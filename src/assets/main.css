@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ----------------------------------------
+   Personalizações para o tema do GnPublish 
+   ---------------------------------------- */
+
+/* width */
+::-webkit-scrollbar {
+   width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+   background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+   background: gray;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+   background: gray;
+}
