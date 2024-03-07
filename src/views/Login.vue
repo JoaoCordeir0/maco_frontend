@@ -1,5 +1,6 @@
 <template>
-  <img src="/logo_maco.png" alt="Logo Maco" width="280" class="fixed top-0 pl-2 pt-4">
+  <!-- <img src="/logo_maco.png" alt="Logo Maco" width="150" class="fixed top-0 pl-2 pt-4"> -->
+  <h1 class="fixed top-0 pl-2 pt-4 ml-2">Maco</h1>
   <div class="flex items-center justify-center h-screen px-6 bg-gray-200">
     <div class="w-full max-w-sm bg-white py-5 px-5">
       <p class="font-semibold text-2xl text-gray-600">Olá,</p>
