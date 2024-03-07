@@ -4,7 +4,7 @@
   <div class="flex items-center justify-center h-screen px-6 bg-gray-200">
     <div class="w-full max-w-sm bg-white py-5 px-5">
       <p class="font-semibold text-2xl text-gray-600">Olá,</p>
-      <p>Informe suas credenciais de acesso</p>
+      <p>Informe suas credenciais</p>
       <form class="mt-4 mt-10" @submit.prevent="login">
         <label class="block">
           <span class="text-sm text-gray-700">Usuário</span>
