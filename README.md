@@ -1,6 +1,6 @@
 # Maco frontend
 
-## URL: https://main.d6rag92scdqfs.amplifyapp.com/
+URL: https://main.d6rag92scdqfs.amplifyapp.com/
 
 ## Node version: 20.10.0
 
