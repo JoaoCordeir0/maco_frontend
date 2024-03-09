@@ -20,7 +20,7 @@
           :class="[$route.name === 'Dashoard' ? activeClass : inactiveClass]" to="/dashboard">
           <font-awesome-icon :icon="['fas', 'chart-line']" />
           <span class="mx-4 font-semibold">Dashoard</span>
-        </router-link>   
+        </router-link>
       </nav>
     </div>
   </div>

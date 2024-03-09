@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { auth } from './hooks/useAuth'
 
 import Login from './views/Login.vue'
+import ForgotPassword from './views/ForgotPassword.vue'
 import Dashboard from './views/Dashboard.vue'
 import NotFound from './views/NotFound.vue'
 
@@ -16,6 +17,12 @@ const routes: RouteRecordRaw[] = [
     path: '/login',
     name: 'Login',
     component: Login,
+    meta: { layout: 'empty' },
+  },
+  {
+    path: '/forgotpassword',
+    name: 'Forgot Password',
+    component: ForgotPassword,
     meta: { layout: 'empty' },
   },
   {
