@@ -3,6 +3,7 @@ import { auth } from './hooks/useAuth'
 
 import Login from './views/Login.vue'
 import ForgotPassword from './views/ForgotPassword.vue'
+import ChangePassword from './views/ChangePassword.vue'
 import Dashboard from './views/Dashboard.vue'
 import NotFound from './views/NotFound.vue'
 
@@ -21,9 +22,15 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/forgotpassword',
-    name: 'Forgot Password',
+    name: 'ForgotPassword',
     component: ForgotPassword,
     meta: { layout: 'empty' },
+  },
+  {
+    path: '/changepassword/:token',
+    name: 'ChangePassword',
+    component: ChangePassword,
+    meta: { layout: 'empty' }
   },
   {
     path: '/dashboard',
