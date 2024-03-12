@@ -9,20 +9,19 @@ export interface ILoginState {
     token: String
 }
 
-export async function apiLogin(username, password) {
+export async function apiLogin(email, password) {
 
     localStorage.clear();
     
     var params = new URLSearchParams()
-    params.append('username', username)
+    params.append('email', email)
     params.append('password', password)
 
     const { data } = await axios.post(`${endpointUrl}/user/login`, params)
 
     if (data.token != undefined) 
     {       
-        localStorage.setItem('Token', data.token)    
-        localStorage.setItem('Name', data.name)        
+        localStorage.setItem('Token', data.token)            
         localStorage.setItem('AuthDay', (new Date()).getDate().toString())
     }
 
@@ -32,8 +31,7 @@ export async function apiLogin(username, password) {
 }
 
 export function auth(to, from, next) {
-    next()
-    //localStorage.getItem('Token') != undefined ? next() : next('/login')    
+    localStorage.getItem('Token') != undefined ? next() : next('/login')    
 }
 
 export function getToken() {

@@ -89,9 +89,16 @@ export default defineComponent({
         });
         state.isLoading = false
         return
-      }
+      }     
 
-      if (username.value == "123" && password.value == "123") {
+      const result = await apiLogin(username.value, password.value)
+
+      state.message = result.value['message']
+      state.token = result.value['token']
+
+      if (state.token != undefined) {
+        Toast.fire({icon: 'success', title: 'Bem vindo ' + localStorage.getItem('Name') });
+        state.isLoading = false
         router.push('dashboard')
       } else {
         Toast.fire({
@@ -100,23 +107,6 @@ export default defineComponent({
         });
         state.isLoading = false
       }
-
-      // const result = await apiLogin(username.value, password.value)
-
-      // state.message = result.value['message']
-      // state.token = result.value['token']
-
-      // if (state.token != undefined) {
-      //   Toast.fire({icon: 'success', title: 'Bem vindo ' + localStorage.getItem('Name') });
-      //   state.isLoading = false
-      //   router.push('edition-list')
-      // } else {
-      //   Toast.fire({
-      //     icon: 'error',
-      //     title: 'Usuário ou senha incorretos!'
-      //   });
-      //   state.isLoading = false
-      // }
     }
 
     return {
