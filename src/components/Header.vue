@@ -45,7 +45,13 @@
           <div
             v-show="dropdownOpen"
             class="absolute right-0 z-20 w-48 py-2 mt-2 bg-white rounded-md shadow-xl"
-          >                
+          >
+            <a
+              href="#"              
+              class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-400 hover:bg-opacity-30 hover:text-gray-900"
+              >Profile</a
+            >                
+            <hr>
             <a
               href="#"
               @click="logout"

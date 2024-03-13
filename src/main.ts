@@ -2,7 +2,10 @@ import { createApp } from 'vue';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { /* Project icons */    
-    faChartLine,   
+    faChartLine, 
+    faScroll,  
+    faPenToSquare,
+    faTrash
 } from '@fortawesome/free-solid-svg-icons'
 
 import App from './App.vue';
@@ -27,6 +30,6 @@ app.use(VueSweetalert2);
 app.use(router);
 
 /* add icons to the library */
-library.add(faChartLine) 
+library.add(faChartLine, faScroll, faPenToSquare, faTrash) 
 
 app.mount('#app');

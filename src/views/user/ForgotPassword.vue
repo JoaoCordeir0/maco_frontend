@@ -45,8 +45,8 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from "vue"
-import { ILoginState, apiLogin } from "../hooks/useAuth"
-import router from "../router"
+import { ILoginState, apiLogin } from "../../hooks/useAuth"
+import router from "../../router"
 import Swal from "sweetalert2"
 
 const Toast = Swal.mixin({
@@ -93,4 +93,4 @@ export default defineComponent({
     }
 })
 
-</script>
+</script>../../hooks/useAuth../../router

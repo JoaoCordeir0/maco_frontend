@@ -1,35 +1,31 @@
 <template>
-  <!-- <img src="/logo_maco.png" alt="Logo Maco" width="150" class="fixed top-0 pl-2 pt-4"> -->
-  <h1 class="fixed top-0 pl-2 pt-4 ml-2">Maco</h1>
-  <div class="flex items-center justify-center h-screen px-6 bg-zinc-50">
+    <h1 class="fixed top-0 pl-2 pt-4 ml-2">Maco</h1>
+  <div class="flex items-center justify-center h-screen px-6 bg-zinc-100">
     <div class="w-full max-w-sm py-5 px-5">
       <div class="space-y-2">
-        <p class="font-semibold text-2xl text-gray-800">Login</p>
-        <p class="text-xs text-gray-400">Insira seu e-mail e senha para entrar.</p>
+        <p class="font-semibold text-2xl text-gray-800">Alterar Senha</p>
+        <p class="text-xs text-gray-400">Digite sua nova senha no campo abaixo e a confirme.</p>
       </div>
-      <form class="mt-4" @submit.prevent="login">
+      <form class="mt-4" @submit.prevent="sendEmail">
         <label class="block">
-          <span class="text-sm text-gray-800">Email</span>
+          <span class="text-sm text-gray-800">Nova Senha</span>
           <input type="text"
             class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
-            v-model="username" />
+            v-model="email" />
         </label>
 
-        <label class="block mt-3">
-          <span class="text-sm text-gray-800">Senha</span>
-          <input type="password"
+        <label class="block">
+          <span class="text-sm text-gray-800">Confirmar Senha</span>
+          <input type="text"
             class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
-            v-model="password" />
-          <div class="flex justify-end mt-2">
-            <button type="button" @click="forgotPasswordPage" class="text-xs underline" >Esqueceu a senha?</button>
-          </div>
+            v-model="email" />
         </label>
 
         <div class="mt-6">
           <button type="submit" :disabled="isLoading"
             class="w-full px-4 py-2 text-sm text-center text-white bg-gray-800 rounded-md focus:outline-none hover:bg-gray-700 transition">
             <span v-if="isLoading == false">
-              Entrar
+              Alterar
             </span>
             <span v-if="isLoading == true">
               <svg aria-hidden="true"
@@ -48,12 +44,13 @@
       </form>
     </div>
   </div>
+
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from "vue"
-import { ILoginState, apiLogin } from "../hooks/useAuth"
-import router from "../router"
+import { ILoginState, apiLogin } from "../../hooks/useAuth"
+import router from "../../router"
 import Swal from "sweetalert2"
 
 const Toast = Swal.mixin({
@@ -65,63 +62,38 @@ const Toast = Swal.mixin({
 });
 
 export default defineComponent({
-  setup() {
-    const state: ILoginState = reactive({
-      isLoading: false,
-      message: '',
-      token: '',
-    });
+    setup(){
 
-    const username = ref("");
-    const password = ref("");
+        const email = ref("");
 
-    function forgotPasswordPage(){
-      router.push('forgotpassword');
+        // Just to not get errors
+        const isLoading = false;
+
+        function loginPage()
+        {
+          router.push('login');
+        }
+
+        async function sendEmail()
+        {
+          if(email.value == "")
+          {
+            Toast.fire({
+              icon: 'warning',
+              title: 'Informe o e-mail!'
+            });
+
+            return
+          }   
+        }
+
+        return{
+            email,
+            isLoading,
+            sendEmail,
+            loginPage
+        }
+        
     }
-
-    async function login() {
-      state.isLoading = true
-
-      if (username.value == "" || password.value == "") {
-        Toast.fire({
-          icon: 'warning',
-          title: 'Informe o e-mail e a senha!'
-        });
-        state.isLoading = false
-        return
-      }     
-
-      const result = await apiLogin(username.value, password.value)
-
-      state.message = result.value['message']
-      state.token = result.value['token']
-
-      if (state.token != undefined) {
-        Toast.fire({icon: 'success', title: 'Bem vindo ' + localStorage.getItem('Name') });
-        state.isLoading = false
-        router.push('dashboard')
-      } else {
-        Toast.fire({
-          icon: 'error',
-          title: 'Usuário ou senha incorretos!'
-        });
-        state.isLoading = false
-      }
-    }
-
-    return {
-      ...toRefs(state),
-      username,
-      password,
-      login,
-      forgotPasswordPage
-    }
-  },
-  beforeMount() {
-    if (localStorage.getItem('AuthDay') != undefined && localStorage.getItem('AuthDay') == (new Date()).getDate().toString()) {
-      Toast.fire({icon: 'success', title: 'Bem vindo'});
-      router.push('dashboard')      
-    }
-  }
-});
-</script>
+})
+</script>../../hooks/useAuth../../router
