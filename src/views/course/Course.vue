@@ -119,7 +119,7 @@ export default defineComponent({
             }
             
             state.isLoading = false
-            router.push('/course-list')
+            router.push('/courses')
         }
 
         return {
