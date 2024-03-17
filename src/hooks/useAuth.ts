@@ -21,8 +21,12 @@ export async function apiLogin(email, password) {
 
     if (data.token != undefined) 
     {       
-        localStorage.setItem('Token', data.token)            
-        localStorage.setItem('AuthDay', (new Date()).getDate().toString())
+        localStorage.setItem('user-token', data.token)     
+        localStorage.setItem('user-name', data.user.name)     
+        localStorage.setItem('user-email', data.user.email)     
+        localStorage.setItem('user-ra', data.user.ra)     
+        localStorage.setItem('user-role', data.user.role)     
+        localStorage.setItem('user-auth-day', (new Date()).getDate().toString())
     }
 
     const loginData = ref<ILoginState[]>(data);    
@@ -30,13 +34,32 @@ export async function apiLogin(email, password) {
     return loginData 
 }
 
-export function auth(to, from, next) {
-    localStorage.getItem('Token') != undefined ? next() : next('/login')    
+export function authBasic(to, from, next) {
+    const token = localStorage.getItem('user-token') != undefined    
+    token ? next() : next('/login')    
+}
+
+export function authAdmin(to, from, next) {
+    const token = localStorage.getItem('user-token') != undefined
+    const role = String(getUserRole()) == '1:ADMIN'
+    token && role ? next() : next('/login')    
+}
+
+export function authAdvisor(to, from, next) {
+    const token = localStorage.getItem('user-token') != undefined
+    const role = String(getUserRole()) == '2:ADVISOR'
+    token && role ? next() : next('/login')    
+}
+
+export function authAuthor(to, from, next) {
+    const token = localStorage.getItem('user-token') != undefined
+    const role = String(getUserRole()) == '3:AUTHOR'
+    token && role ? next() : next('/login')    
 }
 
 export function getToken() {
     try {
-        const token = localStorage.getItem('Token')
+        const token = localStorage.getItem('user-token')
         return token
     }
     catch (e) {
@@ -45,14 +68,27 @@ export function getToken() {
     }
 }
 
+export function getUserRole(modestring = false) {
+    try {
+        let role = atob(localStorage.getItem('user-role') || '')        
+        if (modestring) {
+            role = role.split(':')[1]
+        }
+        return role
+    }
+    catch (e) {
+       return 'null'
+    }
+}
+
 export function credentials() {
     const url = String(endpointUrl)
     const token = String(getToken())
-    const headers = { "Authorization": token }
+    const authBearer = {'Authorization' : `Bearer ${token}`}
 
     return {
         url,
         token,
-        headers,
+        authBearer,
     }
 }

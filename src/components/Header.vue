@@ -13,7 +13,7 @@
       </button>            
 
       <div class="flex items-center justify-center ml-3">
-       <p class="text-gray-500 font-semibold text-xl">Maco</p>
+       <p class="text-gray-500 font-semibold text-xl">Maco - {{ roleUser }}</p>
       </div>
       
     </div>
@@ -68,6 +68,7 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { useSidebar } from "../hooks/useSidebar";
+import { getUserRole } from "../hooks/useAuth";
 import router from "../router"
 
 export default defineComponent({     
@@ -79,10 +80,12 @@ export default defineComponent({
   setup(_, { emit }) {
     const dropdownOpen = ref(false);
     const { isOpen } = useSidebar();
+    const roleUser = ref('');
   
     return {      
       isOpen,
       dropdownOpen,    
+      roleUser,
     };
   },
   methods: { 
@@ -91,7 +94,7 @@ export default defineComponent({
       router.push('/') 
     },
     loadUser() {
-      let name = localStorage.getItem('Name')
+      let name = localStorage.getItem('user-name')
       if (name != null) {
         let name_split = name.split(' ')
         let char1 = name_split[0].substr(0, 1)
@@ -103,6 +106,7 @@ export default defineComponent({
     }
   }, 
   beforeMount() {
+    this.roleUser = getUserRole(true)
     this.nameUser = this.loadUser()
   }
 });

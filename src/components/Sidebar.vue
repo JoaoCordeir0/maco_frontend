@@ -21,12 +21,28 @@
           <font-awesome-icon :icon="['fas', 'chart-line']" />
           <span class="mx-4 font-semibold">Dashoard</span>
         </router-link>
-        <router-link class="flex items-center px-4 py-2 mt-2 duration-200"
-          :class="[$route.name === 'CourseList' ? activeClass : inactiveClass]" to="/courses">
-          <font-awesome-icon :icon="['fas', 'scroll']" />
-          <span class="mx-4 font-semibold">Cursos</span>
-        </router-link>
+
+        <div v-if="roleUser == '1:ADMIN'">
+          <router-link class="flex items-center px-4 py-2 mt-2 duration-200"
+            :class="[$route.name === 'CourseList' ? activeClass : inactiveClass]" to="/courses">
+            <font-awesome-icon :icon="['fas', 'scroll']" />
+            <span class="mx-4 font-semibold">Cursos</span>
+          </router-link>
+        </div>     
+        
+        <div v-if="roleUser == '2:ADVISOR'">
+          <!-- 
+            Fazer os menu dos revisores
+          -->
+        </div>     
+
+        <div v-if="roleUser == '3:AUTHOR'">
+            <!-- 
+              Fazer os menu dos autores 
+            -->
+        </div>     
       </nav>
+
     </div>
   </div>
 </template>
@@ -34,6 +50,7 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { useSidebar } from "../hooks/useSidebar";
+import { getUserRole } from "../hooks/useAuth";
 
 export default defineComponent({
   async setup() {
@@ -44,14 +61,17 @@ export default defineComponent({
     const inactiveClass = ref(
       "border-gray-900 text-gray-500 hover:bg-gray-600 hover:bg-opacity-25 hover:text-gray-100 rounded-md"
     );
-    let actualIssue: any = '1001'
+    const roleUser = ref('')
             
     return {
       isOpen,
       activeClass,
-      inactiveClass,
-      actualIssue,
+      inactiveClass,      
+      roleUser,
     };
   },  
+  beforeMount() {
+    this.roleUser = getUserRole()
+  }
 }); 
 </script>

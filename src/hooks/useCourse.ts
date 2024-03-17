@@ -11,16 +11,21 @@ export interface ICourseState {
 
 export async function courseList() {
     const { data } = await axios.get(`${api.url}/course/list`, {
-        headers: {'Authorization' : `Bearer ${api.token}`}
+        headers: api.authBearer
     })
 
-    return ref<ICourseState[]>(data)
+    if (typeof data[0] == 'object')
+        return ref<ICourseState[]>(data)
+    else
+        return ref<ICourseState[]>([data])
 }
 
 export async function courseDetails(id) {
-    const { data } = await axios.get(`${api.url}/course/details/${id}`)
+    const { data } = await axios.get(`${api.url}/course/details/${id}`, {
+        headers: api.authBearer
+    })
 
-    return ref<ICourseState[]>(data['courses'][0])
+    return ref<ICourseState[]>(data)
 }
 
 export async function courseAdd(infos) {    
@@ -44,11 +49,10 @@ export async function courseEdit(infos) {
     return data
 }
 
-export async function delcourse(id) {
-    var params = new URLSearchParams()
-    params.append('id', id)
-
-    const { data } = await axios.post(`${api.url}/course/del`, params)
+export async function courseDel(id) {        
+    const { data } = await axios.delete(`${api.url}/course/del/${id}`, {
+        headers: api.authBearer
+    })
 
     return data
 }

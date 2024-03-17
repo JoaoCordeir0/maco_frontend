@@ -97,7 +97,7 @@ export default defineComponent({
       state.token = result.value['token']
 
       if (state.token != undefined) {
-        Toast.fire({icon: 'success', title: 'Bem vindo ' + localStorage.getItem('Name') });
+        Toast.fire({icon: 'success', title: 'Bem vindo ' + localStorage.getItem('user-name') });
         state.isLoading = false
         router.push('dashboard')
       } else {
@@ -118,7 +118,7 @@ export default defineComponent({
     }
   },
   beforeMount() {
-    if (localStorage.getItem('AuthDay') != undefined && localStorage.getItem('AuthDay') == (new Date()).getDate().toString()) {
+    if (localStorage.getItem('user-auth-day') != undefined && localStorage.getItem('user-auth-day') == (new Date()).getDate().toString()) {
       Toast.fire({icon: 'success', title: 'Bem vindo'});
       router.push('dashboard')      
     }

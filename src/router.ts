@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import { auth } from './hooks/useAuth'
+import { authBasic, authAdmin, authAdvisor, authAuthor } from './hooks/useAuth'
 
 import Login from './views/user/Login.vue'
 import ForgotPassword from './views/user/ForgotPassword.vue'
@@ -38,19 +38,19 @@ const routes: RouteRecordRaw[] = [
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard,   
-    beforeEnter: auth,
+    beforeEnter: authBasic,
   },  
   {
     path: '/courses',
     name: 'CourseList',
     component: CourseList,   
-    beforeEnter: auth,
+    beforeEnter: authAdmin,
   },
   {
     path: '/course/:action',
     name: 'Course',
     component: Course,   
-    beforeEnter: auth,
+    beforeEnter: authAdmin,
   },  
   { 
     path: '/:pathMatch(.*)*',

@@ -17,7 +17,7 @@
                                         v-model="name" />
                                 </label>
                             </div>
-                            <div class="...">
+                            <div class="col-span-2  ...">
                                 <label class="block">
                                     <span class="text-sm text-gray-700">Descrição do curso</span>
                                     <input type="text"
@@ -62,7 +62,7 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from "vue"
 import router from "../../router"
-import { ICourseState, courseAdd, courseDetails, courseEdit } from "../../hooks/useCourse"
+import { ICourseState, courseAdd, courseDetails, courseEdit, courseDel } from "../../hooks/useCourse"
 import Spinner from "../../components/Spinner.vue"
 import Swal from "sweetalert2"
 
@@ -137,7 +137,7 @@ export default defineComponent({
         async loadCourse() {
             const result = await courseDetails(this.$route.params.action)                                
 
-            if (result.value['name_pt'] == undefined) 
+            if (result.value['name'] == undefined) 
                 Toast.fire({icon: 'error', title: 'Curso não encontrado!'})
             
             this.id = result.value['id']
@@ -156,8 +156,13 @@ export default defineComponent({
                 confirmButtonText: "Sim, excluir!",
                 cancelButtonText: "Cancelar",
             }).then(async (result) => {
-                if (result.isConfirmed) {      
-                    // em dev                                  
+                if (result.isConfirmed) {                    
+                    const result = await courseDel(id)
+                    if (result.status == 'success') {                
+                        Toast.fire({icon: 'success', title: 'Curso excluído!'})     
+                        router.push('/courses')
+                    } else
+                        Toast.fire({icon: 'error', title: result.message})  
                 }
             });            
         }

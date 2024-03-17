@@ -41,7 +41,8 @@
   
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from "vue"
-import { ICourseState, courseList } from "../../hooks/useCourse"
+import router from "../../router"
+import { ICourseState, courseList, courseDel } from "../../hooks/useCourse"
 import Swal from "sweetalert2"
 
 const Toast = Swal.mixin({
@@ -59,15 +60,22 @@ export default defineComponent({
             message: '',
         })
         const courses = ref()
-
-        courses.value = (await courseList()).value // Consome a API
-
+       
         return {
             ...toRefs(state),
             courses,
         }
     },
     methods: {
+        async loadCourses() {                        
+            const result = (await courseList()).value // Consome a API
+
+            if (result.toString() != 'Not found') {
+                this.courses = result                                
+            }                
+            else                 
+                Toast.fire({icon: 'warning', title: 'Nenhum curso encontrado'})                                    
+        },      
         delCourse(id) {
             Swal.fire({
                 title: "Tem certeza?",
@@ -79,9 +87,19 @@ export default defineComponent({
                 confirmButtonText: "Sim, excluir!",
                 cancelButtonText: "Cancelar",
             }).then(async (result) => {
-                if (result.isConfirmed) {}
+                if (result.isConfirmed) {
+                    const result = await courseDel(id)
+                    if (result.status == 'success') {                
+                        Toast.fire({icon: 'success', title: 'Curso excluído!'})     
+                        this.loadCourses()
+                    } else
+                        Toast.fire({icon: 'error', title: result.message})  
+                }
             });       
         }
+    },
+    beforeMount() {
+        this.loadCourses()
     }
 })
-</script>../../hooks/useCourse
+</script>
