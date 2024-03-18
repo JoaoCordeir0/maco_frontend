@@ -14,10 +14,7 @@ export async function courseList() {
         headers: api.authBearer
     })
 
-    if (typeof data[0] == 'object')
-        return ref<ICourseState[]>(data)
-    else
-        return ref<ICourseState[]>([data])
+    return ref<ICourseState[]>(data)
 }
 
 export async function courseDetails(id) {
