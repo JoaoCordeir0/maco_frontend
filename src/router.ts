@@ -7,6 +7,8 @@ import ChangePassword from './views/user/ChangePassword.vue'
 import Dashboard from './views/Dashboard.vue'
 import CourseList from './views/course/CourseList.vue'
 import Course from './views/course/Course.vue'
+import ArticleList from './views/article/ArticleList.vue'
+import Article from './views/article/Article.vue'
 import NotFound from './views/NotFound.vue'
 
 const routes: RouteRecordRaw[] = [
@@ -52,6 +54,18 @@ const routes: RouteRecordRaw[] = [
     component: Course,   
     beforeEnter: authAdmin,
   },  
+  {
+    path: '/articles',
+    name: 'ArticleList',
+    component: ArticleList,
+    beforeEnter: authAdmin
+  },
+  {
+    path: '/article/:action',
+    name: 'Article',
+    component: Article,
+    beforeEnter: authAdmin
+  },
   { 
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
