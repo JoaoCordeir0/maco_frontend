@@ -2,7 +2,7 @@
     <div class="mt-2">
         <div class="bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2 mb-2">
             <div class="flex flex-wrap">
-                <p class="text-gray-500 font-semibold text-xl border-b-2">Listagem de cursos</p>
+                <p class="text-gray-500 font-semibold text-xl border-b-2">Listagem de artigos</p>
                 <div class="overflow-x-auto inline-block min-w-full rounded-lg">                    
                     <table class="min-w-full leading-normal mt-5">
                         <thead>

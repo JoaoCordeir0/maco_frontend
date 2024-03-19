@@ -5,7 +5,8 @@ import { /* Project icons */
     faChartLine, 
     faScroll,  
     faPenToSquare,
-    faTrash
+    faTrash,
+    faNewspaper,
 } from '@fortawesome/free-solid-svg-icons'
 
 import App from './App.vue';
@@ -30,6 +31,6 @@ app.use(VueSweetalert2);
 app.use(router);
 
 /* add icons to the library */
-library.add(faChartLine, faScroll, faPenToSquare, faTrash) 
+library.add(faChartLine, faScroll, faPenToSquare, faTrash, faNewspaper) 
 
 app.mount('#app');

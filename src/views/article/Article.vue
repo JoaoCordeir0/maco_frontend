@@ -93,9 +93,7 @@ export default defineComponent({
         const isEdit = false
 
         async function saveArticle() {
-            state.isLoading = true
-
-            
+            state.isLoading = true            
         }
 
         return {
