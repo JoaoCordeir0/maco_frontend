@@ -1,5 +1,5 @@
 <template>
-    <h1 class="fixed top-0 pl-2 pt-4 ml-2">Maco</h1>
+  <img src="/logo_maco.png" alt="Logo Maco" width="100" class="fixed top-0 pl-2 pt-2">  
   <div class="flex items-center justify-center h-screen px-6 bg-zinc-100">
     <div class="w-full max-w-sm py-5 px-5">
       <div class="space-y-2">
