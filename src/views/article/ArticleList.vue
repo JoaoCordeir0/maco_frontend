@@ -9,10 +9,7 @@
                             <tr>
                                 <th class="px-5 text-start border-b-2">Id</th>
                                 <th class="px-5 text-start border-b-2">Título</th>        
-                                <th class="px-5 text-start border-b-2">Autores</th>                                
-                                <th class="px-5 text-start border-b-2">Revisor</th>
-                                <th class="px-5 text-start border-b-2">Palavras Chaves</th>
-                                <th class="px-5 text-start border-b-2">Resumo</th>
+                                <th class="px-5 text-start border-b-2">Curso</th>        
                                 <th class="px-5 text-start border-b-2">Status</th>
                                 <th class="px-5 text-start border-b-2">Ações</th>
                             </tr>
@@ -26,16 +23,7 @@
                                     <p class="text-gray-900 whitespace-nowrap">{{ item.title }}</p>
                                 </td>                                
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                    <p class="text-gray-900 whitespace-nowrap">{{ item.author }}</p>
-                                </td>  
-                                <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                    <p class="text-gray-900 whitespace-nowrap">{{ item.advisor }}</p>
-                                </td>  
-                                <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                    <p class="text-gray-900 whitespace-nowrap">{{ item.keywords }}</p>
-                                </td>  
-                                <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                    <p class="text-gray-900 whitespace-nowrap">{{ item.summary }}</p>
+                                    <p class="text-gray-900 whitespace-nowrap">{{ item.course }}</p>
                                 </td>  
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
                                     <p class="text-gray-900 whitespace-nowrap">{{ item.status }}</p>

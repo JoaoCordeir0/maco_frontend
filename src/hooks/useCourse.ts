@@ -18,11 +18,11 @@ export async function courseList() {
 }
 
 export async function courseDetails(id) {
-    const { data } = await axios.get(`${api.url}/course/details/${id}`, {
+    const { data } = await axios.get(`${api.url}/course/list?id=${id}`, {
         headers: api.authBearer
     })
 
-    return ref<ICourseState[]>(data)
+    return ref<ICourseState[]>(data[0])
 }
 
 export async function courseAdd(infos) {    

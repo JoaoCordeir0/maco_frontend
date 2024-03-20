@@ -57,17 +57,6 @@ export function authAuthor(to, from, next) {
     token && role ? next() : next('/login')    
 }
 
-export function getToken() {
-    try {
-        const token = localStorage.getItem('user-token')
-        return token
-    }
-    catch (e) {
-        const token = 'null'
-        return token
-    }
-}
-
 export function getUserRole(modestring = false) {
     try {
         let role = atob(localStorage.getItem('user-role') || '')        
@@ -83,7 +72,7 @@ export function getUserRole(modestring = false) {
 
 export function credentials() {
     const url = String(endpointUrl)
-    const token = String(getToken())
+    const token = String(localStorage.getItem('user-token'))
     const authBearer = {'Authorization' : `Bearer ${token}`}
 
     return {
