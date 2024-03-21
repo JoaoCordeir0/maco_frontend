@@ -14,7 +14,7 @@
         </div>
       </div>
 
-      <nav class="mt-10 px-2">                  
+      <nav class="mt-5 px-2">                  
         <router-link class="flex items-center px-4 py-2 mt-2 duration-200"
           :class="[$route.name === 'Dashoard' ? activeClass : inactiveClass]" to="/dashboard">
           <font-awesome-icon :icon="['fas', 'chart-line']" />
