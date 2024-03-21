@@ -4,9 +4,12 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { /* Project icons */    
     faChartLine, 
     faScroll,  
+    faFloppyDisk,
     faPenToSquare,
     faTrash,
     faNewspaper,
+    faFileWord,
+    faEye,
 } from '@fortawesome/free-solid-svg-icons'
 
 import App from './App.vue';
@@ -31,6 +34,6 @@ app.use(VueSweetalert2);
 app.use(router);
 
 /* add icons to the library */
-library.add(faChartLine, faScroll, faPenToSquare, faTrash, faNewspaper) 
+library.add(faChartLine, faScroll, faFloppyDisk, faPenToSquare, faTrash, faNewspaper, faFileWord, faEye) 
 
 app.mount('#app');

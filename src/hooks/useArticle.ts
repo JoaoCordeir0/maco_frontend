@@ -14,21 +14,26 @@ export async function articleList() {
         headers: api.authBearer
     })
 
-    if(typeof data[0] == 'object')
-        return ref<IArticleState[]>(data)
-    else
-        return ref<IArticleState[]>([data])
+    return ref<IArticleState[]>(data)
+}
+
+export async function articleDetails(id) {
+    const { data } = await axios.get(`${api.url}/article/list?article_id=${id}`, {
+        headers: api.authBearer
+    })
+
+    return ref<IArticleState[]>(data[0])
 }
 
 export async function articleAdd(infos) {
     var params = new URLSearchParams()
+    params.append('user', infos.user)
     params.append('title', infos.title)
     params.append('author', infos.author)
     params.append('advisor', infos.advisor)
     params.append('keyword', infos.keyword)
     params.append('summary', infos.summary)
-    params.append('status', infos.status)
-
+       
     const { data } = await axios.post(`${api.url}/article/add`, params)
 
     return data

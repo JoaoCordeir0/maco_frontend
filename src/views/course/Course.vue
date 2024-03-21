@@ -3,7 +3,7 @@
         <div class="bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2">
             <div class="flex flex-wrap">
                 <p class="text-gray-500 font-semibold text-xl border-b-2"> {{ pageTitle }} </p>
-                <span v-if="!infoLoad">
+                <span v-if="!infoLoaded">
                     <Spinner />
                 </span>
                 <div class="w-full">                    
@@ -26,7 +26,7 @@
                                 </label>
                             </div>                           
                         </div>
-                        <div v-if="infoLoad" class="mt-5">
+                        <div v-if="infoLoaded" class="mt-5">
                             <div class="flex justify-end">
                                 <button v-if="isEdit" type="button" v-on:click="delCategory(id)" class="px-12 py-2 mr-2 text-sm text-center text-white bg-red-800 rounded-md focus:outline-none font-bold">                                    
                                     <font-awesome-icon :icon="['fas', 'trash']" /> &nbsp; Excluir                                    
@@ -81,7 +81,7 @@ export default defineComponent({
             message: '',
         })
 
-        const infoLoad = false
+        const infoLoaded = false
         const pageTitle = ref("")
         const id = ref("")
         const name = ref("")
@@ -124,7 +124,7 @@ export default defineComponent({
 
         return {
             ...toRefs(state),
-            infoLoad,
+            infoLoaded,
             pageTitle,
             id,
             name,
@@ -143,7 +143,7 @@ export default defineComponent({
             this.id = result.value['id']
             this.name = result.value['name']
             this.description = result.value['description']            
-            this.infoLoad = true          
+            this.infoLoaded = true          
         },
         async delCategory(id) {
             Swal.fire({
@@ -171,7 +171,7 @@ export default defineComponent({
         switch (router.currentRoute.value.params.action) {
             case 'add':
                 this.pageTitle = 'Inserir curso'
-                this.infoLoad = true
+                this.infoLoaded = true
                 break;            
             default:
                 this.pageTitle = 'Editar curso'

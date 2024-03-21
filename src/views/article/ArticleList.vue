@@ -3,7 +3,7 @@
         <div class="bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2 mb-2">
             <div class="flex flex-wrap">
                 <p class="text-gray-500 font-semibold text-xl border-b-2">Listagem de artigos</p>
-                <div class="overflow-x-auto inline-block min-w-full rounded-lg">                    
+                <div v-if="infonotnull" class="overflow-x-auto inline-block min-w-full rounded-lg">                    
                     <table class="min-w-full leading-normal mt-5">
                         <thead>
                             <tr>
@@ -30,8 +30,7 @@
                                 </td>                                
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200 min-w-72">
                                     <div class="sm:inline-block">                                        
-                                        <a :href="`/article/${item.id}`" class="sm:px-5 sm:py-2 px-5 bg-gray-900 m-2 mt-2 text-white rounded"><font-awesome-icon :icon="['fas', 'pen-to-square']" /> <span class="hidden lg:inline">Editar</span></a>
-                                        <a href="#del" class="sm:px-5 sm:py-2 px-5 bg-red-800 m-2 mt-2 text-white rounded"><font-awesome-icon :icon="['fas', 'trash']" /> <span class="hidden lg:inline">Excluir</span></a>
+                                        <a :href="`/article/${item.id}`" class="sm:px-5 sm:py-2 px-5 bg-gray-900 m-2 mt-2 text-white rounded"><font-awesome-icon :icon="['fas', 'eye']" /> &nbsp; <span class="hidden lg:inline">Visualizar</span></a>                                        
                                     </div>                                    
                                 </td>
                             </tr>
@@ -66,20 +65,24 @@ export default defineComponent({
         })
 
         const articles = ref()
+        const infonotnull = ref(false)
 
         return {
             ...toRefs(state),
-            articles
+            articles,
+            infonotnull,
         }
     },
     methods: {
         async loadArticles(){
             const result = (await articleList()).value // Consome a API
-
-            if(result.toString() != 'Not found')
+                
+            if(result.length != 1) {
                 this.articles = result
-            else
+                this.infonotnull = true
+            } else {
                 Toast.fire({icon: 'warning', title: 'Nenhum artigo encontrado'})
+            }                
         }
     },
     beforeMount(){
