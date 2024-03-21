@@ -3,6 +3,9 @@
         <div class="bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2 mb-2">
             <div class="flex flex-wrap">
                 <p class="text-gray-500 font-semibold text-xl border-b-2">Listagem de artigos</p>
+                <span v-if="!infoLoaded">
+                    <Spinner />
+                </span>
                 <div v-if="infonotnull" class="overflow-x-auto inline-block min-w-full rounded-lg">                    
                     <table class="min-w-full leading-normal mt-5">
                         <thead>
@@ -66,11 +69,13 @@ export default defineComponent({
 
         const articles = ref()
         const infonotnull = ref(false)
+        const infoLoaded = ref(false)
 
         return {
             ...toRefs(state),
             articles,
             infonotnull,
+            infoLoaded,
         }
     },
     methods: {
@@ -82,12 +87,14 @@ export default defineComponent({
                 this.infonotnull = true
             } else {
                 Toast.fire({icon: 'warning', title: 'Nenhum artigo encontrado'})
-            }                
+            }        
+            this.infoLoaded = true        
         }
     },
     beforeMount(){
         this.loadArticles()
-    }
+    },
+    components: { Spinner }
 })
 
 </script>

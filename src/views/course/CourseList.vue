@@ -3,7 +3,10 @@
         <div class="bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2 mb-2">
             <div class="flex flex-wrap">
                 <p class="text-gray-500 font-semibold text-xl border-b-2">Listagem de cursos</p>
-                <div class="overflow-x-auto inline-block min-w-full rounded-lg">                    
+                <span v-if="!infoLoaded">
+                    <Spinner />
+                </span>
+                <div v-if="infonotnull" class="overflow-x-auto inline-block min-w-full rounded-lg">                    
                     <table class="min-w-full leading-normal mt-5">
                         <thead>
                             <tr>
@@ -41,7 +44,7 @@
   
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from "vue"
-import router from "../../router"
+import Spinner from "../../components/Spinner.vue"
 import { ICourseState, courseList, courseDel } from "../../hooks/useCourse"
 import Swal from "sweetalert2"
 
@@ -59,22 +62,28 @@ export default defineComponent({
             isLoading: false,
             message: '',
         })
+        const infoLoaded = ref(false)        
+        const infonotnull = ref(false)
         const courses = ref()
        
         return {
             ...toRefs(state),
             courses,
+            infonotnull,
+            infoLoaded,            
         }
     },
     methods: {
         async loadCourses() {                        
             const result = (await courseList()).value // Consome a API
 
-            if (result.toString() != 'Not found') {
-                this.courses = result                                
-            }                
-            else                 
-                Toast.fire({icon: 'warning', title: 'Nenhum curso encontrado'})                                    
+            if(result.length != 1) {
+                this.courses = result
+                this.infonotnull = true
+            } else {
+                Toast.fire({icon: 'warning', title: 'Nenhum curso encontrado'})      
+            }            
+            this.infoLoaded = true                                          
         },      
         delCourse(id) {
             Swal.fire({
@@ -100,6 +109,7 @@ export default defineComponent({
     },
     beforeMount() {
         this.loadCourses()
-    }
+    },
+    components: { Spinner }
 })
 </script>
