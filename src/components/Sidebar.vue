@@ -32,6 +32,11 @@
             <font-awesome-icon :icon="['fas', 'newspaper']" />
             <span class="mx-4 font-semibold">Artigos</span>
           </router-link>
+          <router-link class="flex items-center px-4 py-2 mt-2 duration-200"
+            :class="[$route.name === 'UserList' ? activeClass : inactiveClass]" to="/users">
+            <font-awesome-icon :icon="['fas', 'users']" />
+            <span class="mx-4 font-semibold">Usuários</span>
+          </router-link>
         </div>     
         
         <div v-if="roleUser == '2:ADVISOR'">

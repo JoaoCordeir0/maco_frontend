@@ -10,6 +10,7 @@ import { /* Project icons */
     faNewspaper,
     faFileWord,
     faEye,
+    faUsers,
 } from '@fortawesome/free-solid-svg-icons'
 
 import App from './App.vue';
@@ -34,6 +35,6 @@ app.use(VueSweetalert2);
 app.use(router);
 
 /* add icons to the library */
-library.add(faChartLine, faScroll, faFloppyDisk, faPenToSquare, faTrash, faNewspaper, faFileWord, faEye) 
+library.add(faChartLine, faScroll, faFloppyDisk, faPenToSquare, faTrash, faNewspaper, faFileWord, faEye, faUsers) 
 
 app.mount('#app');

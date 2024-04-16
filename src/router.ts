@@ -9,6 +9,7 @@ import CourseList from './views/course/CourseList.vue'
 import Course from './views/course/Course.vue'
 import ArticleList from './views/article/ArticleList.vue'
 import Article from './views/article/Article.vue'
+import UserList from './views/user/UserList.vue'
 import NotFound from './views/NotFound.vue'
 
 const routes: RouteRecordRaw[] = [
@@ -64,6 +65,12 @@ const routes: RouteRecordRaw[] = [
     path: '/article/:action',
     name: 'Article',
     component: Article,
+    beforeEnter: authAdmin
+  },
+  {
+    path: '/users',
+    name: 'Users',
+    component: UserList,
     beforeEnter: authAdmin
   },
   { 
