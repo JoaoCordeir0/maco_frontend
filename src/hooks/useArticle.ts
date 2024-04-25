@@ -31,7 +31,7 @@ export async function articleDetails(id) {
         headers: api.authBearer
     })
 
-    return ref<IArticleState[]>(data)
+    return ref<IArticleState[]>(data[0])
 }
 
 export async function submissionDetails(article) {
@@ -40,7 +40,7 @@ export async function submissionDetails(article) {
         headers: api.authBearer
     })
 
-    return ref<IArticleState[]>(data)
+    return ref<IArticleState[]>(data[0])
 }
 
 export async function articleAdd(infos) {
