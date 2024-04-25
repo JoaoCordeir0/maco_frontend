@@ -145,7 +145,7 @@ export default defineComponent({
         }
     }, 
     methods: {
-        async loadArticle() {
+        async loadSubmission() {
             const result = await submissionDetails(this.$route.params.id)                                
             
             try {
@@ -171,7 +171,7 @@ export default defineComponent({
         switch (router.currentRoute.value.params.id) {                  
             default:
                 this.pageTitle = 'Detalhes do artigo'
-                this.loadArticle()                
+                this.loadSubmission()                
         }
     },
     components: { Spinner }
