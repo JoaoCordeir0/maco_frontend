@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ref } from 'vue';
 import { credentials } from './useAuth';
 
-const api = credentials()
+const api = await credentials()
 
 export interface ICourseState {
     isLoading: boolean,

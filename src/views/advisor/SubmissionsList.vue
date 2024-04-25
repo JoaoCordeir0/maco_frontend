@@ -79,7 +79,7 @@ export default defineComponent({
         }
     },
     methods: {
-        async loadArticles(){
+        async loadArticles() {
             const result = (await submissionsList()).value // Consome a API
                 
             if(result.length != 1) {

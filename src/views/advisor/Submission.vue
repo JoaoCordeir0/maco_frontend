@@ -161,18 +161,15 @@ export default defineComponent({
                 this.article_status = result.value['status']
                 this.infoLoaded = true   
             } catch(e) {
-                this.infoLoaded = true   
+                this.infoLoaded = true               
                 Toast.fire({icon: 'error', title: 'Usuário sem permissão para está ação!'})                
             }
                    
         },       
     },
     beforeMount() {
-        switch (router.currentRoute.value.params.id) {                  
-            default:
-                this.pageTitle = 'Detalhes do artigo'
-                this.loadSubmission()                
-        }
+        this.pageTitle = 'Detalhes do artigo'
+        this.loadSubmission()    
     },
     components: { Spinner }
 })

@@ -2,7 +2,7 @@ import axios from "axios";
 import { ref } from "vue";
 import { credentials } from "./useAuth";
 
-const api = credentials();
+const api = await credentials();
 
 export interface IArticleState {
     isLoading: boolean,
@@ -31,7 +31,7 @@ export async function articleDetails(id) {
         headers: api.authBearer
     })
 
-    return ref<IArticleState[]>(data[0])
+    return ref<IArticleState[]>(data)
 }
 
 export async function submissionDetails(article) {
@@ -40,7 +40,7 @@ export async function submissionDetails(article) {
         headers: api.authBearer
     })
 
-    return ref<IArticleState[]>(data[0])
+    return ref<IArticleState[]>(data)
 }
 
 export async function articleAdd(infos) {

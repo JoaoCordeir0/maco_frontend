@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ref } from 'vue';
 import { credentials } from './useAuth';
 
-const api = credentials()
+const api = await credentials()
 
 export interface IUserState {
     isLoading: boolean,
@@ -10,7 +10,7 @@ export interface IUserState {
 }
 
 export async function userList() {
-    const { data } = await axios.get(`${api.url}/user/list?user_id=4`, {
+    const { data } = await axios.get(`${api.url}/user/list`, {
         headers: api.authBearer
     })
 
