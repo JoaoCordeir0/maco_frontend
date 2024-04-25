@@ -40,9 +40,16 @@
         </div>     
         
         <div v-if="roleUser == '2:ADVISOR'">
-          <!-- 
-            Fazer os menu dos revisores
-          -->
+          <router-link class="flex items-center px-4 py-2 mt-2 duration-200"
+            :class="[$route.name === 'SubmissionsList' ? activeClass : inactiveClass]" to="/submissions">
+            <font-awesome-icon :icon="['fas', 'newspaper']" />
+            <span class="mx-4 font-semibold">Submissões</span>
+          </router-link>
+          <router-link class="flex items-center px-4 py-2 mt-2 duration-200"
+            :class="[$route.name === 'AdvisorCourses' ? activeClass : inactiveClass]" to="/mycourses">
+            <font-awesome-icon :icon="['fas', 'graduation-cap']" />
+            <span class="mx-4 font-semibold">Meus cursos</span>
+          </router-link>
         </div>     
 
         <div v-if="roleUser == '3:AUTHOR'">

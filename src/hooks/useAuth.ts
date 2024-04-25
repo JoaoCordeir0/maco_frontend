@@ -21,7 +21,9 @@ export async function apiLogin(email, password) {
 
     if (data.token != undefined) 
     {       
+        localStorage.clear()
         localStorage.setItem('user-token', data.token)     
+        localStorage.setItem('user-id', data.user.id)     
         localStorage.setItem('user-name', data.user.name)     
         localStorage.setItem('user-email', data.user.email)     
         localStorage.setItem('user-ra', data.user.ra)     
@@ -71,9 +73,9 @@ export function getUserRole(modestring = false) {
 }
 
 export function credentials() {
-    const url = String(endpointUrl)
-    const token = String(localStorage.getItem('user-token'))
-    const authBearer = {'Authorization' : `Bearer ${token}`}
+    let url = String(endpointUrl)
+    let token = String(localStorage.getItem('user-token'))
+    let authBearer = {'Authorization' : `Bearer ${token}`}
 
     return {
         url,

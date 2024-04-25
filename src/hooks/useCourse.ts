@@ -17,6 +17,15 @@ export async function courseList() {
     return ref<ICourseState[]>(data)
 }
 
+export async function courseListByUser() {
+    let id = localStorage.getItem('user-id')
+    const { data } = await axios.get(`${api.url}/course/list/user/${id}`, {
+        headers: api.authBearer
+    })
+
+    return ref<ICourseState[]>(data)
+}
+
 export async function courseDetails(id) {
     const { data } = await axios.get(`${api.url}/course/list?id=${id}`, {
         headers: api.authBearer

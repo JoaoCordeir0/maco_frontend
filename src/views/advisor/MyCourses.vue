@@ -1,0 +1,82 @@
+<template>
+    <div class="mt-2">
+        <div class="bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2">
+            <div class="flex flex-wrap">
+                <p class="text-gray-500 font-semibold text-xl border-b-2">Meus Cursos</p>     
+                <span v-if="!infoLoaded">
+                    <Spinner />
+                </span>         
+                <div v-if="infonotnull" class="w-full mt-5">     
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">                        
+                        <div class="col max-w-sm rounded overflow-hidden shadow-lg" v-for="item in courses">
+                            <img class="w-full" :src="'/public/' + item.image" alt="Sunset in the mountains">
+                            <div class="px-6 py-4">
+                                <div class="font-bold text-xl mb-2">{{ item.name }}</div>
+                                <p class="text-gray-700 text-base">{{ item.description }}</p>
+                            </div>
+                            <div class="px-6 pb-2">
+                                <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#photography</span>
+                                <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#travel</span>
+                                <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#winter</span>
+                            </div>
+                        </div>                                            
+                    </div>                                   
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref, reactive, toRefs } from 'vue';
+import router from "../../router"
+import { ICourseState, courseListByUser } from '../../hooks/useCourse';
+import Spinner from "../../components/Spinner.vue"
+import Swal from "sweetalert2"
+
+const Toast = Swal.mixin({
+    toast: true, position: "top-end", showConfirmButton: false, timer: 3000, timerProgressBar: true,
+    didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+    }
+});
+
+export default defineComponent({
+    setup(){
+        const state: ICourseState = reactive({
+            isLoading: false,
+            message: ''
+        })
+
+        const infoLoaded = ref(false)     
+        const infonotnull = ref(false)   
+        const courses = ref()
+
+        return {
+            ...toRefs(state),         
+            courses, 
+            infoLoaded,
+            infonotnull,
+        }
+    }, 
+    methods: {
+        async loadCourses() {
+            const result = (await courseListByUser()).value
+            
+            if(result.length != 1) {
+                this.courses = result   
+                this.infonotnull = true             
+            } else {
+                Toast.fire({icon: 'warning', title: 'Nenhum curso encontrado'})      
+            }            
+            this.infoLoaded = true                 
+        },       
+    },  
+    beforeMount() {
+        this.loadCourses() 
+    },
+    components: { Spinner }
+})
+
+</script>

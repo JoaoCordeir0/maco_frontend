@@ -17,8 +17,26 @@ export async function articleList() {
     return ref<IArticleState[]>(data)
 }
 
+export async function submissionsList() {
+    let id = localStorage.getItem('user-id')
+    const { data } = await axios.get(`${api.url}/article/list/advisor/${id}`, {
+        headers: api.authBearer
+    })
+
+    return ref<IArticleState[]>(data)
+}
+
 export async function articleDetails(id) {
     const { data } = await axios.get(`${api.url}/article/list?article_id=${id}`, {
+        headers: api.authBearer
+    })
+
+    return ref<IArticleState[]>(data[0])
+}
+
+export async function submissionDetails(article) {
+    let id = localStorage.getItem('user-id')
+    const { data } = await axios.get(`${api.url}/article/list/advisor/${id}?article_id=${article}`, {
         headers: api.authBearer
     })
 
