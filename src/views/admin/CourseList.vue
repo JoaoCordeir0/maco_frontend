@@ -10,7 +10,7 @@
                     <table class="min-w-full leading-normal mt-5">
                         <thead>
                             <tr>
-                                <th class="px-5 text-start border-b-2">Id</th>
+                                <th class="px-5 text-start border-b-2">ID</th>
                                 <th class="px-5 text-start border-b-2">Nome</th>        
                                 <th class="px-5 text-start border-b-2">Descrição</th>                                
                                 <th class="px-5 text-start border-b-2">Ações</th>

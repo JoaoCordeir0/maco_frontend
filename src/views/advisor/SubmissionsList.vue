@@ -10,9 +10,10 @@
                     <table class="min-w-full leading-normal mt-5">
                         <thead>
                             <tr>
-                                <th class="px-5 text-start border-b-2">Id</th>
+                                <th class="px-5 text-start border-b-2">ID</th>
                                 <th class="px-5 text-start border-b-2">Título</th>        
-                                <th class="px-5 text-start border-b-2">Curso</th>        
+                                <th class="px-5 text-start border-b-2">Curso</th> 
+                                <th class="px-5 text-start border-b-2">Aluno</th>        
                                 <th class="px-5 text-start border-b-2">Status</th>
                                 <th class="px-5 text-start border-b-2">Ações</th>
                             </tr>
@@ -28,8 +29,11 @@
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
                                     <p class="text-gray-900 whitespace-nowrap">{{ item.course }}</p>
                                 </td>  
+                                <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                                    <p class="text-gray-900 whitespace-nowrap">{{ item.author }}</p>
+                                </td>  
                                 <td class="px-5 py-5 text-sm border-b border-gray-200">
-                                    <p class="text-gray-900 whitespace-nowrap"><span class="bg-cyan-500 rounded pt-1 pb-1 pr-3 pl-3 text-white">{{ item.status }}</span></p>
+                                    <p class="text-gray-900 whitespace-nowrap"><span class="bg-cyan-500 rounded pt-1 pb-1 pr-3 pl-3 text-white">Em revisão</span></p>
                                 </td>                                
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200 min-w-72">
                                     <div class="sm:inline-block">                                        
@@ -40,6 +44,9 @@
                         </tbody>
                     </table>
                 </div>
+                <div v-else class="overflow-x-auto inline-block min-w-full rounded-lg mt-5">                    
+                   <p>Nenhum artigo disponível</p>
+                </div>
             </div>
         </div>
     </div>
@@ -48,7 +55,7 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue';
 import router from "../../router"
-import { IArticleState, articleList, articleAdd, submissionsList } from '../../hooks/useArticle';
+import { IArticleState, submissionsList } from '../../hooks/useArticle';
 import Spinner from "../../components/Spinner.vue"
 import Swal from "sweetalert2"
 
@@ -81,8 +88,8 @@ export default defineComponent({
     methods: {
         async loadArticles() {
             const result = (await submissionsList()).value // Consome a API
-                
-            if(result.length != 1) {
+
+            if(result[0] != undefined) {
                 this.articles = result
                 this.infonotnull = true
             } else {

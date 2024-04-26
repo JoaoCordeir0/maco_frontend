@@ -14,6 +14,7 @@ import { /* Project icons */
     faRightLeft,
     faArrowUpFromBracket,
     faGraduationCap,
+    faShareFromSquare,
 } from '@fortawesome/free-solid-svg-icons'
 
 import App from './App.vue';
@@ -38,6 +39,6 @@ app.use(VueSweetalert2);
 app.use(router);
 
 /* add icons to the library */
-library.add(faChartLine, faScroll, faFloppyDisk, faPenToSquare, faTrash, faNewspaper, faFileWord, faEye, faUsers, faRightLeft, faArrowUpFromBracket, faGraduationCap) 
+library.add(faChartLine, faScroll, faFloppyDisk, faPenToSquare, faTrash, faNewspaper, faFileWord, faEye, faUsers, faRightLeft, faArrowUpFromBracket, faGraduationCap, faShareFromSquare) 
 
 app.mount('#app');

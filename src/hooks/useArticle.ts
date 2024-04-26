@@ -56,3 +56,15 @@ export async function articleAdd(infos) {
 
     return data
 }
+
+export async function articleEditStatus(article, status) {
+    var params = new URLSearchParams()
+    params.append('id', article)
+    params.append('status', status)    
+
+    const { data } = await axios.post(`${api.url}/article/status`, params, {
+        headers: api.authBearer
+    })
+
+    return data
+}

@@ -95,10 +95,26 @@ export default defineComponent({
       state.message = result.value['message']
       state.token = result.value['token']
 
-      if (state.token != undefined) {
-        Toast.fire({icon: 'success', title: 'Bem vindo ' + localStorage.getItem('user-name') });
+      if (state.token != undefined) {        
         state.isLoading = false
-        router.push('dashboard')
+        let timerInterval;
+        Swal.fire({
+            toast: true, 
+            position: "top-end", 
+            showConfirmButton: false, 
+            icon: "success",
+            title: "Sucesso! Redirecionando...",            
+            timer: 1000,
+            timerProgressBar: true,
+            didOpen: () => {},
+            willClose: () => {
+                clearInterval(timerInterval);
+            }
+            }).then((result) => {            
+            if (result.dismiss === Swal.DismissReason.timer) {
+                location.href = '/dashboard'
+            }
+        });        
       } else {
         Toast.fire({
           icon: 'error',

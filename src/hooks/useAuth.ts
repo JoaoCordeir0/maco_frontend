@@ -28,7 +28,7 @@ export async function apiLogin(email, password) {
         localStorage.setItem('user-email', data.user.email)     
         localStorage.setItem('user-ra', data.user.ra)     
         localStorage.setItem('user-role', data.user.role)     
-        localStorage.setItem('user-auth-day', (new Date()).getDate().toString())
+        localStorage.setItem('user-auth-day', (new Date()).getDate().toString())        
     }
 
     const loginData = ref<ILoginState[]>(data);    
