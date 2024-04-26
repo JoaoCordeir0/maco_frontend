@@ -53,9 +53,11 @@
         </div>     
 
         <div v-if="roleUser == '3:AUTHOR'">
-            <!-- 
-              Fazer os menu dos autores 
-            -->
+          <router-link class="flex items-center px-4 py-2 mt-2 duration-200"
+            :class="[$route.name === 'NewArticle' ? activeClass : inactiveClass]" to="/newarticle">
+            <font-awesome-icon :icon="['fas', 'file-circle-plus']" />
+            <span class="mx-4 font-semibold">Submeter artigo</span>
+          </router-link>
         </div>     
       </nav>
 

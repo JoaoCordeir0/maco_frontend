@@ -14,6 +14,7 @@ import NotFound from './views/NotFound.vue'
 import SubmissionsList from './views/advisor/SubmissionsList.vue'
 import Submission from './views/advisor/Submission.vue'
 import MyCourses from './views/advisor/MyCourses.vue'
+import NewArticle from './views/author/NewArticle.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -95,6 +96,14 @@ const routes: RouteRecordRaw[] = [
     beforeEnter: authAdvisor
   },
   
+  // Author routes
+  {
+    path: '/newarticle',
+    name: 'NewArticle',
+    component: NewArticle,
+    beforeEnter: authAuthor
+  },
+
   {
     path: '/dashboard',
     name: 'Dashboard',
