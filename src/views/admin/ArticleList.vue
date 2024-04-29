@@ -38,7 +38,7 @@
                                     <p class="text-gray-900 whitespace-nowrap">{{ item.course }}</p>
                                 </td>  
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                    <p class="text-gray-900 whitespace-nowrap">{{ item.status }}</p>
+                                    <p class="text-gray-900 whitespace-nowrap"><span :class="getColorArticleStatus(item.status)" class="rounded pt-1 pb-1 pr-3 pl-3 text-white">{{ formatArticleStatus(item.status) }}</span></p>
                                 </td>                                
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200 min-w-72">
                                     <div class="sm:inline-block">                                        
@@ -108,7 +108,49 @@ export default defineComponent({
                 Toast.fire({icon: 'warning', title: 'Nenhum artigo encontrado'})
             }        
             this.infoLoaded = true        
-        }
+        },
+        formatArticleStatus(status) {
+            let newStatus = ''
+            switch(status) {
+                case 'in_submission':
+                    newStatus = 'Em submissão'
+                    break
+                case 'in_revision':
+                    newStatus = 'Em revisão'
+                    break
+                case 'in_correction':
+                    newStatus = 'Em correção'
+                    break
+                case 'approved':
+                    newStatus = 'Aprovado'
+                    break  
+                case 'finished':
+                    newStatus = 'Finalizado'
+                    break   
+            }
+            return newStatus;
+        },
+        getColorArticleStatus(status) {
+            let color = ''
+            switch(status) {
+                case 'in_submission':
+                    color = 'bg-yellow-500'
+                    break
+                case 'in_revision':
+                    color = 'bg-cyan-500'
+                    break
+                case 'in_correction':
+                    color = 'bg-red-500'
+                    break
+                case 'approved':
+                    color = 'bg-grenn-500'
+                    break  
+                case 'finished':
+                    color = 'bg-grenn-800'
+                    break   
+            }
+            return color;
+        }           
     },   
     components: { Spinner, ArticleAdminFilter }
 })
