@@ -62,7 +62,7 @@
                                     <font-awesome-icon :icon="['fas', 'arrow-up-from-bracket']" /> &nbsp; Aprovar                                     
                                 </button>
 
-                                <button v-on:click="returnToStudent" type="button" class="px-12 py-2 mr-2 text-sm text-center text-white bg-orange-800 rounded-md focus:outline-none font-bold">                                    
+                                <button v-on:click="returnToAuthor" type="button" class="px-12 py-2 mr-2 text-sm text-center text-white bg-orange-800 rounded-md focus:outline-none font-bold">                                    
                                     <font-awesome-icon :icon="['fas', 'right-left']" /> &nbsp; Devolver para o aluno                                     
                                 </button>
 
@@ -96,7 +96,7 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue';
 import router from "../../router"
-import { IArticleState, submissionDetails, articleEditStatus } from '../../hooks/useArticle';
+import { IArticleState, submissionDetails, articleEditStatus, articleAddComment } from '../../hooks/useArticle';
 import Spinner from "../../components/Spinner.vue"
 import Swal from "sweetalert2"
 
@@ -175,26 +175,51 @@ export default defineComponent({
             }
                    
         },     
-        async returnToStudent() {
-            Swal.fire({
-                title: "Tem certeza?",
-                html: `Você está prestes a devolver este artigo para o aluno <b>${this.author_name}</b>. Está certo disso?`,
-                icon: "warning",
+        async returnToAuthor() {
+            const { value: comment } = await Swal.fire({
+                input: "textarea",
+                icon: "question",
+                inputLabel: "Informe o que deve ser corrigido no artigo.",               
                 showCancelButton: true,
-                confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Sim, devolver para o aluno!",
                 cancelButtonText: "Cancelar",
-            }).then(async (result) => {
-                if (result.isConfirmed) {                    
-                    const result = await articleEditStatus(this.$route.params.id, 3)
-                    if (result.status == 'success') {                
-                        Toast.fire({icon: 'success', title: 'Artigo devolvido para o aluno!'})     
-                        router.push('/submissions')
-                    } else
-                        Toast.fire({icon: 'error', title: result.message})  
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "Confirmar",
+                inputValidator: (value) => {
+                    return new Promise((resolve) => {
+                        if (value) {
+                            resolve();
+                        } else {
+                            resolve("Preencha essa informação!)");
+                        }
+                    });
                 }
-            });            
+            })
+
+            if (comment) {
+                Swal.fire({
+                    title: "Tem certeza?",
+                    html: `Você está prestes a devolver este artigo para o aluno <b>${this.author_name}</b>. Está certo disso?`,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Sim, devolver para o aluno!",
+                    cancelButtonText: "Cancelar",
+                }).then(async (result) => {
+                    if (result.isConfirmed) {                    
+                        const resultStatus = await articleEditStatus(this.$route.params.id, 3)
+                        const resultComment = await articleAddComment(this.$route.params.id, comment)
+
+                        if (resultStatus.status == 'success' && resultComment.status == 'success') {                
+                            Toast.fire({icon: 'success', title: 'Artigo devolvido para o aluno!'})     
+                            router.push('/submissions')
+                        } else {
+                            Toast.fire({icon: 'error', title: resultStatus.message + ' ' + resultComment.message})  
+                        }                            
+                    }
+                })      
+            }                  
         },
         async approveArticle() {
             Swal.fire({

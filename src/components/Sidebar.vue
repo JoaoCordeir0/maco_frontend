@@ -37,6 +37,11 @@
             <font-awesome-icon :icon="['fas', 'users']" />
             <span class="mx-4 font-semibold">Usuários</span>
           </router-link>
+          <router-link class="flex items-center px-4 py-2 mt-2 duration-200"
+            :class="[$route.name === 'EventSettings' ? activeClass : inactiveClass]" to="/settings">
+            <font-awesome-icon :icon="['fas', 'gear']" />
+            <span class="mx-4 font-semibold">Configurações</span>
+          </router-link>          
         </div>     
         
         <div v-if="roleUser == '2:ADVISOR'">

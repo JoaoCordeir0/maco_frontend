@@ -1,11 +1,20 @@
 <template>
     <div class="mt-2">
         <div class="bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2 mb-2">
-            <div class="flex flex-wrap">
-                <p class="text-gray-500 font-semibold text-xl border-b-2">Listagem de artigos</p>
-                <span v-if="!infoLoaded">
-                    <Spinner />
-                </span>
+            <div class="flex flex-wrap">              
+                <div class="w-full grid grid-cols-6 gap-4">                    
+                    <div class="col-start-1 col-end-8 ...">
+                        <p class="text-gray-500 font-semibold text-xl"><span class="border-b-2">Listagem de artigos</span>
+                            <span v-if="!infoLoaded">
+                                <Spinner />
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-end-10 col-span-2 ...">
+                        <ArticleAdminFilter @some-event="loadArticles" />
+                    </div>                
+                </div>
+                 
                 <div v-if="infonotnull" class="overflow-x-auto inline-block min-w-full rounded-lg">                    
                     <table class="min-w-full leading-normal mt-5">
                         <thead>
@@ -40,6 +49,9 @@
                         </tbody>
                     </table>
                 </div>
+                <div v-else class="overflow-x-auto inline-block min-w-full rounded-lg">
+                    <p class="mt-5">Nenhum artigo encontrado</p>
+                </div>
             </div>
         </div>
     </div>
@@ -47,9 +59,10 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue';
-import router from "../../router"
 import { IArticleState, articleList, articleAdd } from '../../hooks/useArticle';
 import Spinner from "../../components/Spinner.vue"
+import { eventList } from '../../hooks/useEvent';
+import ArticleAdminFilter from '../../components/filters/ArticleAdminFilter.vue';
 import Swal from "sweetalert2"
 
 const Toast = Swal.mixin({
@@ -68,21 +81,27 @@ export default defineComponent({
         })
 
         const articles = ref()
+        const filter = ref(false);
         const infonotnull = ref(false)
         const infoLoaded = ref(false)
 
         return {
             ...toRefs(state),
             articles,
+            filter,            
             infonotnull,
             infoLoaded,
         }
     },
     methods: {
-        async loadArticles(){
-            const result = (await articleList()).value // Consome a API
+        async loadArticles(filter){  
+            this.infoLoaded = false
+            this.infonotnull = false
+            this.articles = null
+
+            const result = (await articleList(filter)).value // Consome a API
                 
-            if(result.length != 1) {
+            if(result[0] != undefined) {
                 this.articles = result
                 this.infonotnull = true
             } else {
@@ -90,11 +109,8 @@ export default defineComponent({
             }        
             this.infoLoaded = true        
         }
-    },
-    beforeMount(){
-        this.loadArticles()
-    },
-    components: { Spinner }
+    },   
+    components: { Spinner, ArticleAdminFilter }
 })
 
 </script>

@@ -15,6 +15,7 @@ import SubmissionsList from './views/advisor/SubmissionsList.vue'
 import Submission from './views/advisor/Submission.vue'
 import MyCourses from './views/advisor/MyCourses.vue'
 import NewArticle from './views/author/NewArticle.vue'
+import Settings from './views/admin/Settings.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -73,6 +74,12 @@ const routes: RouteRecordRaw[] = [
     path: '/users',
     name: 'Users',
     component: UserList,
+    beforeEnter: authAdmin
+  },
+  {
+    path: '/settings',
+    name: 'EventSettings',
+    component: Settings,
     beforeEnter: authAdmin
   },
 
