@@ -7,8 +7,7 @@
     <div
         v-show="filter"
         @click="filter = false"
-        class="fixed inset-0 z-10 w-full h-full">
-        Filtro
+        class="fixed inset-0 z-10 w-full h-full">        
     </div>
     <transition
         enter-active-class="transition duration-150 ease-out transform"
@@ -22,7 +21,7 @@
             class="absolute right-10 z-20 p-3 mt-2 bg-white rounded-md shadow-xl border-2">       
             <p class="mt-2">Filtro pelo status do artigo</p>
             <select v-model="status" @change="$emit('someEvent', { status: status, course: course, event: event })" class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full">
-                <option value="0" selected>Todos os status</option>                
+                <!-- <option value="0" selected>Todos os status</option> -->
                 <option value="1">Artigos em submissão</option>
                 <option value="2">Artigos em revisão</option>
                 <option value="3">Artigos em correção</option>
@@ -37,7 +36,7 @@
             <br>
             <p>Filtro por evento</p>
             <select v-model="event" @change="$emit('someEvent', { status: status, course: course, event: event })" class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full">
-                <option value="0" selected>Todos os eventos</option>    
+                <!-- <option value="0" selected>Todos os eventos</option> -->
                 <option v-for="item in events" v-bind:value="item.id">{{ item.name }}</option>                        
             </select>
         </div>
@@ -52,7 +51,7 @@ import { eventList } from '../../hooks/useEvent';
 export default defineComponent({
     async setup(){       
         const filter = ref(false);        
-        const status = ref(0)
+        const status = ref(4)
         const course = ref(0)
         const event = ref(0)
         const events = ref()

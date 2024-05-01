@@ -10,7 +10,7 @@ export interface IArticleState {
 }
 
 export async function articleList(filter) {
-    let path = '/article/admin/list'
+    let path = '/article/list/admin'
     let char = '?'
     if (filter.status != undefined && filter.status != 0) {
         path = `${path}?article_status=${filter.status}`
@@ -33,7 +33,7 @@ export async function articleList(filter) {
 }
 
 export async function submissionsList() {    
-    const { data } = await axios.get(`${api.url}/article/advisor/list`, {
+    const { data } = await axios.get(`${api.url}/article/list/advisor`, {
         headers: api.authBearer
     })
 
@@ -41,7 +41,7 @@ export async function submissionsList() {
 }
 
 export async function articleDetails(id) {
-    const { data } = await axios.get(`${api.url}/article/admin/list?article_id=${id}`, {
+    const { data } = await axios.get(`${api.url}/article/list/admin?article_id=${id}`, {
         headers: api.authBearer
     })
 
@@ -49,7 +49,7 @@ export async function articleDetails(id) {
 }
 
 export async function submissionDetails(article) {
-    const { data } = await axios.get(`${api.url}/article/advisor/list?article_id=${article}`, {
+    const { data } = await axios.get(`${api.url}/article/list/advisor?article_id=${article}`, {
         headers: api.authBearer
     })
 

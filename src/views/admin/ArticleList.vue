@@ -143,7 +143,7 @@ export default defineComponent({
                     color = 'bg-red-500'
                     break
                 case 'approved':
-                    color = 'bg-grenn-500'
+                    color = 'bg-green-500'
                     break  
                 case 'finished':
                     color = 'bg-grenn-800'
