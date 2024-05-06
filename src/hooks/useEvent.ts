@@ -17,6 +17,14 @@ export async function eventList() {
     return ref<IEventState[]>(data)
 }
 
+export async function eventActiveList() {
+    const { data } = await axios.get(`${api.url}/event/list?status=1`, {
+        headers: api.authBearer
+    })
+
+    return ref<IEventState[]>(data)
+}
+
 export async function eventDetails(id) {
     const { data } = await axios.get(`${api.url}/event/list?event_id=${id}`, {
         headers: api.authBearer

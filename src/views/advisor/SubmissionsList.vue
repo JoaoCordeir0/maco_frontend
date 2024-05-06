@@ -87,7 +87,7 @@ export default defineComponent({
     },
     methods: {
         async loadArticles() {
-            const result = (await submissionsList()).value // Consome a API
+            const result = (await submissionsList('advisor', '')).value // Consome a API
 
             if(result[0] != undefined) {
                 this.articles = result

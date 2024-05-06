@@ -14,8 +14,9 @@ import NotFound from './views/NotFound.vue'
 import SubmissionsList from './views/advisor/SubmissionsList.vue'
 import Submission from './views/advisor/Submission.vue'
 import MyCourses from './views/advisor/MyCourses.vue'
-import NewArticle from './views/author/NewArticle.vue'
+import Submit from './views/author/Submit.vue'
 import Settings from './views/admin/Settings.vue'
+import Events from './views/author/Events.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -105,9 +106,15 @@ const routes: RouteRecordRaw[] = [
   
   // Author routes
   {
-    path: '/newarticle',
-    name: 'NewArticle',
-    component: NewArticle,
+    path: '/submit/:eventid',
+    name: 'Submit',
+    component: Submit,
+    beforeEnter: authAuthor
+  },
+  {
+    path: '/events',
+    name: 'Events',
+    component: Events,
     beforeEnter: authAuthor
   },
 

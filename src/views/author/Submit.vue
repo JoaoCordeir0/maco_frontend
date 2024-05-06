@@ -78,7 +78,8 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue';
 import router from "../../router"
-import { IArticleState } from '../../hooks/useArticle';
+import { IArticleState, articleAdd } from '../../hooks/useArticle';
+import { eventDetails } from '../../hooks/useEvent';
 import Swal from "sweetalert2"
 
 const Toast = Swal.mixin({
@@ -107,10 +108,6 @@ export default defineComponent({
         const course = ref("")      
         const article_status = ref("")  
 
-        async function saveArticle() {
-            state.isLoading = true            
-        }
-
         return {
             ...toRefs(state),            
             pageTitle,
@@ -122,14 +119,29 @@ export default defineComponent({
             summary,
             status,
             course,    
-            article_status,        
-            saveArticle
+            article_status,                    
         }
     }, 
     methods: {         
+        async loadEvent() {
+            const result = (await eventDetails(this.$route.params.eventid)).value
+        },
+        async saveArticle() {}
     },
     beforeMount() {
         this.pageTitle = 'Submissão'
+        this.loadEvent()
+
+        // Salva o pré 
+        // articleAdd({
+        //     'event': this.$route.params.eventid,
+        //     'title': ' ',
+        //     'authors': ' ',
+        //     'advisors': ' ',
+        //     'keywords': ' ',
+        //     'summary': ' ',
+        //     'status': 1
+        // })        
     },    
 })
 

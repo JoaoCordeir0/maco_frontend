@@ -32,8 +32,8 @@ export async function articleList(filter) {
     return ref<IArticleState[]>(data)
 }
 
-export async function submissionsList() {    
-    const { data } = await axios.get(`${api.url}/article/list/advisor`, {
+export async function submissionsList(level, filter) {    
+    const { data } = await axios.get(`${api.url}/article/list/${level}?${filter}`, {
         headers: api.authBearer
     })
 
@@ -58,11 +58,13 @@ export async function submissionDetails(article) {
 
 export async function articleAdd(infos) {
     var params = new URLSearchParams()    
+    params.append('event', infos.event)
     params.append('title', infos.title)
-    params.append('author', infos.author)
-    params.append('advisor', infos.advisor)
-    params.append('keyword', infos.keyword)
+    params.append('authors', infos.authors)
+    params.append('advisors', infos.advisors)
+    params.append('keywords', infos.keywords)
     params.append('summary', infos.summary)
+    params.append('status', infos.status)
        
     const { data } = await axios.post(`${api.url}/article/add`, params, {
         headers: api.authBearer
