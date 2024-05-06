@@ -2,8 +2,11 @@
     <div class="mt-2">
         <div class="bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2">
             <div class="flex flex-wrap">
-                <p class="text-gray-500 font-semibold text-xl border-b-2"> {{ pageTitle }} </p>                
-                <div class="w-full">                    
+                <p class="text-gray-500 font-semibold text-xl border-b-2"> {{ pageTitle }} <span>{{ eventName }}</span></p>
+                <span v-if="!infoLoaded">
+                    <Spinner />
+                </span>
+                <div class="w-full">                        
                     <form class="mt-4" @submit.prevent="saveArticle">
                         <div class="grid grid-cols-1 gap-4 md:grid-cols-1 xl:grid-cols-1">
                             <div class="...">
@@ -78,9 +81,10 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue';
 import router from "../../router"
-import { IArticleState, articleAdd } from '../../hooks/useArticle';
+import { IArticleState, articleAdd, submissionDetails } from '../../hooks/useArticle';
 import { eventDetails } from '../../hooks/useEvent';
 import Swal from "sweetalert2"
+import Spinner from "../../components/Spinner.vue"
 
 const Toast = Swal.mixin({
     toast: true, position: "top-end", showConfirmButton: false, timer: 3000, timerProgressBar: true,
@@ -97,6 +101,8 @@ export default defineComponent({
             message: ''
         })
         
+        const eventID = ref()
+        const articleID = ref()
         const pageTitle = ref("")
         const id = ref("")
         const title = ref("")
@@ -107,9 +113,13 @@ export default defineComponent({
         const status = ref("")
         const course = ref("")      
         const article_status = ref("")  
+        const infoLoaded = ref(false)
+        const eventName = ref("")
 
         return {
             ...toRefs(state),            
+            eventID,
+            articleID,
             pageTitle,
             id,
             title,
@@ -119,30 +129,94 @@ export default defineComponent({
             summary,
             status,
             course,    
-            article_status,                    
+            article_status,     
+            infoLoaded,      
+            eventName,         
         }
     }, 
-    methods: {         
-        async loadEvent() {
-            const result = (await eventDetails(this.$route.params.eventid)).value
-        },
-        async saveArticle() {}
-    },
-    beforeMount() {
-        this.pageTitle = 'Submissão'
-        this.loadEvent()
+    methods: {   
+        async loadPageSettings() {
+            this.eventID = sessionStorage.getItem('event-id-selected')
+            this.articleID = this.$route.params.articleid
 
-        // Salva o pré 
-        // articleAdd({
-        //     'event': this.$route.params.eventid,
-        //     'title': ' ',
-        //     'authors': ' ',
-        //     'advisors': ' ',
-        //     'keywords': ' ',
-        //     'summary': ' ',
-        //     'status': 1
-        // })        
+            if (this.eventID == undefined && this.articleID == '') {
+                Swal.fire({
+                    icon: 'error', 
+                    title: 'Evento ou artigo não selecionado!',
+                    toast: true, 
+                    position: "top-end", 
+                    showConfirmButton: false, 
+                    timer: 3000, 
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                })    
+                router.push('/events')
+            }      
+           
+            if (sessionStorage.getItem('article-added') == 'n' && this.articleID == '') { 
+                await this.createArticle()
+            } else {
+                await this.loadArticle(this.articleID)
+            }              
+        },  
+        async createArticle() {
+            const article = await articleAdd({
+                'event': this.eventID,
+                'title': ' ',
+                'authors': ' ',
+                'advisors': ' ',
+                'keywords': ' ',
+                'summary': ' ',
+                'status': 1
+            })                
+            sessionStorage.setItem('article-added', 'y')            
+            this.infoLoaded = true                        
+            this.loadArticle(article.returnid)
+            router.push(`/submit/${article.returnid}`)    
+        },  
+        async loadArticle(articleID) {                    
+            const resultArticle = await submissionDetails('author', articleID)                            
+            if (resultArticle.value == undefined) {
+                Swal.fire({
+                    icon: 'error', 
+                    title: 'Artigo não encontrado!',
+                    toast: true, 
+                    position: "top-end", 
+                    showConfirmButton: false, 
+                    timer: 3000, 
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                })    
+                router.push('/events')
+            }
+
+            this.eventID = resultArticle.value['event']                
+            const resultEvent = await eventDetails(this.eventID)               
+            
+            this.title = resultArticle.value['title'] != ' ' ? resultArticle.value['title'] : ''
+            this.authors = resultArticle.value['authors'] != ' ' ? resultArticle.value['authors'] : ''
+            this.advisors = resultArticle.value['advisors'] != ' ' ? resultArticle.value['advisors'] : ''
+            this.keywords = resultArticle.value['keywords'] != ' ' ? resultArticle.value['keywords'] : ''
+            this.summary = resultArticle.value['summary'] != ' ' ? resultArticle.value['summary'] : ''        
+            this.eventName = ' - ' + resultEvent.value['name']
+            this.infoLoaded = true            
+        },
+        async saveArticle() {
+            console.log(this.$route.params.articleid) 
+            console.log(this.title)           
+        },      
+    },
+    beforeMount() {              
+        this.loadPageSettings()             
+        this.pageTitle = 'Submissão'               
     },    
+    components: { Spinner }
 })
 
 </script>

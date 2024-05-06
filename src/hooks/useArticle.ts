@@ -40,20 +40,20 @@ export async function submissionsList(level, filter) {
     return ref<IArticleState[]>(data)
 }
 
-export async function articleDetails(id) {
-    const { data } = await axios.get(`${api.url}/article/list/admin?article_id=${id}`, {
+export async function submissionDetails(level, article) {
+    const { data } = await axios.get(`${api.url}/article/list/${level}?article_id=${article}`, {
         headers: api.authBearer
     })
 
     return ref<IArticleState[]>(data[0])
 }
 
-export async function submissionDetails(article) {
-    const { data } = await axios.get(`${api.url}/article/list/advisor?article_id=${article}`, {
+export async function submissionDelete(articleID) {
+    const { data } = await axios.delete(`${api.url}/article/del/${articleID}`, {
         headers: api.authBearer
     })
 
-    return ref<IArticleState[]>(data[0])
+    return data
 }
 
 export async function articleAdd(infos) {

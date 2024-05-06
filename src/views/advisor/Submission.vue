@@ -153,7 +153,7 @@ export default defineComponent({
     }, 
     methods: {
         async loadSubmission() {
-            const result = await submissionDetails(this.$route.params.id)                                
+            const result = await submissionDetails('advisor', this.$route.params.id)                                
             
             try {
                 if (result.value['title'] == undefined) {

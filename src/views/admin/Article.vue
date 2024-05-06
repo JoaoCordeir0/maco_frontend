@@ -85,7 +85,7 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue';
 import router from "../../router"
-import { IArticleState, articleDetails } from '../../hooks/useArticle';
+import { IArticleState, submissionDetails } from '../../hooks/useArticle';
 import Spinner from "../../components/Spinner.vue"
 import Swal from "sweetalert2"
 
@@ -138,7 +138,7 @@ export default defineComponent({
     }, 
     methods: {
         async loadArticle() {
-            const result = await articleDetails(this.$route.params.action)                                
+            const result = await submissionDetails('admin', this.$route.params.action)                                
 
             if (result.value['title'] == undefined) 
                 Toast.fire({icon: 'error', title: 'Artigo não encontrado!'})

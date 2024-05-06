@@ -106,7 +106,7 @@ const routes: RouteRecordRaw[] = [
   
   // Author routes
   {
-    path: '/submit/:eventid',
+    path: '/submit/:articleid?',
     name: 'Submit',
     component: Submit,
     beforeEnter: authAuthor
