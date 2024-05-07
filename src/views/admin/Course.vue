@@ -28,10 +28,6 @@
                         </div>
                         <div v-if="infoLoaded" class="mt-5">
                             <div class="flex justify-end">
-                                <button v-if="isEdit" type="button" v-on:click="delCategory(id)" class="px-12 py-2 mr-2 text-sm text-center text-white bg-red-800 rounded-md focus:outline-none font-bold">                                    
-                                    <font-awesome-icon :icon="['fas', 'trash']" /> &nbsp; Excluir                                    
-                                </button>
-
                                 <button type="submit" :disabled="isLoading"
                                     class="px-12 py-2 text-sm text-center text-white bg-gray-900 rounded-md focus:outline-none font-bold">
                                     <span v-if="isLoading == false">
@@ -62,7 +58,7 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from "vue"
 import router from "../../router"
-import { ICourseState, courseAdd, courseDetails, courseEdit, courseDel } from "../../hooks/useCourse"
+import { ICourseState, courseAdd, courseDetails, courseEdit } from "../../hooks/useCourse"
 import Spinner from "../../components/Spinner.vue"
 import Swal from "sweetalert2"
 
@@ -144,28 +140,7 @@ export default defineComponent({
             this.name = result.value['name']
             this.description = result.value['description']            
             this.infoLoaded = true          
-        },
-        async delCategory(id) {
-            Swal.fire({
-                title: "Tem certeza?",
-                text: "Você não poderá reverter isso!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Sim, excluir!",
-                cancelButtonText: "Cancelar",
-            }).then(async (result) => {
-                if (result.isConfirmed) {                    
-                    const result = await courseDel(id)
-                    if (result.status == 'success') {                
-                        Toast.fire({icon: 'success', title: 'Curso excluído!'})     
-                        router.push('/courses')
-                    } else
-                        Toast.fire({icon: 'error', title: result.message})  
-                }
-            });            
-        }
+        },       
     },
     beforeMount() {
         switch (router.currentRoute.value.params.action) {

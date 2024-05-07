@@ -54,11 +54,3 @@ export async function courseEdit(infos) {
 
     return data
 }
-
-export async function courseDel(id) {        
-    const { data } = await axios.delete(`${api.url}/course/del/${id}`, {
-        headers: api.authBearer
-    })
-
-    return data
-}

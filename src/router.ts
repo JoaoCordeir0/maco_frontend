@@ -73,7 +73,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/users',
-    name: 'Users',
+    name: 'UsersList',
     component: UserList,
     beforeEnter: authAdmin
   },

@@ -30,7 +30,7 @@
                                     <p class="text-gray-900 whitespace-nowrap">{{ formatCPF(item.cpf) }}</p>
                                 </td>                                  
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                    <p class="text-gray-900 whitespace-nowrap">{{ item.course }}</p>
+                                    <p class="text-gray-900 whitespace-nowrap">{{ formatCourse(item.courses) }}</p>
                                 </td>  
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
                                     <p class="text-gray-900 whitespace-nowrap">{{ getRole(item.role) }}</p>
@@ -108,6 +108,21 @@ export default defineComponent({
                     break;
             }
             return paper
+        },
+        formatCourse(courses) {            
+            let courses_array : string[] = [];
+            let courses_str = ''
+            for(let c = 0; c < Object.keys(courses).length; c++) {
+                try {                    
+                    if (! courses_array.includes(courses[c].name)){
+                        courses_array.push(courses[c].name)
+                    }                                        
+                } catch(e) {}                
+            }
+            courses_array.forEach(item => {
+                courses_str += item + ' / '
+            });
+            return courses_str.slice(0, -3)           
         }
     },
     beforeMount() {

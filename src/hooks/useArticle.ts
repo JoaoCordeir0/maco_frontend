@@ -56,6 +56,14 @@ export async function submissionDelete(articleID) {
     return data
 }
 
+export async function authorDelete(article, user) {    
+    const { data } = await axios.delete(`${api.url}/article/author/del/${article}/${user}`, {
+        headers: api.authBearer,        
+    })
+
+    return data
+}
+
 export async function articleAdd(infos) {
     var params = new URLSearchParams()    
     params.append('event', infos.event)

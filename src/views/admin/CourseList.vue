@@ -29,8 +29,7 @@
                                 </td>                                
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200 min-w-72">
                                     <div class="sm:inline-block">                                        
-                                        <a :href="`/course/${item.id}`" class="sm:px-5 sm:py-2 px-5 bg-gray-900 m-2 mt-2 text-white rounded"><font-awesome-icon :icon="['fas', 'pen-to-square']" /> <span class="hidden lg:inline">Editar</span></a>
-                                        <a href="#del" v-on:click="delCourse(item.id)" class="sm:px-5 sm:py-2 px-5 bg-red-800 m-2 mt-2 text-white rounded"><font-awesome-icon :icon="['fas', 'trash']" /> <span class="hidden lg:inline">Excluir</span></a>
+                                        <a :href="`/course/${item.id}`" class="sm:px-5 sm:py-2 px-5 bg-gray-900 m-2 mt-2 text-white rounded"><font-awesome-icon :icon="['fas', 'pen-to-square']" /> <span class="hidden lg:inline">Editar</span></a>                                        
                                     </div>                                    
                                 </td>
                             </tr>
@@ -45,7 +44,7 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from "vue"
 import Spinner from "../../components/Spinner.vue"
-import { ICourseState, courseList, courseDel } from "../../hooks/useCourse"
+import { ICourseState, courseList } from "../../hooks/useCourse"
 import Swal from "sweetalert2"
 
 const Toast = Swal.mixin({
@@ -84,28 +83,7 @@ export default defineComponent({
                 Toast.fire({icon: 'warning', title: 'Nenhum curso encontrado'})      
             }            
             this.infoLoaded = true                                          
-        },      
-        delCourse(id) {
-            Swal.fire({
-                title: "Tem certeza?",
-                text: "Você não poderá reverter isso!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Sim, excluir!",
-                cancelButtonText: "Cancelar",
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    const result = await courseDel(id)
-                    if (result.status == 'success') {                
-                        Toast.fire({icon: 'success', title: 'Curso excluído!'})     
-                        this.loadCourses()
-                    } else
-                        Toast.fire({icon: 'error', title: result.message})  
-                }
-            });       
-        }
+        },                    
     },
     beforeMount() {
         this.loadCourses()
