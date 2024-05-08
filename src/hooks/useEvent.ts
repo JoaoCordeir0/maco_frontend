@@ -34,22 +34,34 @@ export async function eventDetails(id) {
 }
 
 export async function eventAdd(infos) {    
-    var params = new URLSearchParams()
-    params.append('name', infos.name)
-    params.append('description', infos.description)    
+    let params = {        
+        'name': infos.name,
+        'start': infos.start, 
+        'end': infos.end,
+        'number_characters': infos.chars,
+        'status': infos.status
+    }   
 
-    const { data } = await axios.post(`${api.url}/event/add`, params)
+    const { data } = await axios.post(`${api.url}/event/add`, params, {
+        headers: api.authBearer
+    })
 
     return data
 }
 
 export async function eventEdit(infos) {
-    var params = new URLSearchParams()
-    params.append('id', infos.id)
-    params.append('name', infos.name)
-    params.append('description', infos.description)    
+    let params = {
+        'id': infos.id,
+        'name': infos.name,
+        'start': infos.start, 
+        'end': infos.end,
+        'number_characters': infos.chars,
+        'status': infos.status
+    }
 
-    const { data } = await axios.post(`${api.url}/event/edit`, params)
+    const { data } = await axios.post(`${api.url}/event/edit`, params, {
+        headers: api.authBearer
+    })
 
     return data
 }

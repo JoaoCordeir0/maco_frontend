@@ -61,14 +61,7 @@ import router from "../../router"
 import { ICourseState, courseAdd, courseDetails, courseEdit } from "../../hooks/useCourse"
 import Spinner from "../../components/Spinner.vue"
 import Swal from "sweetalert2"
-
-const Toast = Swal.mixin({
-    toast: true, position: "top-end", showConfirmButton: false, timer: 3000, timerProgressBar: true,
-    didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-    }
-});
+import { Toast } from "../../hooks/useToast"
 
 export default defineComponent({
     setup() {
@@ -88,7 +81,7 @@ export default defineComponent({
             state.isLoading = true
 
             if (name.value == "") {
-                Toast.fire({icon: 'warning', title: 'Informe o nome do curso!'})
+                Toast().fire({icon: 'warning', title: 'Informe o nome do curso!'})
                 state.isLoading = false
                 return
             }            
@@ -99,9 +92,9 @@ export default defineComponent({
                     description: description.value,                    
                 })
                 if (result.status == 'success')
-                    Toast.fire({icon: 'success', title: 'Curso gravado!'})
+                    Toast().fire({icon: 'success', title: 'Curso gravado!'})
                 else
-                    Toast.fire({icon: 'error', title: result.message})
+                    Toast().fire({icon: 'error', title: result.message})
             } else {
                 const result = await courseEdit({
                     id: id.value,
@@ -109,9 +102,9 @@ export default defineComponent({
                     description: description.value,                    
                 })
                 if (result.status == 'success')
-                    Toast.fire({icon: 'success', title: 'Curso editado!'})
+                    Toast().fire({icon: 'success', title: 'Curso editado!'})
                 else
-                    Toast.fire({icon: 'error', title: result.message})
+                    Toast().fire({icon: 'error', title: result.message})
             }
             
             state.isLoading = false
@@ -134,7 +127,7 @@ export default defineComponent({
             const result = await courseDetails(this.$route.params.action)                                
 
             if (result.value['name'] == undefined) 
-                Toast.fire({icon: 'error', title: 'Curso não encontrado!'})
+                Toast().fire({icon: 'error', title: 'Curso não encontrado!'})
             
             this.id = result.value['id']
             this.name = result.value['name']

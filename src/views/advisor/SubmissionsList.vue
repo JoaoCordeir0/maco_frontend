@@ -54,18 +54,9 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue';
-import router from "../../router"
 import { IArticleState, submissionsList } from '../../hooks/useArticle';
 import Spinner from "../../components/Spinner.vue"
-import Swal from "sweetalert2"
-
-const Toast = Swal.mixin({
-    toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true,
-    didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-    }
-})
+import { Toast } from '../../hooks/useToast';
 
 export default defineComponent({
     async setup(){
@@ -93,7 +84,7 @@ export default defineComponent({
                 this.articles = result
                 this.infonotnull = true
             } else {
-                Toast.fire({icon: 'warning', title: 'Nenhum artigo encontrado'})
+                Toast().fire({icon: 'warning', title: 'Nenhum artigo encontrado'})
             }        
             this.infoLoaded = true        
         }

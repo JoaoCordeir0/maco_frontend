@@ -52,14 +52,7 @@ import { defineComponent, ref, reactive, toRefs } from "vue"
 import Spinner from "../../components/Spinner.vue"
 import { IUserState, userList, userDel } from "../../hooks/useUser"
 import Swal from "sweetalert2"
-
-const Toast = Swal.mixin({
-    toast: true, position: "top-end", showConfirmButton: false, timer: 3000, timerProgressBar: true,
-    didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-    }
-});
+import { Toast } from "../../hooks/useToast"
 
 export default defineComponent({
     async setup() {
@@ -86,7 +79,7 @@ export default defineComponent({
                 this.users = result
                 this.infonotnull = true
             } else {
-                Toast.fire({icon: 'warning', title: 'Nenhum usuário encontrado'})      
+                Toast().fire({icon: 'warning', title: 'Nenhum usuário encontrado'})      
             }            
             this.infoLoaded = true                                          
         },             

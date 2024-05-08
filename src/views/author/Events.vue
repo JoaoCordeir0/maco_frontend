@@ -66,6 +66,7 @@ import Spinner from "../../components/Spinner.vue"
 import Swal from "sweetalert2"
 import { format } from 'date-fns';
 import router from '../../router';
+import { Toast } from '../../hooks/useToast';
 
 export default defineComponent({
     setup(){
@@ -107,19 +108,7 @@ export default defineComponent({
                 this.events = result   
                 this.infonotnull = true             
             } else {
-                Swal.fire({
-                    icon: 'warning', 
-                    title: 'Nenhum evento encontrado',
-                    toast: true, 
-                    position: "top-end", 
-                    showConfirmButton: false, 
-                    timer: 3000, 
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                        toast.onmouseenter = Swal.stopTimer;
-                        toast.onmouseleave = Swal.resumeTimer;
-                    }
-                })      
+                Toast().fire({icon: 'warning', title: 'Nenhum evento encontrado'})                     
             }            
             this.infoLoaded = true                 
         },       
@@ -145,36 +134,11 @@ export default defineComponent({
             }).then(async (result) => {
                 if (result.isConfirmed) {                    
                     const result = await submissionDelete(articleID)
-
-                    if (result.status == 'success') {                
-                        Swal.fire({
-                            icon: 'success', 
-                            title: 'Artigo excluído com sucesso',
-                            toast: true, 
-                            position: "top-end", 
-                            showConfirmButton: false, 
-                            timer: 3000, 
-                            timerProgressBar: true,
-                            didOpen: (toast) => {
-                                toast.onmouseenter = Swal.stopTimer;
-                                toast.onmouseleave = Swal.resumeTimer;
-                            }
-                        })   
+                    if (result.status == 'success') {                            
+                        Toast().fire({icon: 'success', title: 'Artigo excluído com sucesso'})      
                         this.loadArticlesIncomplete()
-                    } else {
-                        Swal.fire({
-                            icon: 'error', 
-                            title: 'Erro ao excluir',
-                            toast: true, 
-                            position: "top-end", 
-                            showConfirmButton: false, 
-                            timer: 3000, 
-                            timerProgressBar: true,
-                            didOpen: (toast) => {
-                                toast.onmouseenter = Swal.stopTimer;
-                                toast.onmouseleave = Swal.resumeTimer;
-                            }
-                        })   
+                    } else {                 
+                        Toast().fire({icon: 'error', title: 'Erro ao excluir'})        
                     }                            
                 }
             })      

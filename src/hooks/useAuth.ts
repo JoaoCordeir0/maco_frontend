@@ -75,7 +75,10 @@ export function getUserRole(modestring = false) {
 export async function credentials() {
     let url = String(endpointUrl)
     let token = String(localStorage.getItem('user-token'))
-    let authBearer = {'Authorization' : `Bearer ${token}`}
+    let authBearer = {
+        'Content-Type': 'application/json',
+        'Authorization' : `Bearer ${token}`,
+    }
 
     return {
         url,

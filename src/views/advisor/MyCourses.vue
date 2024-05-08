@@ -33,14 +33,7 @@ import router from "../../router"
 import { ICourseState, courseListByUser } from '../../hooks/useCourse';
 import Spinner from "../../components/Spinner.vue"
 import Swal from "sweetalert2"
-
-const Toast = Swal.mixin({
-    toast: true, position: "top-end", showConfirmButton: false, timer: 3000, timerProgressBar: true,
-    didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-    }
-});
+import { Toast } from '../../hooks/useToast';
 
 export default defineComponent({
     setup(){
@@ -68,7 +61,7 @@ export default defineComponent({
                 this.courses = result   
                 this.infonotnull = true             
             } else {
-                Toast.fire({icon: 'warning', title: 'Nenhum curso encontrado'})      
+                Toast().fire({icon: 'warning', title: 'Nenhum curso encontrado'})      
             }            
             this.infoLoaded = true                 
         },       

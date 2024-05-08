@@ -64,15 +64,7 @@ export async function authorDelete(article, user) {
     return data
 }
 
-export async function articleAdd(infos) {
-    var params = new URLSearchParams()    
-    params.append('event', infos.event)
-    params.append('title', infos.title)
-    params.append('authors', infos.authors)
-    params.append('advisors', infos.advisors)
-    params.append('keywords', infos.keywords)
-    params.append('summary', infos.summary)
-    params.append('status', infos.status)
+export async function articleAdd(params) {
        
     const { data } = await axios.post(`${api.url}/article/add`, params, {
         headers: api.authBearer
@@ -82,9 +74,10 @@ export async function articleAdd(infos) {
 }
 
 export async function articleEditStatus(article, status) {
-    var params = new URLSearchParams()
-    params.append('id', article)
-    params.append('status', status)    
+    let params = {
+        'id': article,
+        'status': status,
+    }
 
     const { data } = await axios.post(`${api.url}/article/status`, params, {
         headers: api.authBearer
@@ -94,9 +87,10 @@ export async function articleEditStatus(article, status) {
 }
 
 export async function articleAddComment(article, comment) {    
-    var params = new URLSearchParams()
-    params.append('article', article)    
-    params.append('comment', comment)    
+    let params = {
+        'article': article,
+        'comment': comment,
+    }
 
     const { data } = await axios.post(`${api.url}/article/comment`, params, {
         headers: api.authBearer

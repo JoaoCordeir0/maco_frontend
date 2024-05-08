@@ -1,11 +1,21 @@
 <template>
     <div class="mt-2">
         <div class="bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2">
-            <div class="flex flex-wrap">
-                <p class="text-gray-500 font-semibold text-xl border-b-2">Configurações de evento</p>     
-                <span v-if="!infoLoaded">
-                    <Spinner />
-                </span>         
+            <div class="flex flex-wrap">        
+                <div class="w-full grid grid-cols-6 gap-4">                    
+                    <div class="col-start-1 col-end-8 ...">
+                        <p class="text-gray-500 font-semibold text-xl"><span class="border-b-2">Configurações de evento</span>
+                            <span v-if="!infoLoaded">
+                                <Spinner />
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-end-10 col-span-2 ...">
+                        <button @click="showModal(), createEvent()" class="bg-green-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                            <font-awesome-icon :icon="['fas', 'file-circle-plus']" /> Criar novo evento
+                        </button>
+                    </div>                
+                </div>     
                 <div v-if="infonotnull" class="w-full mt-5">                         
                     <div class="border-2 rounded p-2 mb-2" v-for="item in events">                        
                         <div class="w-full grid grid-cols-6 gap-4">                    
@@ -15,30 +25,74 @@
                                 </div>
                             </div>
                             <div class="col-end-10 col-span-2 ...">
-                                <button class="bg-blue-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> <font-awesome-icon :icon="['fas', 'pen-to-square']" /> Editar</button>                                
+                                <button @click="showModal(), loadEvent(item.id)" class="bg-blue-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> <font-awesome-icon :icon="['fas', 'pen-to-square']" /> Editar</button>                                
                             </div>                
                         </div>
-
                     </div>                     
                 </div>
             </div>
         </div>
     </div>
+    <Modal v-show="isModalVisible" @some-event="showModal">
+        <template #header>
+            <p class="text-xl">Criação e edição de eventos</p>
+        </template>
+        <template #body>
+            <div v-if="eventLoaded" class="px-5 py-5 mt-0">
+                <form @submit.prevent="">
+                    <label class="block">
+                        <span class="text-sm text-gray-700">Nome do evento <span class="text-red-500 font-semibold">*</span></span>
+                        <input type="text"
+                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                            v-model="event_name" />
+                    </label>    
+                    <label class="block mt-2">
+                        <span class="text-sm text-gray-700">Data inicial do evento <span class="text-red-500 font-semibold">*</span></span>
+                        <input type="date"
+                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                            v-model="event_start" />
+                    </label>    
+                    <label class="block mt-2">
+                        <span class="text-sm text-gray-700">Data final do evento <span class="text-red-500 font-semibold">*</span></span>
+                        <input type="date"
+                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                            v-model="event_end" />
+                    </label>    
+                    <label class="block mt-2">
+                        <span class="text-sm text-gray-700">Quantidade de caracteres permitidos no resumo <span class="text-red-500 font-semibold">*</span></span>
+                        <input type="number"
+                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                            v-model="event_chars" />
+                    </label>   
+                    <label class="block mt-2">
+                        <span class="text-sm text-gray-700">Status <span class="text-red-500 font-semibold">*</span></span>
+                    </label>                                            
+                    <label class="relative inline-flex cursor-pointer items-center mt-4">                        
+                        <input id="switch-2" type="checkbox" class="peer sr-only" :checked="event_status" v-on:click="event_status = !event_status">
+                        <div class="peer h-4 w-11 rounded-full border bg-slate-200 after:absolute after:-top-1 after:left-0 after:h-6 after:w-6 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-green-300 peer-checked:after:translate-x-full peer-focus:ring-green-300"></div>
+                    </label>                        
+                    <span class="absolute ml-3 mt-3">{{ getStatus() }}</span>
+                </form>
+                <div class="flex justify-end">
+                    <button v-on:click="saveEvent()" type="button" class="px-12 py-2 mt-3 text-sm text-center text-white bg-gray-900 rounded-md focus:outline-none font-bold">                                    
+                        <font-awesome-icon :icon="['fas', 'floppy-disk']" /> &nbsp; Salvar                                   
+                    </button>                    
+                </div>            
+            </div>   
+            <div v-else class="px-5 py-5 mt-0 flex justify-center">
+                <Spinner />
+            </div>         
+        </template>
+    </Modal>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue';
-import { IEventState, eventList } from '../../hooks/useEvent';
+import { IEventState, eventList, eventDetails, eventAdd, eventEdit } from '../../hooks/useEvent';
 import Spinner from "../../components/Spinner.vue"
-import Swal from "sweetalert2"
-
-const Toast = Swal.mixin({
-    toast: true, position: "top-end", showConfirmButton: false, timer: 3000, timerProgressBar: true,
-    didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-    }
-});
+import Modal from '../../components/Modal.vue';
+import { Toast } from '../../hooks/useToast';
+import { format } from 'date-fns';
 
 export default defineComponent({
     setup(){
@@ -49,13 +103,29 @@ export default defineComponent({
 
         const infoLoaded = ref(false)     
         const infonotnull = ref(false)   
-        const events = ref()
+        const events = ref()        
+        const isModalVisible = ref(false)
+        const eventLoaded = ref(false)
+        const event_id = ref()
+        const event_name = ref()
+        const event_start = ref()
+        const event_end = ref()
+        const event_chars = ref()        
+        const event_status = ref()     
 
         return {
             ...toRefs(state),         
             events, 
             infoLoaded,
-            infonotnull,
+            infonotnull,            
+            isModalVisible,
+            eventLoaded,
+            event_id,
+            event_name,
+            event_start,
+            event_end,
+            event_chars,        
+            event_status,                
         }
     }, 
     methods: {
@@ -66,15 +136,81 @@ export default defineComponent({
                 this.events = result   
                 this.infonotnull = true             
             } else {
-                Toast.fire({icon: 'warning', title: 'Nenhum evento encontrado'})      
+                Toast().fire({icon: 'warning', title: 'Nenhum evento encontrado'})      
             }            
             this.infoLoaded = true                 
-        },       
+        },     
+        async loadEvent(eventID) {
+            const result = await eventDetails(eventID)
+            
+            if (result.value != undefined) {
+                this.event_id = eventID
+                this.event_name = result.value['name']
+                this.event_start = this.formatDate(result.value['start'])
+                this.event_end = this.formatDate(result.value['end'])
+                this.event_chars = result.value['number_characters']
+                this.event_status = result.value['status']
+                this.eventLoaded = true
+            } else {
+                Toast().fire({icon: 'error', title: 'Erro ao carregar evento!'})      
+            }
+        },
+        async saveEvent() {
+            if (this.event_id != undefined) {
+                const result = await eventEdit({
+                    'id': this.event_id,
+                    'name': this.event_name,
+                    'start': this.event_start,
+                    'end': this.event_end,
+                    'chars': this.event_chars,
+                    'status': this.event_status,
+                })
+                if (result.status == 'success') {
+                    Toast().fire({icon: 'success', title: 'Evento atualizado!'})
+                    this.isModalVisible = false
+                    this.loadevents()
+                } else {
+                    Toast().fire({icon: 'error', title: 'Erro ao atualizar evento!'})
+                }
+            } else {
+                const result = await eventAdd({
+                    'name': this.event_name,
+                    'start': this.event_start,
+                    'end': this.event_end,
+                    'chars': this.event_chars,
+                    'status': this.event_status,
+                })
+                if (result.status == 'success') {
+                    Toast().fire({icon: 'success', title: 'Evento gravado!'})
+                    this.isModalVisible = false
+                    this.loadevents()
+                } else {
+                    Toast().fire({icon: 'error', title: 'Erro ao salvar evento!'})
+                }
+            }            
+        },
+        createEvent() {
+            this.event_id = ref()
+            this.event_name = ref()
+            this.event_start = ref()
+            this.event_end = ref()
+            this.event_chars = ref()
+            this.event_status = 1
+            this.eventLoaded = true
+        },
+        getStatus() {            
+            return this.event_status ? 'Ativo' : 'Inativo'
+        },
+        formatDate(date) {
+            return format(new Date(date), 'yyyy-MM-dd')
+        },  
+        showModal () {
+            this.isModalVisible = !this.isModalVisible
+        },
     },  
     beforeMount() {
         this.loadevents() 
     },
-    components: { Spinner }
+    components: { Spinner, Modal }
 })
-
 </script>
