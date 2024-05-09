@@ -9,8 +9,13 @@ export interface IUserState {
     message: String,
 }
 
-export async function userList() {
-    const { data } = await axios.get(`${api.url}/user/list`, {
+export async function userList(mode, filter) {
+    let path = ''    
+    if (filter.user_info != undefined) {
+        path = `&user_info=${filter.user_info}`
+    }
+    
+    const { data } = await axios.get(`${api.url}/user/list?mode=${mode}${path}`, {
         headers: api.authBearer
     })
 

@@ -73,7 +73,7 @@ export default defineComponent({
     },
     methods: {
         async loadUsers() {                        
-            const result = (await userList()).value // Consome a API
+            const result = (await userList('admin', {})).value // Consome a API
             
             if (result[0] != undefined) {
                 this.users = result

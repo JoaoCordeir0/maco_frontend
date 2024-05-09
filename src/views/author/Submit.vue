@@ -16,7 +16,7 @@
                 </div>
             </div>            
         </div>
-        <form class="mt-4 mb-5" @submit.prevent="saveArticle">
+        <form class="mt-4 mb-5">
             <div class="grid grid-cols-1 gap-4 md:grid-cols-1 xl:grid-cols-1 mb-14">                
                 <div class="... bg-white border-2 rounded-xl border-gray px-5 pb-5 pt-3 mt-2">
                     <label class="block">
@@ -45,7 +45,7 @@
                             </div>                               
                         </div>  
                         <div class="mt-4 w-full flex justify-center">
-                            <button href="#" v-on:click="showAuthorModal" class="bg-blue-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                            <button type="button" v-on:click="showAuthorModal" class="bg-blue-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                 Adicionar autor <font-awesome-icon :icon="['fas', 'user-plus']" />
                             </button> 
                         </div>                            
@@ -94,6 +94,24 @@
         <template #header>
             <p class="text-xl">Adição de autores</p>
         </template>
+        <template #body>
+            <div class="px-5 py-5 mt-0">
+                <form @submit.prevent="">
+                    <label class="block">
+                        <span class="text-sm text-gray-700">Nome do autor:</span>
+                        <input type="text"
+                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                            placeholder="Exemplo: João Vi..."                            
+                            v-on:keyup="searchAuthors()"
+                            v-model="search_author_info"/>
+                    </label>   
+                </form>
+
+                <div v-for="author in search_author_data" class="mt-3">
+                    <p>{{ author.name }}</p>
+                </div>
+            </div>
+        </template>
     </Modal>    
 </template>
 
@@ -102,6 +120,7 @@ import { defineComponent, ref, reactive, toRefs } from 'vue';
 import router from "../../router"
 import { IArticleState, articleAdd, submissionDetails, authorDelete } from '../../hooks/useArticle';
 import { eventDetails } from '../../hooks/useEvent';
+import { userList } from '../../hooks/useUser';
 import Swal from "sweetalert2"
 import Spinner from "../../components/Spinner.vue"
 import { Toast } from '../../hooks/useToast';
@@ -131,6 +150,8 @@ export default defineComponent({
         const eventName = ref("")
         const allowedChars = ref("")
         const isModalAuthorVisible = ref(false)
+        const search_author_info = ref("")
+        const search_author_data = ref()
 
         return {
             ...toRefs(state),            
@@ -150,6 +171,8 @@ export default defineComponent({
             eventName,      
             allowedChars,   
             isModalAuthorVisible,
+            search_author_info,
+            search_author_data,
         }
     }, 
     methods: {   
@@ -202,6 +225,9 @@ export default defineComponent({
             this.allowedChars = ' Número de caracteres permitidos: ' + resultEvent.value['number_characters']
             this.infoLoaded = true            
         },
+        async searchAuthors(){            
+            this.search_author_data = (await userList('author', { 'user_info': this.search_author_info })).value                                    
+        },
         async submitAticle() {
             this.isLoading = true
         },
@@ -229,11 +255,7 @@ export default defineComponent({
         },
         showBtnDelAuthor(author) {
             return author != localStorage.getItem('user-id')
-        },
-        async saveArticle() {
-            console.log(this.$route.params.articleid) 
-            console.log(this.title)           
-        },
+        },      
         showAuthorModal () {
             this.isModalAuthorVisible = !this.isModalAuthorVisible
         },      
