@@ -12,7 +12,7 @@ export interface IUserState {
 export async function userList(mode, filter) {
     let path = ''    
     if (filter.user_info != undefined) {
-        path = `&user_info=${filter.user_info}`
+        path = `&user_info=${filter.user_info}&article_id=${filter.article_id}`
     }
     
     const { data } = await axios.get(`${api.url}/user/list?mode=${mode}${path}`, {

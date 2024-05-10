@@ -107,8 +107,15 @@
                     </label>   
                 </form>
 
-                <div v-for="author in search_author_data" class="mt-3">
-                    <p>{{ author.name }}</p>
+                <div v-if="search_author_data" v-for="author in search_author_data" class="mt-3">
+                    <div class="bg-gray-300 p-3 rounded">
+                        <p>{{ author.name }} - <a :href="author.email" class="text-blue-700">{{ author.email }}</a>
+                            <a href="#" v-on:click="addAuthor(author.id)" class="bg-blue-600 text-white px-3 rounded-md float-end">Adicionar <font-awesome-icon :icon="['fas', 'user-plus']" /></a>
+                        </p>
+                    </div>
+                </div>
+                <div v-else class="bg-gray-300 p-3 rounded mt-3">
+                    <p>Informe um dado do author para buscar</p>
                 </div>
             </div>
         </template>
@@ -118,7 +125,7 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue';
 import router from "../../router"
-import { IArticleState, articleAdd, submissionDetails, authorDelete } from '../../hooks/useArticle';
+import { IArticleState, articleAdd, submissionDetails, authorDelete, articleAddAuthor } from '../../hooks/useArticle';
 import { eventDetails } from '../../hooks/useEvent';
 import { userList } from '../../hooks/useUser';
 import Swal from "sweetalert2"
@@ -176,9 +183,12 @@ export default defineComponent({
         }
     }, 
     methods: {   
+        getArticleID() {
+            return this.$route.params.articleid
+        },
         async loadPageSettings() {
             this.eventID = sessionStorage.getItem('event-id-selected')
-            this.articleID = this.$route.params.articleid
+            this.articleID = this.getArticleID()
 
             if (this.eventID == undefined && this.articleID == '') {        
                 Toast().fire({icon: 'error', title: 'Evento ou artigo não selecionado!'})         
@@ -206,7 +216,8 @@ export default defineComponent({
             this.loadArticle(article.returnid)
             router.push(`/submit/${article.returnid}`)    
         },  
-        async loadArticle(articleID) {                    
+        async loadArticle(articleID) {      
+            this.infoLoaded = false              
             const resultArticle = await submissionDetails('author', articleID)                            
             if (resultArticle.value == undefined) {            
                 Toast().fire({icon: 'error', title: 'Artigo não encontrado!'})         
@@ -225,8 +236,18 @@ export default defineComponent({
             this.allowedChars = ' Número de caracteres permitidos: ' + resultEvent.value['number_characters']
             this.infoLoaded = true            
         },
-        async searchAuthors(){            
-            this.search_author_data = (await userList('author', { 'user_info': this.search_author_info })).value                                    
+        async searchAuthors(){           
+            this.search_author_data = ref() 
+            this.search_author_data = (await userList('author', { 'user_info': this.search_author_info, 'article_id': this.getArticleID() })).value                                    
+        },
+        async addAuthor(authorID) {
+            const result = await articleAddAuthor(this.getArticleID(), authorID)
+
+            if (result.status == 'success') {
+                this.isModalAuthorVisible = false
+                this.loadArticle(this.getArticleID())
+                Toast().fire({icon: 'success', title: 'Author inserido com sucesso'})
+            }
         },
         async submitAticle() {
             this.isLoading = true
@@ -244,12 +265,12 @@ export default defineComponent({
             }).then(async (result) => {
                 if (result.isConfirmed) {   
                     this.infoLoaded = false                 
-                    const result = await authorDelete(this.$route.params.articleid, authorID)
+                    const result = await authorDelete(this.getArticleID(), authorID)
 
                     if (result.status == 'success') {                                      
                         Toast().fire({icon: 'success', title: 'Autor excluído com sucesso!'})                
                     }  
-                    this.loadArticle(this.$route.params.articleid)                     
+                    this.loadArticle(this.getArticleID())                     
                 }
             })     
         },

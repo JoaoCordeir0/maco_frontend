@@ -79,7 +79,7 @@ export async function articleEditStatus(article, status) {
         'status': status,
     }
 
-    const { data } = await axios.post(`${api.url}/article/status`, params, {
+    const { data } = await axios.post(`${api.url}/article/edit/status`, params, {
         headers: api.authBearer
     })
 
@@ -92,7 +92,20 @@ export async function articleAddComment(article, comment) {
         'comment': comment,
     }
 
-    const { data } = await axios.post(`${api.url}/article/comment`, params, {
+    const { data } = await axios.post(`${api.url}/article/add/comment`, params, {
+        headers: api.authBearer
+    })
+
+    return data
+}
+
+export async function articleAddAuthor(article, author) {    
+    let params = {
+        'article': article,
+        'author': author,
+    }
+
+    const { data } = await axios.post(`${api.url}/article/add/author`, params, {
         headers: api.authBearer
     })
 
