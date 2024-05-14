@@ -98,25 +98,30 @@
             <div class="px-5 py-5 mt-0">
                 <form @submit.prevent="">
                     <label class="block">
-                        <span class="text-sm text-gray-700">Nome do autor:</span>
-                        <input type="text"
+                        <span class="text-sm text-gray-700">Informe o nome, e-mail ou RA para buscar:</span>
+                        <div class="flex">
+                            <input type="text"
                             class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
-                            placeholder="Exemplo: João Vi..."                            
-                            v-on:keyup="searchAuthors()"
+                            placeholder="Exemplo: João Vi..."                                                        
                             v-model="search_author_info"/>
+                            <button class="bg-gray-300 ml-2 rounded p-3" v-on:click="searchAuthors()"><font-awesome-icon :icon="['fas', 'magnifying-glass']" /></button>  
+                        </div>                        
                     </label>   
                 </form>
 
-                <div v-if="search_author_data" v-for="author in search_author_data" class="mt-3">
-                    <div class="bg-gray-300 p-3 rounded">
+                <span v-if="!search_author_loaded" class="flex justify-center mt-2">
+                    <Spinner />
+                </span>
+                <div v-if="search_author_data[0] != undefined" v-for="author in search_author_data" class="mt-3">                    
+                    <div class="bg-gray-300 p-3 rounded">                        
                         <p>{{ author.name }} - <a :href="author.email" class="text-blue-700">{{ author.email }}</a>
                             <a href="#" v-on:click="addAuthor(author.id)" class="bg-blue-600 text-white px-3 rounded-md float-end">Adicionar <font-awesome-icon :icon="['fas', 'user-plus']" /></a>
                         </p>
-                    </div>
-                </div>
+                    </div>                    
+                </div>    
                 <div v-else class="bg-gray-300 p-3 rounded mt-3">
-                    <p>Informe um dado do author para buscar</p>
-                </div>
+                    <p>Nenhum autor encontrado</p>
+                </div>            
             </div>
         </template>
     </Modal>    
@@ -159,6 +164,7 @@ export default defineComponent({
         const isModalAuthorVisible = ref(false)
         const search_author_info = ref("")
         const search_author_data = ref()
+        const search_author_loaded = ref(true)
 
         return {
             ...toRefs(state),            
@@ -180,6 +186,7 @@ export default defineComponent({
             isModalAuthorVisible,
             search_author_info,
             search_author_data,
+            search_author_loaded,
         }
     }, 
     methods: {   
@@ -236,9 +243,14 @@ export default defineComponent({
             this.allowedChars = ' Número de caracteres permitidos: ' + resultEvent.value['number_characters']
             this.infoLoaded = true            
         },
-        async searchAuthors(){           
-            this.search_author_data = ref() 
-            this.search_author_data = (await userList('author', { 'user_info': this.search_author_info, 'article_id': this.getArticleID() })).value                                    
+        async searchAuthors(){                  
+            if (this.search_author_info == '') {            
+                Toast().fire({icon: 'warning', title: 'Informe o nome, RA ou e-mail para buscar!'})                         
+                return
+            }                   
+            this.search_author_loaded = false     
+            this.search_author_data = (await userList('author', { 'user_info': this.search_author_info, 'article_id': this.getArticleID() })).value                                                
+            this.search_author_loaded = true
         },
         async addAuthor(authorID) {
             const result = await articleAddAuthor(this.getArticleID(), authorID)
@@ -278,6 +290,7 @@ export default defineComponent({
             return author != localStorage.getItem('user-id')
         },      
         showAuthorModal () {
+            this.search_author_data = ''
             this.isModalAuthorVisible = !this.isModalAuthorVisible
         },      
     },
