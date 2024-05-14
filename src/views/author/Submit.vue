@@ -16,13 +16,13 @@
                 </div>
             </div>            
         </div>
-        <form class="mt-4 mb-5">
+        <form class="mt-4 mb-5" aria-disabled="true">
             <div class="grid grid-cols-1 gap-4 md:grid-cols-1 xl:grid-cols-1 mb-14">                
                 <div class="... bg-white border-2 rounded-xl border-gray px-5 pb-5 pt-3 mt-2">
                     <label class="block">
                         <span class="text-sm text-gray-700">Título do Artigo <span class="text-red-500 font-semibold">*</span></span>
-                        <input type="text"
-                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                        <input type="text" :disabled="!infoLoaded"
+                            class="block w-full max-h-10 mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
                             v-model="title" />
                     </label>
                 </div>                               
@@ -32,12 +32,12 @@
                         <div v-for="author in authors" class="grid grid-cols-2 gap-4 md:grid-cols-2 xl:grid-cols-2">                                        
                             <div class="... mt-1">
                                 <span class="text-sm text-gray-700">Nome</span>                                    
-                                <input :value="author.name" disabled type="text" class="block w-full mt-1 border-gray-300 rounded-md"/>
+                                <input :value="author.name" disabled type="text" class="block w-full max-h-10 mt-1 border-gray-300 rounded-md"/>
                             </div>
                             <div class="... mt-1">
                                 <span class="text-sm text-gray-700">E-mail</span>                                    
                                 <div class="flex">
-                                    <input :value="author.email" disabled type="text" class="w-full block mt-1 border-gray-300 rounded-md"/>                                
+                                    <input :value="author.email" disabled type="text" class="w-full max-h-10 block mt-1 border-gray-300 rounded-md"/>                                
                                     <a v-if="showBtnDelAuthor(author.id)" href="#" v-on:click="delAuthor(author.id)" class="ms-2 bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                         <font-awesome-icon class="mt-2" size="lg" :icon="['fas', 'trash-can']" />
                                     </a> 
@@ -54,29 +54,41 @@
                 <div class="... bg-white border-2 rounded-xl border-gray px-5 pb-5 pt-3 mt-2">
                     <label class="block">
                         <span class="text-sm text-gray-700">Nome dos orientadores <span class="text-red-500 font-semibold">*</span></span>
-                        <input type="text"
-                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                        <input type="text" :disabled="!infoLoaded"
+                            class="block w-full max-h-10 mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
                             v-model="advisors" />
                     </label>
                 </div>                   
                 <div class="... bg-white border-2 rounded-xl border-gray px-5 pb-5 pt-3 mt-2">                      
                     <label class="block">
                         <span class="text-sm text-gray-700">Resumo <span class="text-red-500 font-semibold">*</span> <br> {{ allowedChars }}</span>
-                        <textarea name="" id="" cols="30" rows="5" v-model="summary"
+                        <textarea name="" id="" cols="30" rows="5" v-model="summary" :disabled="!infoLoaded"
                             class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"></textarea>
                     </label>
                 </div>    
                 <div class="... bg-white border-2 rounded-xl border-gray px-5 pb-5 pt-3 mt-2">
-                    <label class="block">
-                        <span class="text-sm text-gray-700">Palavras chaves <span class="text-red-500 font-semibold">*</span></span>
-                        <input type="text"
-                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
-                            v-model="keywords" />
-                    </label>
+                    <form @submit.prevent="addKeyword()">
+                        <label class="block">
+                            <span class="text-sm text-gray-700">Palavras chaves <span class="text-red-500 font-semibold">*</span></span>
+                            <div class="my-2">
+                                <span v-for="key in keywords" v-on:click="delKeyword(key)" class="bg-orange-500 text-white rounded border-2 px-3 mr-2 hover:border-gray-800 hover:text-gray-800">
+                                    {{ key }} - <font-awesome-icon class="mt-2" :icon="['fas', 'trash-can']" />
+                                </span>
+                            </div>
+                            <div class="flex">
+                                <input type="text" :disabled="!infoLoaded"
+                                class="block w-72 max-h-10 mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                                v-model="keyword" />
+                                <button class="ms-2 mt-2 mb-3 bg-blue-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                    Adicionar palavra <font-awesome-icon class="mt-1" :icon="['fas', 'file-circle-plus']" />
+                                </button> 
+                            </div>                          
+                        </label>
+                    </form>
                 </div>                         
             </div>            
             <div class="flex justify-end">
-                <button type="submit" :disabled="isLoading" v-on:click="submitAticle()"
+                <button type="button" :disabled="isLoading" v-on:click="submitAticle()"
                     class="absolute bottom-6 right-6 px-12 py-2 text-sm text-center text-white bg-gray-900 rounded-md focus:outline-none font-bold">
                     <span v-if="!isLoading">
                         <font-awesome-icon :icon="['fas', 'floppy-disk']" /> &nbsp; Enviar
@@ -112,25 +124,25 @@
                 <span v-if="!search_author_loaded" class="flex justify-center mt-2">
                     <Spinner />
                 </span>
-                <div v-if="search_author_data[0] != undefined" v-for="author in search_author_data" class="mt-3">                    
+                <div v-for="author in search_author_data" class="mt-3">                    
                     <div class="bg-gray-300 p-3 rounded">                        
                         <p>{{ author.name }} - <a :href="author.email" class="text-blue-700">{{ author.email }}</a>
                             <a href="#" v-on:click="addAuthor(author.id)" class="bg-blue-600 text-white px-3 rounded-md float-end">Adicionar <font-awesome-icon :icon="['fas', 'user-plus']" /></a>
                         </p>
                     </div>                    
                 </div>    
-                <div v-else class="bg-gray-300 p-3 rounded mt-3">
+                <div v-if="!search_author_data" class="bg-gray-300 p-3 rounded mt-3">
                     <p>Nenhum autor encontrado</p>
-                </div>            
+                </div>
             </div>
         </template>
-    </Modal>    
+    </Modal>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue';
 import router from "../../router"
-import { IArticleState, articleAdd, submissionDetails, authorDelete, articleAddAuthor } from '../../hooks/useArticle';
+import { IArticleState, articleAdd, submissionDetails, authorDelete, articleAddAuthor, articleEditKeywords } from '../../hooks/useArticle';
 import { eventDetails } from '../../hooks/useEvent';
 import { userList } from '../../hooks/useUser';
 import Swal from "sweetalert2"
@@ -153,7 +165,8 @@ export default defineComponent({
         const title = ref("")
         const authors = ref("")
         const advisors = ref("")
-        const keywords = ref("")
+        const keywords = ref()
+        const keyword = ref("")
         const summary = ref("")
         const status = ref("")
         const course = ref("")      
@@ -176,6 +189,7 @@ export default defineComponent({
             authors,
             advisors,
             keywords,
+            keyword,
             summary,
             status,
             course,    
@@ -237,19 +251,23 @@ export default defineComponent({
             this.title = resultArticle.value['title'] != ' ' ? resultArticle.value['title'] : ''
             this.authors = resultArticle.value['authors'] != ' ' ? resultArticle.value['authors'] : ''
             this.advisors = resultArticle.value['advisors'] != ' ' ? resultArticle.value['advisors'] : ''
-            this.keywords = resultArticle.value['keywords'] != ' ' ? resultArticle.value['keywords'] : ''
+            this.keywords = resultArticle.value['keywords'] != ' ' ? (resultArticle.value['keywords']).split(';') : []
             this.summary = resultArticle.value['summary'] != ' ' ? resultArticle.value['summary'] : ''        
             this.eventName = ' - ' + resultEvent.value['name']
             this.allowedChars = ' Número de caracteres permitidos: ' + resultEvent.value['number_characters']
             this.infoLoaded = true            
         },
         async searchAuthors(){                  
+            this.search_author_data = ref()
             if (this.search_author_info == '') {            
                 Toast().fire({icon: 'warning', title: 'Informe o nome, RA ou e-mail para buscar!'})                         
                 return
             }                   
             this.search_author_loaded = false     
-            this.search_author_data = (await userList('author', { 'user_info': this.search_author_info, 'article_id': this.getArticleID() })).value                                                
+            const result = (await userList('author', { 'user_info': this.search_author_info, 'article_id': this.getArticleID() })).value
+            if (result[0] != undefined) {
+                this.search_author_data = result
+            }            
             this.search_author_loaded = true
         },
         async addAuthor(authorID) {
@@ -260,6 +278,32 @@ export default defineComponent({
                 this.loadArticle(this.getArticleID())
                 Toast().fire({icon: 'success', title: 'Author inserido com sucesso'})
             }
+        },
+        async addKeyword() {
+            if (this.keyword.trim().length === 0) {            
+                Toast().fire({icon: 'warning', title: 'Informe a palavra-chave'})                         
+                return
+            } 
+
+            let keys = this.keywords.toString().replaceAll(',', ';') + '; ' + this.keyword
+                        
+            const result = await articleEditKeywords(this.getArticleID(), keys)
+
+            if (result.status == 'success') {                
+                this.loadArticle(this.getArticleID())
+                this.keyword = ''
+                Toast().fire({icon: 'success', title: 'Palavra inserida com sucesso'})
+            }            
+        },
+        async delKeyword(key_by_remove) {
+            let keys = (this.keywords.filter(item => item !== key_by_remove)).toString().replaceAll(',', ';')
+            
+            const result = await articleEditKeywords(this.getArticleID(), keys)
+
+            if (result.status == 'success') {                
+                this.loadArticle(this.getArticleID())
+                Toast().fire({icon: 'success', title: 'Palavra removida com sucesso'})
+            }                        
         },
         async submitAticle() {
             this.isLoading = true
@@ -285,12 +329,11 @@ export default defineComponent({
                     this.loadArticle(this.getArticleID())                     
                 }
             })     
-        },
+        },        
         showBtnDelAuthor(author) {
             return author != localStorage.getItem('user-id')
         },      
-        showAuthorModal () {
-            this.search_author_data = ''
+        showAuthorModal () {            
             this.isModalAuthorVisible = !this.isModalAuthorVisible
         },      
     },

@@ -75,7 +75,7 @@ export async function articleAdd(params) {
 
 export async function articleEditStatus(article, status) {
     let params = {
-        'id': article,
+        'article': article,
         'status': status,
     }
 
@@ -106,6 +106,19 @@ export async function articleAddAuthor(article, author) {
     }
 
     const { data } = await axios.post(`${api.url}/article/add/author`, params, {
+        headers: api.authBearer
+    })
+
+    return data
+}
+
+export async function articleEditKeywords(article, keywords) {    
+    let params = {
+        'article': article,
+        'keywords': keywords,
+    }
+
+    const { data } = await axios.post(`${api.url}/article/edit/keywords`, params, {
         headers: api.authBearer
     })
 
