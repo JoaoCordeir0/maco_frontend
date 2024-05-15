@@ -74,6 +74,9 @@
                                 <span v-for="key in keywords" v-on:click="delKeyword(key)" class="bg-gray-700 rounded-lg text-white rounded border-2 border-gray-700 px-3 mr-2 hover:border-red-800 hover:text-red-800 hover:bg-red-400">
                                     <font-awesome-icon :icon="['fas', 'xmark']" class="mr-2" /> {{ key }}
                                 </span>
+                                <span v-if="!infoLoaded">
+                                    <Spinner />
+                                </span>
                             </div>
                             <div class="flex">
                                 <input type="text" :disabled="!infoLoaded"
