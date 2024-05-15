@@ -11,7 +11,7 @@
                         </p>
                     </div>
                     <div class="col-end-10 col-span-2 ...">
-                        <a href="#" v-on:click="showCommentsModal()" class="mr-4 bg-cyan-600 text-white rounded-md py-1 px-3">Comentários <font-awesome-icon size="xl" :icon="['fas', 'comment-dots']" /></a>
+                        <a v-if="comments != ''" href="#" v-on:click="showCommentsModal()" class="mr-4 bg-cyan-600 text-white rounded-md py-1 px-3">Comentários <font-awesome-icon size="xl" :icon="['fas', 'comment-dots']" /></a>
                         <a href="#" class="bg-green-700 text-white rounded-md py-1 px-3">Ajuda <font-awesome-icon :icon="['fas', 'question']" /></a>
                     </div>                
                 </div>
@@ -100,9 +100,9 @@
                             <Spinner />
                         </span>
                         <div class="flex mb-1" v-for="ref in references">
-                            <input type="text" disabled :value="ref.reference"
+                            <input type="text" :value="ref.reference"
                                 class="block w-full max-h-10 mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"/>
-                            <a href="#" v-on:click="" class="ms-2 mt-1 bg-blue-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md">                                 
+                            <a href="#" v-on:click="editReference()" class="ms-2 mt-1 bg-blue-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md">                                 
                                 <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'pen-to-square']" />
                             </a> 
                             <a href="#" v-on:click="delReference(ref.id)" class="ms-2 mt-1 bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
@@ -219,7 +219,7 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue';
 import router from "../../router"
-import { IArticleState, articleAdd, submissionDetails, authorDelete, articleAddAuthor, articleEditKeywords, articleAddReference, articleDelReference } from '../../hooks/useArticle';
+import { IArticleState, articleAdd, submissionDetails, articleEditStatus, authorDelete, articleAddAuthor, articleEditKeywords, articleAddReference, articleDelReference, articleSubmit } from '../../hooks/useArticle';
 import { eventDetails } from '../../hooks/useEvent';
 import { userList } from '../../hooks/useUser';
 import Swal from "sweetalert2"
@@ -257,7 +257,7 @@ export default defineComponent({
         const allowedChars = ref("")
         const isModalAuthorVisible = ref(false)
         const isModalReferenceVisible = ref(false)
-        const isModalCommentsVisible = ref(false)        
+        const isModalCommentsVisible = ref(false)      
         const search_author_info = ref("")
         const search_author_data = ref()
         const search_author_loaded = ref(true)
@@ -339,13 +339,13 @@ export default defineComponent({
             this.title = resultArticle.value['title'] != ' ' ? resultArticle.value['title'] : ''
             this.authors = resultArticle.value['authors'] != ' ' ? resultArticle.value['authors'] : ''
             this.advisors = resultArticle.value['advisors'] != ' ' ? resultArticle.value['advisors'] : ''
-            this.keywords = resultArticle.value['advisors'] != ' ' ? (resultArticle.value['keywords']).split(';') : []
+            this.keywords = resultArticle.value['keywords'] != ' ' ? (resultArticle.value['keywords']).split(';') : []
             this.summary = resultArticle.value['summary'] != ' ' ? resultArticle.value['summary'] : ''        
             this.references = resultArticle.value['references']
-            this.comments = resultArticle.value['comments']
+            this.comments = resultArticle.value['comments'][0] != undefined ? resultArticle.value['comments'] : ''
             this.eventName = ' - ' + resultEvent.value['name']
             this.allowedChars = ' Número de caracteres permitidos: ' + resultEvent.value['number_characters']
-            this.infoLoaded = true            
+            this.infoLoaded = true           
         },
         async searchAuthors(){                  
             this.search_author_data = ref()
@@ -375,8 +375,12 @@ export default defineComponent({
                 return
             } 
 
-            let keys = this.keywords.toString().replaceAll(',', ';') + '; ' + this.keyword
-                        
+            let keys = this.keywords.toString().replaceAll(',', ';') 
+            if (keys != '') {
+                keys = keys + '; ' + this.keyword
+            } else {
+                keys = this.keyword
+            }
             const result = await articleEditKeywords(this.getArticleID(), keys)
 
             if (result.status == 'success') {                
@@ -414,8 +418,8 @@ export default defineComponent({
         },
         async delKeyword(key_by_remove) {                        
             let keys = (this.keywords.filter(item => item !== key_by_remove)).toString().replaceAll(',', ';')
-                                   
-            const result = await articleEditKeywords(this.getArticleID(), keys)
+      
+            const result = await articleEditKeywords(this.getArticleID(), keys == '' ? ' ' : keys)
 
             if (result.status == 'success') {                
                 this.loadArticle(this.getArticleID())
@@ -445,7 +449,28 @@ export default defineComponent({
             })             
         },
         async submitAticle() {
+            if (this.title == '') {
+                Toast().fire({icon: 'warning', title: 'Informe o título'})
+                return
+            }
+            if (this.summary == '') {
+                Toast().fire({icon: 'warning', title: 'Informe o resumo'})
+                return
+            }
             this.isLoading = true
+
+            const result1 = await articleSubmit(this.getArticleID(), this.title, this.summary)
+            const result2 = await articleEditStatus(this.getArticleID(), 2)
+            
+            if (result1.status == 'success' && result2.status == 'success') {                
+                router.push('/events')
+                Toast().fire({icon: 'success', title: 'Artigo submetido com sucesso'})
+            } else {
+                Toast().fire({icon: 'error', title: result1.message + result2.message})
+            }  
+        },
+        editReference() {
+            
         },
         delAuthor(authorID) {
             Swal.fire({

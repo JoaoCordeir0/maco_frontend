@@ -145,3 +145,18 @@ export async function articleDelReference(article, referenceID) {
 
     return data
 }
+
+export async function articleSubmit(article, title, summary) {    
+    let params = {
+        'article': article,
+        'title': title,
+        'summary': summary
+    }
+
+    const { data } = await axios.post(`${api.url}/article/edit/data`, params, {
+        headers: api.authBearer
+    })
+
+    return data
+}
+
