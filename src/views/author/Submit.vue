@@ -11,6 +11,7 @@
                         </p>
                     </div>
                     <div class="col-end-10 col-span-2 ...">
+                        <a href="#" v-on:click="showCommentsModal()" class="mr-4 bg-cyan-600 text-white rounded-md py-1 px-3">Comentários <font-awesome-icon size="xl" :icon="['fas', 'comment-dots']" /></a>
                         <a href="#" class="bg-green-700 text-white rounded-md py-1 px-3">Ajuda <font-awesome-icon :icon="['fas', 'question']" /></a>
                     </div>                
                 </div>
@@ -28,7 +29,10 @@
                 </div>                               
                 <div class="... bg-white border-2 rounded-xl border-gray px-5 pb-5 pt-3 mt-2">
                     <label class="block">
-                        <span class="text-sm text-gray-700">Autores <span class="text-red-500 font-semibold">*</span></span>                                    
+                        <span class="text-sm text-gray-700">Autores <span class="text-red-500 font-semibold">*</span></span>    
+                        <span v-if="!infoLoaded">
+                            <Spinner />
+                        </span>                                
                         <div v-for="author in authors" class="grid grid-cols-2 gap-4 md:grid-cols-2 xl:grid-cols-2">                                        
                             <div class="... mt-1">
                                 <span class="text-sm text-gray-700">Nome</span>                                    
@@ -83,12 +87,35 @@
                                 class="block w-72 max-h-10 mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
                                 v-model="keyword" />
                                 <button class="ms-2 mt-2 mb-3 bg-blue-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
-                                    Adicionar palavra <font-awesome-icon class="mt-1" :icon="['fas', 'file-circle-plus']" />
+                                    Adicionar palavra <font-awesome-icon :icon="['fas', 'circle-plus']" />
                                 </button> 
                             </div>                          
                         </label>
                     </form>
-                </div>                         
+                </div> 
+                <div class="... bg-white border-2 rounded-xl border-gray px-5 pb-5 pt-3 mt-2">                      
+                    <label class="block">
+                        <span class="text-sm text-gray-700">Referências bibliográficas <span class="text-red-500 font-semibold">*</span></span>
+                        <span v-if="!infoLoaded">
+                            <Spinner />
+                        </span>
+                        <div class="flex mb-1" v-for="ref in references">
+                            <input type="text" disabled :value="ref.reference"
+                                class="block w-full max-h-10 mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"/>
+                            <a href="#" v-on:click="" class="ms-2 mt-1 bg-blue-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md">                                 
+                                <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'pen-to-square']" />
+                            </a> 
+                            <a href="#" v-on:click="delReference(ref.id)" class="ms-2 mt-1 bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'trash-can']" />
+                            </a> 
+                        </div>
+                    </label>
+                    <div class="mt-4 w-full flex justify-center">
+                        <button type="button" v-on:click="showReferenceModal" class="bg-blue-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                            Adicionar referência <font-awesome-icon :icon="['fas', 'circle-plus']" />
+                        </button> 
+                    </div>  
+                </div>                          
             </div>            
             <div class="flex justify-end">
                 <button type="button" :disabled="isLoading" v-on:click="submitAticle()"
@@ -99,10 +126,32 @@
                     <span v-else>
                         <Loading />
                     </span>
-                </button>
+                </button>                
             </div>            
         </form>        
     </div>
+
+    <!-- Modal dos comentarios -->
+    <Modal v-show="isModalCommentsVisible" @some-event="showCommentsModal">
+        <template #header>
+            <p class="text-xl">Comentários</p>
+        </template>
+        <template #body>
+            <div class="px-5 pb-5 pt-1">                
+                <div class="flex items-start gap-2.5 mt-3" v-for="comment in comments">
+                    <span class="text-gray-700"><font-awesome-icon size="xl" :icon="['fas', 'user']" /></span>
+                    <!-- <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="Jese image"> -->
+                    <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-700">
+                        <div class="flex items-center space-x-2 rtl:space-x-reverse">
+                            <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ comment.name }}</span>
+                            <span class="text-sm font-normal text-gray-500 dark:text-gray-400">{{ formatDateComments(comment.created_at) }}</span>
+                        </div>
+                        <p class="text-sm font-normal py-2.5 text-gray-900 dark:text-white">{{ comment.comment }}</p>                        
+                    </div>                               
+                </div>            
+            </div>
+        </template>
+    </Modal>
 
     <!-- Modal de adição dos autores -->
     <Modal v-show="isModalAuthorVisible" @some-event="showAuthorModal">
@@ -140,12 +189,37 @@
             </div>
         </template>
     </Modal>
+
+    <!-- Modal de adição de referências -->
+    <Modal v-show="isModalReferenceVisible" @some-event="showReferenceModal">
+        <template #header>
+            <p class="text-xl">Referências bibliográficas</p>
+        </template>
+        <template #body>
+            <div class="px-5 py-5 mt-0">
+                <form @submit.prevent="">
+                    <label class="block">
+                        <span class="text-sm text-gray-700">Informe a referência:</span>                        
+                        <input type="text"
+                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                            placeholder="Exemplo: João V. Cordeiro 2024"                                                        
+                            v-model="reference"/>                                                    
+                    </label>   
+                    <div class="mt-4 w-full flex justify-center">
+                        <button type="submit" v-on:click="addReference()" class="bg-blue-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                            Adicionar <font-awesome-icon :icon="['fas', 'circle-plus']" />
+                        </button> 
+                    </div>  
+                </form>                                    
+            </div>
+        </template>
+    </Modal>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue';
 import router from "../../router"
-import { IArticleState, articleAdd, submissionDetails, authorDelete, articleAddAuthor, articleEditKeywords } from '../../hooks/useArticle';
+import { IArticleState, articleAdd, submissionDetails, authorDelete, articleAddAuthor, articleEditKeywords, articleAddReference, articleDelReference } from '../../hooks/useArticle';
 import { eventDetails } from '../../hooks/useEvent';
 import { userList } from '../../hooks/useUser';
 import Swal from "sweetalert2"
@@ -153,6 +227,7 @@ import Spinner from "../../components/Spinner.vue"
 import { Toast } from '../../hooks/useToast';
 import Modal from '../../components/Modal.vue';
 import Loading from '../../components/Loading.vue';
+import { format } from 'date-fns';
 
 export default defineComponent({
     setup(){
@@ -172,12 +247,17 @@ export default defineComponent({
         const keyword = ref("")
         const summary = ref("")
         const status = ref("")
-        const course = ref("")      
+        const references = ref("")
+        const reference = ref("")
+        const course = ref("")   
+        const comments = ref("")   
         const article_status = ref("")  
         const infoLoaded = ref(false)
         const eventName = ref("")
         const allowedChars = ref("")
         const isModalAuthorVisible = ref(false)
+        const isModalReferenceVisible = ref(false)
+        const isModalCommentsVisible = ref(false)        
         const search_author_info = ref("")
         const search_author_data = ref()
         const search_author_loaded = ref(true)
@@ -195,12 +275,17 @@ export default defineComponent({
             keyword,
             summary,
             status,
+            references,
+            reference,
             course,    
+            comments,
             article_status,     
             infoLoaded,      
             eventName,      
             allowedChars,   
             isModalAuthorVisible,
+            isModalReferenceVisible,
+            isModalCommentsVisible,
             search_author_info,
             search_author_data,
             search_author_loaded,
@@ -254,8 +339,10 @@ export default defineComponent({
             this.title = resultArticle.value['title'] != ' ' ? resultArticle.value['title'] : ''
             this.authors = resultArticle.value['authors'] != ' ' ? resultArticle.value['authors'] : ''
             this.advisors = resultArticle.value['advisors'] != ' ' ? resultArticle.value['advisors'] : ''
-            this.keywords = resultArticle.value['keywords'] != ' ' ? (resultArticle.value['keywords']).split(';') : []
+            this.keywords = resultArticle.value['advisors'] != ' ' ? (resultArticle.value['keywords']).split(';') : []
             this.summary = resultArticle.value['summary'] != ' ' ? resultArticle.value['summary'] : ''        
+            this.references = resultArticle.value['references']
+            this.comments = resultArticle.value['comments']
             this.eventName = ' - ' + resultEvent.value['name']
             this.allowedChars = ' Número de caracteres permitidos: ' + resultEvent.value['number_characters']
             this.infoLoaded = true            
@@ -298,15 +385,64 @@ export default defineComponent({
                 Toast().fire({icon: 'success', title: 'Palavra inserida com sucesso'})
             }            
         },
-        async delKeyword(key_by_remove) {
+        async addReference() {
+            if (this.reference.trim().length === 0) {            
+                Toast().fire({icon: 'warning', title: 'Informe a referência bibliográfica'})                         
+                return
+            } 
+            Swal.fire({
+                title: "Tem certeza?",
+                html: `Você está prestes a inserir a referência: "<b>${this.reference}</b>" Está certo disso?`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sim, adicionar!",
+                cancelButtonText: "Cancelar",
+            }).then(async (result) => {
+                if (result.isConfirmed) {   
+                    this.infoLoaded = false                 
+                    const result = await articleAddReference(this.getArticleID(), this.reference)
+
+                    if (result.status == 'success') {                                      
+                        Toast().fire({icon: 'success', title: 'Referência bibliográfica inserida com sucesso!'})                
+                    }  
+                    this.isModalReferenceVisible = false
+                    this.loadArticle(this.getArticleID())                     
+                }
+            })     
+        },
+        async delKeyword(key_by_remove) {                        
             let keys = (this.keywords.filter(item => item !== key_by_remove)).toString().replaceAll(',', ';')
-            
+                                   
             const result = await articleEditKeywords(this.getArticleID(), keys)
 
             if (result.status == 'success') {                
                 this.loadArticle(this.getArticleID())
                 Toast().fire({icon: 'success', title: 'Palavra removida com sucesso'})
             }                        
+        },
+        async delReference(refID) {            
+            Swal.fire({
+                title: "Tem certeza?",
+                html: `Você está prestes a excluir. Está certo disso?`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sim, excluir!",
+                cancelButtonText: "Cancelar",
+            }).then(async (result) => {
+                if (result.isConfirmed) {   
+                    this.infoLoaded = false                 
+                    const result = await articleDelReference(this.getArticleID(), refID)
+
+                    if (result.status == 'success') {                                      
+                        Toast().fire({icon: 'success', title: 'Referência excluída com sucesso!'})                
+                    }  
+                    this.loadArticle(this.getArticleID())                     
+                }
+            })             
         },
         async submitAticle() {
             this.isLoading = true
@@ -333,12 +469,21 @@ export default defineComponent({
                 }
             })     
         },        
+        formatDateComments(date) {
+            return format(new Date(date), 'dd/MM hh:m')
+        }, 
         showBtnDelAuthor(author) {
             return author != localStorage.getItem('user-id')
         },      
         showAuthorModal () {            
             this.isModalAuthorVisible = !this.isModalAuthorVisible
         },      
+        showReferenceModal() {
+            this.isModalReferenceVisible = !this.isModalReferenceVisible
+        },
+        showCommentsModal() {
+            this.isModalCommentsVisible = !this.isModalCommentsVisible
+        },
     },
     beforeMount() {              
         this.loadPageSettings()             

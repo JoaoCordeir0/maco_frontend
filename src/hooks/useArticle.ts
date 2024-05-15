@@ -124,3 +124,24 @@ export async function articleEditKeywords(article, keywords) {
 
     return data
 }
+
+export async function articleAddReference(article, reference) {    
+    let params = {
+        'article': article,
+        'reference': reference,
+    }
+
+    const { data } = await axios.post(`${api.url}/article/add/reference`, params, {
+        headers: api.authBearer
+    })
+
+    return data
+}
+
+export async function articleDelReference(article, referenceID) {    
+    const { data } = await axios.delete(`${api.url}/article/reference/del/${article}/${referenceID}`, {
+        headers: api.authBearer
+    })
+
+    return data
+}

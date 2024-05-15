@@ -63,6 +63,11 @@
             <font-awesome-icon :icon="['fas', 'file-circle-plus']" />
             <span class="mx-4 font-semibold">Submeter artigo</span>
           </router-link>
+          <router-link class="flex items-center px-4 py-2 mt-2 duration-200"
+            :class="[$route.name === 'Corrections' ? activeClass : inactiveClass]" to="/corrections">
+            <font-awesome-icon :icon="['fas', 'file-pen']" />
+            <span class="mx-4 font-semibold">Em correção</span>
+          </router-link>
         </div>     
       </nav>
 

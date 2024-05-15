@@ -17,6 +17,7 @@ import MyCourses from './views/advisor/MyCourses.vue'
 import Submit from './views/author/Submit.vue'
 import Settings from './views/admin/Settings.vue'
 import Events from './views/author/Events.vue'
+import Corrections from './views/author/Corrections.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -115,6 +116,12 @@ const routes: RouteRecordRaw[] = [
     path: '/events',
     name: 'Events',
     component: Events,
+    beforeEnter: authAuthor
+  },
+  {
+    path: '/corrections',
+    name: 'Corrections',
+    component: Corrections,
     beforeEnter: authAuthor
   },
 
