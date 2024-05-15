@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from "vue"
-import { ILoginState, apiLogin } from "../../hooks/useAuth"
+import { ILoginState, apiLogin, isValidToken } from "../../hooks/useAuth"
 import router from "../../router"
 import Swal from "sweetalert2"
 import { Toast } from "../../hooks/useToast"
@@ -111,23 +111,10 @@ export default defineComponent({
       forgotPasswordPage
     }
   },
-  beforeMount() {
-    if (localStorage.getItem('user-auth-day') != undefined && localStorage.getItem('user-auth-day') == (new Date()).getDate().toString()) {      
-      Swal.fire({        
-        icon: 'success', 
-        title: 'Bem vindo',
-        toast: true, 
-        position: "top-end", 
-        showConfirmButton: false, 
-        timer: 3000, 
-        timerProgressBar: true,
-        didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-        }
-      })
-      router.push('dashboard')      
-    }
+  async beforeMount() {
+    if (await isValidToken()) {
+      router.push('/dashboard')
+    }    
   }, 
   components: { Loading }
 });

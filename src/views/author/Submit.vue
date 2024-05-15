@@ -71,8 +71,8 @@
                         <label class="block">
                             <span class="text-sm text-gray-700">Palavras chaves <span class="text-red-500 font-semibold">*</span></span>
                             <div class="my-2">
-                                <span v-for="key in keywords" v-on:click="delKeyword(key)" class="bg-orange-500 text-white rounded border-2 px-3 mr-2 hover:border-gray-800 hover:text-gray-800">
-                                    {{ key }} - <font-awesome-icon class="mt-2" :icon="['fas', 'trash-can']" />
+                                <span v-for="key in keywords" v-on:click="delKeyword(key)" class="bg-gray-700 rounded-lg text-white rounded border-2 border-gray-700 px-3 mr-2 hover:border-red-800 hover:text-red-800 hover:bg-red-400">
+                                    <font-awesome-icon :icon="['fas', 'xmark']" class="mr-2" /> {{ key }}
                                 </span>
                             </div>
                             <div class="flex">

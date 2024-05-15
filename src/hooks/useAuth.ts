@@ -11,11 +11,12 @@ export interface ILoginState {
 
 export async function apiLogin(email, password) {
 
-    localStorage.clear();
-    
-    var params = new URLSearchParams()
-    params.append('email', email)
-    params.append('password', password)
+    localStorage.clear()
+
+    var params = {
+        'email': email,
+        'password': password
+    } 
 
     const { data } = await axios.post(`${endpointUrl}/user/login`, params)
 
@@ -57,6 +58,17 @@ export function authAuthor(to, from, next) {
     const token = localStorage.getItem('user-token') != undefined
     const role = String(getUserRole()) == '3:AUTHOR'
     token && role ? next() : next('/login')    
+}
+
+export async function isValidToken() {
+    const { data } = await axios.post(`${endpointUrl}/token`, {
+        'token': localStorage.getItem('user-token')
+    })
+
+    if (data.status == 'success') {
+        return true
+    }
+    return false
 }
 
 export function getUserRole(modestring = false) {
