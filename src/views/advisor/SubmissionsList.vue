@@ -37,7 +37,7 @@
                                 </td>                                
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200 min-w-72">
                                     <div class="sm:inline-block">                                        
-                                        <a :href="`/submission/${item.id}`" class="sm:px-5 sm:py-2 px-5 bg-gray-900 m-2 mt-2 text-white rounded"><font-awesome-icon :icon="['fas', 'eye']" /> &nbsp; <span class="hidden lg:inline">Visualizar</span></a>                                        
+                                        <a href="#" v-on:click="viewSubmission(item.id, item.event)" class="sm:px-5 sm:py-2 px-5 bg-gray-900 m-2 mt-2 text-white rounded"><font-awesome-icon :icon="['fas', 'eye']" /> &nbsp; <span class="hidden lg:inline">Visualizar</span></a>                                        
                                     </div>                                    
                                 </td>
                             </tr>
@@ -57,6 +57,7 @@ import { defineComponent, ref, reactive, toRefs } from 'vue';
 import { IArticleState, submissionsList } from '../../hooks/useArticle';
 import Spinner from "../../components/Spinner.vue"
 import { Toast } from '../../hooks/useToast';
+import router from '../../router';
 
 export default defineComponent({
     async setup(){
@@ -87,7 +88,12 @@ export default defineComponent({
                 Toast().fire({icon: 'warning', title: 'Nenhum artigo encontrado'})
             }        
             this.infoLoaded = true        
-        }
+        },
+        viewSubmission(articleID, eventID) {            
+            sessionStorage.setItem('article-added', 'y')    
+            sessionStorage.setItem('event-id-selected', eventID)
+            router.push(`/submit/${articleID}`)
+        },
     },
     beforeMount(){
         this.loadArticles()

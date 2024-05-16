@@ -30,7 +30,7 @@
                 <div class="... bg-white border-2 rounded-xl border-gray px-5 pb-5 pt-3 mt-2">
                     <label class="block">
                         <span class="text-sm text-gray-700">Autores <span class="text-red-500 font-semibold">*</span></span>    
-                        <span v-if="!infoLoaded">
+                        <span v-if="!authorLoaded">
                             <Spinner />
                         </span>                                
                         <div v-for="author in authors" class="grid grid-cols-2 gap-4 md:grid-cols-2 xl:grid-cols-2">                                        
@@ -78,7 +78,7 @@
                                 <span v-for="key in keywords" v-on:click="delKeyword(key)" class="bg-gray-700 rounded-lg text-white rounded border-2 border-gray-700 px-3 mr-2 hover:border-red-800 hover:text-red-800 hover:bg-red-400">
                                     <font-awesome-icon :icon="['fas', 'xmark']" class="mr-2" /> {{ key }}
                                 </span>
-                                <span v-if="!infoLoaded">
+                                <span v-if="!keywordLoaded">
                                     <Spinner />
                                 </span>
                             </div>
@@ -96,7 +96,7 @@
                 <div class="... bg-white border-2 rounded-xl border-gray px-5 pb-5 pt-3 mt-2">                      
                     <label class="block">
                         <span class="text-sm text-gray-700">Referências bibliográficas <span class="text-red-500 font-semibold">*</span></span>
-                        <span v-if="!infoLoaded">
+                        <span v-if="!referenceLoaded">
                             <Spinner />
                         </span>
                         <div class="flex mb-1" v-for="ref in references">
@@ -117,8 +117,8 @@
                     </div>  
                 </div>                          
             </div>            
-            <div class="flex justify-end">
-                <button type="button" :disabled="isLoading" v-on:click="submitAticle()"
+            <div v-if="activeBtnByRole('author')" class="flex justify-end">
+                <button type="button" :disabled="isLoading" v-on:click="submitAticle('author')"
                     class="absolute bottom-6 right-6 px-12 py-2 text-sm text-center text-white bg-gray-900 rounded-md focus:outline-none font-bold">
                     <span v-if="!isLoading">
                         <font-awesome-icon :icon="['fas', 'floppy-disk']" /> &nbsp; Enviar
@@ -127,7 +127,32 @@
                         <Loading />
                     </span>
                 </button>                
-            </div>            
+            </div>   
+            <div v-if="activeBtnByRole('advisor')" class="flex justify-end">
+                <div class="absolute bottom-6 right-6">
+                    <button type="button" class="px-12 py-2 mr-2 text-sm text-center text-white bg-blue-800 rounded-md focus:outline-none font-bold">                                    
+                        <font-awesome-icon :icon="['fas', 'file-word']" /> &nbsp; Exportar                                     
+                    </button>
+
+                    <button v-on:click="approveArticle()" type="button" class="px-12 py-2 mr-2 text-sm text-center text-white bg-green-800 rounded-md focus:outline-none font-bold">                                    
+                        <font-awesome-icon :icon="['fas', 'arrow-up-from-bracket']" /> &nbsp; Aprovar                                     
+                    </button>
+
+                    <button v-on:click="returnToAuthor()" type="button" class="px-12 py-2 mr-2 text-sm text-center text-white bg-orange-800 rounded-md focus:outline-none font-bold">                                    
+                        <font-awesome-icon :icon="['fas', 'right-left']" /> &nbsp; Devolver para o aluno                                     
+                    </button>
+
+                    <button type="button" :disabled="isLoading" v-on:click="submitAticle('advisor')"
+                        class="px-12 py-2 text-sm text-center text-white bg-gray-900 rounded-md focus:outline-none font-bold">
+                        <span v-if="!isLoading">
+                            <font-awesome-icon :icon="['fas', 'floppy-disk']" /> &nbsp; Salvar
+                        </span>
+                        <span v-else>
+                            <Loading />
+                        </span>
+                    </button>
+                </div>
+            </div>         
         </form>        
     </div>
 
@@ -219,7 +244,7 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue';
 import router from "../../router"
-import { IArticleState, articleAdd, submissionDetails, articleEditStatus, authorDelete, articleAddAuthor, articleEditKeywords, articleAddReference, articleDelReference, articleSubmit } from '../../hooks/useArticle';
+import { IArticleState, articleAdd, submissionDetails, articleEditStatus, articleAddComment, authorDelete, articleAddAuthor, articleEditKeywords, articleAddReference, articleDelReference, articleSubmit } from '../../hooks/useArticle';
 import { eventDetails } from '../../hooks/useEvent';
 import { userList } from '../../hooks/useUser';
 import Swal from "sweetalert2"
@@ -228,6 +253,7 @@ import { Toast } from '../../hooks/useToast';
 import Modal from '../../components/Modal.vue';
 import Loading from '../../components/Loading.vue';
 import { format } from 'date-fns';
+import { getUserRole } from '../../hooks/useAuth';
 
 export default defineComponent({
     setup(){
@@ -253,6 +279,9 @@ export default defineComponent({
         const comments = ref("")   
         const article_status = ref("")  
         const infoLoaded = ref(false)
+        const keywordLoaded = ref(false)
+        const referenceLoaded = ref(false)
+        const authorLoaded = ref(false)
         const eventName = ref("")
         const allowedChars = ref("")
         const isModalAuthorVisible = ref(false)
@@ -281,6 +310,9 @@ export default defineComponent({
             comments,
             article_status,     
             infoLoaded,      
+            keywordLoaded,
+            referenceLoaded,
+            authorLoaded,
             eventName,      
             allowedChars,   
             isModalAuthorVisible,
@@ -327,17 +359,16 @@ export default defineComponent({
         },  
         async loadArticle(articleID) {      
             this.infoLoaded = false              
-            const resultArticle = await submissionDetails('author', articleID)                            
+            const resultArticle = await submissionDetails(getUserRole(true).toLowerCase(), articleID)                            
             if (resultArticle.value == undefined) {            
                 Toast().fire({icon: 'error', title: 'Artigo não encontrado!'})         
-                router.push('/events')
             }
 
             this.eventID = resultArticle.value['event']                
             const resultEvent = await eventDetails(this.eventID)               
             
             this.title = resultArticle.value['title'] != ' ' ? resultArticle.value['title'] : ''
-            this.authors = resultArticle.value['authors'] != ' ' ? resultArticle.value['authors'] : ''
+            this.authors = resultArticle.value['authors']
             this.advisors = resultArticle.value['advisors'] != ' ' ? resultArticle.value['advisors'] : ''
             this.keywords = resultArticle.value['keywords'] != ' ' ? (resultArticle.value['keywords']).split(';') : []
             this.summary = resultArticle.value['summary'] != ' ' ? resultArticle.value['summary'] : ''        
@@ -345,7 +376,10 @@ export default defineComponent({
             this.comments = resultArticle.value['comments'][0] != undefined ? resultArticle.value['comments'] : ''
             this.eventName = ' - ' + resultEvent.value['name']
             this.allowedChars = ' Número de caracteres permitidos: ' + resultEvent.value['number_characters']
-            this.infoLoaded = true           
+            this.infoLoaded = true   
+            this.authorLoaded = true
+            this.keywordLoaded = true       
+            this.referenceLoaded = true 
         },
         async searchAuthors(){                  
             this.search_author_data = ref()
@@ -361,19 +395,30 @@ export default defineComponent({
             this.search_author_loaded = true
         },
         async addAuthor(authorID) {
+            Toast().fire({icon: 'info', title: 'Carregando...'})
+            this.authorLoaded = false
+
             const result = await articleAddAuthor(this.getArticleID(), authorID)
 
             if (result.status == 'success') {
                 this.isModalAuthorVisible = false
-                this.loadArticle(this.getArticleID())
+                this.loadAuthors()
                 Toast().fire({icon: 'success', title: 'Author inserido com sucesso'})
             }
+        },
+        async loadAuthors() {
+            const result = await submissionDetails(getUserRole(true).toLowerCase(), this.getArticleID())                            
+            this.authors = result.value['authors']
+            this.authorLoaded = true
         },
         async addKeyword() {
             if (this.keyword.trim().length === 0) {            
                 Toast().fire({icon: 'warning', title: 'Informe a palavra-chave'})                         
                 return
             } 
+
+            Toast().fire({icon: 'info', title: 'Carregando...'})
+            this.keywordLoaded = false
 
             let keys = this.keywords.toString().replaceAll(',', ';') 
             if (keys != '') {
@@ -384,10 +429,15 @@ export default defineComponent({
             const result = await articleEditKeywords(this.getArticleID(), keys)
 
             if (result.status == 'success') {                
-                this.loadArticle(this.getArticleID())
+                this.loadKeywords()
                 this.keyword = ''
                 Toast().fire({icon: 'success', title: 'Palavra inserida com sucesso'})
             }            
+        },
+        async loadKeywords() {
+            const result = await submissionDetails(getUserRole(true).toLowerCase(), this.getArticleID())                            
+            this.keywords = result.value['keywords'] != ' ' ? (result.value['keywords']).split(';') : []   
+            this.keywordLoaded = true        
         },
         async addReference() {
             if (this.reference.trim().length === 0) {            
@@ -404,25 +454,34 @@ export default defineComponent({
                 confirmButtonText: "Sim, adicionar!",
                 cancelButtonText: "Cancelar",
             }).then(async (result) => {
-                if (result.isConfirmed) {   
-                    this.infoLoaded = false                 
+                if (result.isConfirmed) {  
+                    Toast().fire({icon: 'info', title: 'Carregando...'}) 
+                    this.referenceLoaded = false             
                     const result = await articleAddReference(this.getArticleID(), this.reference)
 
                     if (result.status == 'success') {                                      
                         Toast().fire({icon: 'success', title: 'Referência bibliográfica inserida com sucesso!'})                
                     }  
                     this.isModalReferenceVisible = false
-                    this.loadArticle(this.getArticleID())                     
+                    this.loadReferences()                     
                 }
             })     
         },
-        async delKeyword(key_by_remove) {                        
+        async loadReferences() {
+            const result = await submissionDetails(getUserRole(true).toLowerCase(), this.getArticleID())                            
+            this.references = result.value['references'] 
+            this.referenceLoaded = true        
+        },
+        async delKeyword(key_by_remove) {  
+            Toast().fire({icon: 'info', title: 'Carregando...'})
+            this.keywordLoaded = false
+
             let keys = (this.keywords.filter(item => item !== key_by_remove)).toString().replaceAll(',', ';')
       
             const result = await articleEditKeywords(this.getArticleID(), keys == '' ? ' ' : keys)
 
             if (result.status == 'success') {                
-                this.loadArticle(this.getArticleID())
+                this.loadKeywords()
                 Toast().fire({icon: 'success', title: 'Palavra removida com sucesso'})
             }                        
         },
@@ -437,18 +496,19 @@ export default defineComponent({
                 confirmButtonText: "Sim, excluir!",
                 cancelButtonText: "Cancelar",
             }).then(async (result) => {
-                if (result.isConfirmed) {   
-                    this.infoLoaded = false                 
+                if (result.isConfirmed) { 
+                    Toast().fire({icon: 'info', title: 'Carregando...'})  
+                    this.referenceLoaded = false                 
                     const result = await articleDelReference(this.getArticleID(), refID)
 
                     if (result.status == 'success') {                                      
                         Toast().fire({icon: 'success', title: 'Referência excluída com sucesso!'})                
                     }  
-                    this.loadArticle(this.getArticleID())                     
+                    this.loadReferences()                     
                 }
             })             
         },
-        async submitAticle() {
+        async submitAticle(role) {
             if (this.title == '') {
                 Toast().fire({icon: 'warning', title: 'Informe o título'})
                 return
@@ -460,14 +520,97 @@ export default defineComponent({
             this.isLoading = true
 
             const result1 = await articleSubmit(this.getArticleID(), this.title, this.summary)
-            const result2 = await articleEditStatus(this.getArticleID(), 2)
+
+            if (role == 'author') {
+                const result2 = await articleEditStatus(this.getArticleID(), 2)
             
-            if (result1.status == 'success' && result2.status == 'success') {                
-                router.push('/events')
-                Toast().fire({icon: 'success', title: 'Artigo submetido com sucesso'})
-            } else {
-                Toast().fire({icon: 'error', title: result1.message + result2.message})
-            }  
+                if (result1.status == 'success' && result2.status == 'success') {                
+                    router.push('/events')
+                    Toast().fire({icon: 'success', title: 'Artigo submetido com sucesso'})
+                } else {
+                    Toast().fire({icon: 'error', title: result1.message + result2.message})
+                }  
+            } else if (role == 'advisor') {
+                if (result1.status == 'success') {                
+                    Toast().fire({icon: 'success', title: 'Artigo salvo com sucesso'})
+                } else {
+                    Toast().fire({icon: 'error', title: result1.message})
+                }  
+                this.isLoading = false
+            }
+            
+        },
+        async returnToAuthor() {
+            const { value: comment } = await Swal.fire({
+                input: "textarea",
+                icon: "question",
+                inputLabel: "Informe o que deve ser corrigido no artigo.",               
+                showCancelButton: true,
+                cancelButtonColor: "#d33",
+                cancelButtonText: "Cancelar",
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "Confirmar",
+                inputValidator: (value) => {
+                    return new Promise((resolve) => {
+                        if (value) {
+                            resolve();
+                        } else {
+                            resolve("Preencha essa informação!)");
+                        }
+                    });
+                }
+            })
+
+            if (comment) {
+                Swal.fire({
+                    title: "Tem certeza?",
+                    html: `Você está prestes a devolver este artigo para os autores. Está certo disso?`,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Sim, devolver para o aluno!",
+                    cancelButtonText: "Cancelar",
+                }).then(async (result) => {
+                    if (result.isConfirmed) { 
+                        Toast().fire({icon: 'info', title: 'Carregando...'})
+
+                        const resultStatus = await articleEditStatus(this.getArticleID(), 3)
+                        const resultComment = await articleAddComment(this.getArticleID(), comment)
+
+                        if (resultStatus.status == 'success' && resultComment.status == 'success') {                
+                            Toast().fire({icon: 'success', title: 'Artigo devolvido para o aluno!'})     
+                            router.push('/submissions')
+                        } else {
+                            Toast().fire({icon: 'error', title: resultStatus.message + ' ' + resultComment.message})  
+                        }                            
+                    }
+                })      
+            }                  
+        },
+        async approveArticle() {
+            Swal.fire({
+                title: "Tem certeza?",
+                html: `Você está prestes a aprovar o artigo "<b>${this.title}</b>". Está certo disso?`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sim, aprovar o artigo!",
+                cancelButtonText: "Cancelar",
+            }).then(async (result) => {
+                if (result.isConfirmed) {        
+                    Toast().fire({icon: 'info', title: 'Carregando...'})            
+
+                    const result = await articleEditStatus(this.getArticleID(), 4)
+                    
+                    if (result.status == 'success') {                
+                        Toast().fire({icon: 'success', title: 'Artigo aprovado!'})     
+                        router.push('/submissions')
+                    } else
+                        Toast().fire({icon: 'error', title: result.message})  
+                }
+            });            
         },
         editReference() {
             
@@ -484,16 +627,19 @@ export default defineComponent({
                 cancelButtonText: "Cancelar",
             }).then(async (result) => {
                 if (result.isConfirmed) {   
-                    this.infoLoaded = false                 
+                    this.authorLoaded = false                 
                     const result = await authorDelete(this.getArticleID(), authorID)
 
                     if (result.status == 'success') {                                      
                         Toast().fire({icon: 'success', title: 'Autor excluído com sucesso!'})                
                     }  
-                    this.loadArticle(this.getArticleID())                     
+                    this.loadAuthors()               
                 }
             })     
-        },        
+        },     
+        activeBtnByRole(role) {
+            return this.infoLoaded && getUserRole(true).toLowerCase() == role
+        },
         formatDateComments(date) {
             return format(new Date(date), 'dd/MM hh:m')
         }, 
@@ -516,5 +662,4 @@ export default defineComponent({
     },    
     components: { Spinner, Loading, Modal }
 })
-
 </script>

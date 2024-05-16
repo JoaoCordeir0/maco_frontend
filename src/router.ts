@@ -12,7 +12,6 @@ import Article from './views/admin/Article.vue'
 import UserList from './views/admin/UserList.vue'
 import NotFound from './views/NotFound.vue'
 import SubmissionsList from './views/advisor/SubmissionsList.vue'
-import Submission from './views/advisor/Submission.vue'
 import MyCourses from './views/advisor/MyCourses.vue'
 import Submit from './views/author/Submit.vue'
 import Settings from './views/admin/Settings.vue'
@@ -93,12 +92,6 @@ const routes: RouteRecordRaw[] = [
     beforeEnter: authAdvisor
   },
   {
-    path: '/submission/:id',
-    name: 'Submission',
-    component: Submission,
-    beforeEnter: authAdvisor
-  },
-  {
     path: '/mycourses',
     name: 'MyCourses',
     component: MyCourses,
@@ -110,7 +103,7 @@ const routes: RouteRecordRaw[] = [
     path: '/submit/:articleid?',
     name: 'Submit',
     component: Submit,
-    beforeEnter: authAuthor
+    beforeEnter: authBasic
   },
   {
     path: '/events',
