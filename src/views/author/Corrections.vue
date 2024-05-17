@@ -1,14 +1,14 @@
 <template>   
-    <div v-if="showInCorrection" class="mt-2">
+    <div class="mt-2">
         <div class="bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2">
             <div class="flex flex-wrap">
                 <p class="text-gray-500 font-semibold text-xl border-b-2">Artigos em correção</p>                     
-                <div v-if="infonotnull" class="w-full mt-5">                         
+                <div v-if="!infoNull" class="w-full mt-5">                         
                     <div class="border-2 rounded p-2 mb-3" v-for="item in articles">                        
                         <div class="w-full grid grid-cols-6 gap-4">                    
                             <div class="col-start-1 col-end-8 ...">
                                 <div class="items-center">
-                                    <span>{{ item.id }}</span> - {{ item.title == ' ' ? 'Título não informado' : item.title }}
+                                    <span>{{ item.id }}</span> - {{ item.title }}
                                 </div>
                             </div>
                             <div class="col-end-10 col-span-2 ...">
@@ -16,13 +16,20 @@
                                     <font-awesome-icon :icon="['fas', 'newspaper']" /> Realizar correção
                                 </a>   
                                 &nbsp;
-                                <a href="#" v-on:click="delArticleIncomplete(item.id)" class="bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                <a href="#" v-on:click="delArticleInCorrection(item.id)" class="bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                     <font-awesome-icon :icon="['fas', 'trash-can']" /> Excluir
                                 </a>                                
                             </div>                
                         </div>
                     </div>                     
-                </div>               
+                </div>   
+                <div v-else class="w-full mt-5"> 
+                    <div class="border-2 rounded p-2 mb-3">                        
+                        <div class="w-full grid grid-cols-6 gap-4">                    
+                            Nenhum artigo em correção                                         
+                        </div>
+                    </div>   
+                </div>            
             </div>
         </div>
     </div>
@@ -46,8 +53,7 @@ export default defineComponent({
         })
 
         const infoLoaded = ref(false)     
-        const infonotnull = ref(false)   
-        const showInCorrection = ref(false)
+        const infoNull = ref(true)           
         const events = ref()
         const articles = ref()
 
@@ -55,8 +61,7 @@ export default defineComponent({
             ...toRefs(state),         
             events, 
             infoLoaded,
-            infonotnull,
-            showInCorrection,
+            infoNull,            
             articles,
         }
     }, 
@@ -70,12 +75,11 @@ export default defineComponent({
             const result = (await submissionsList('author', 'article_status=3')).value
 
             if(result[0] != undefined) {      
-                this.infonotnull = true          
-                this.articles = result
-                this.showInCorrection = true
+                this.infoNull = false          
+                this.articles = result                
             }                    
         },
-        async delArticleIncomplete(articleID) {
+        async delArticleInCorrection(articleID) {
             Swal.fire({
                 title: "Tem certeza?",
                 html: `Você está prestes a excluir. Está certo disso?`,

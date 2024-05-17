@@ -22,7 +22,7 @@
                 <div class="... bg-white border-2 rounded-xl border-gray px-5 pb-5 pt-3 mt-2">
                     <label class="block">
                         <span class="text-sm text-gray-700">Título do Artigo <span class="text-red-500 font-semibold">*</span></span>
-                        <input type="text" :disabled="!infoLoaded"
+                        <input type="text" :disabled="!infoLoaded || !editMode"
                             class="block w-full max-h-10 mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
                             v-model="title" />
                     </label>
@@ -42,13 +42,13 @@
                                 <span class="text-sm text-gray-700">E-mail</span>                                    
                                 <div class="flex">
                                     <input :value="author.email" disabled type="text" class="w-full max-h-10 block mt-1 border-gray-300 rounded-md"/>                                
-                                    <a v-if="userIsLogged(author.id)" href="#" v-on:click="delAuthor(author.id)" class="ms-2 bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                    <a v-if="userIsLogged(author.id) && editMode" href="#" v-on:click="delAuthor(author.id)" class="ms-2 bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                         <font-awesome-icon class="mt-2" size="lg" :icon="['fas', 'trash-can']" />
                                     </a> 
                                 </div>                                
                             </div>                               
                         </div>  
-                        <div class="mt-4 w-full flex justify-center">
+                        <div v-if="editMode" class="mt-4 w-full flex justify-center">
                             <button type="button" v-on:click="showAuthorModal" class="bg-blue-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                 Adicionar autor <font-awesome-icon :icon="['fas', 'user-plus']" />
                             </button> 
@@ -66,7 +66,7 @@
                 <div class="... bg-white border-2 rounded-xl border-gray px-5 pb-5 pt-3 mt-2">                      
                     <label class="block">
                         <span class="text-sm text-gray-700">Resumo <span class="text-red-500 font-semibold">*</span> <br> {{ allowedChars }}</span>
-                        <textarea name="" id="" cols="30" rows="5" v-model="summary" :disabled="!infoLoaded"
+                        <textarea name="" id="" cols="30" rows="5" v-model="summary" :disabled="!infoLoaded || !editMode"
                             class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"></textarea>
                     </label>
                 </div>    
@@ -82,10 +82,10 @@
                                     <Spinner />
                                 </span>
                             </div>
-                            <div class="flex">
+                            <div v-if="editMode" class="flex">
                                 <input type="text" :disabled="!infoLoaded"
-                                class="block w-72 max-h-10 mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
-                                v-model="keyword" />
+                                    class="block w-72 max-h-10 mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                                    v-model="keyword" />
                                 <button class="ms-2 mt-2 mb-3 bg-blue-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                     Adicionar palavra <font-awesome-icon :icon="['fas', 'circle-plus']" />
                                 </button> 
@@ -102,22 +102,22 @@
                         <div class="flex mb-1" v-for="ref in references">
                             <input type="text" :value="ref.reference"
                                 class="block w-full max-h-10 mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"/>
-                            <a href="#" v-on:click="editReference()" class="ms-2 mt-1 bg-blue-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md">                                 
+                            <a v-if="editMode" href="#" v-on:click="editReference()" class="ms-2 mt-1 bg-blue-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md">                                 
                                 <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'pen-to-square']" />
                             </a> 
-                            <a href="#" v-on:click="delReference(ref.id)" class="ms-2 mt-1 bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                            <a v-if="editMode" href="#" v-on:click="delReference(ref.id)" class="ms-2 mt-1 bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                 <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'trash-can']" />
                             </a> 
                         </div>
                     </label>
-                    <div class="mt-4 w-full flex justify-center">
+                    <div v-if="editMode" class="mt-4 w-full flex justify-center">
                         <button type="button" v-on:click="showReferenceModal" class="bg-blue-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                             Adicionar referência <font-awesome-icon :icon="['fas', 'circle-plus']" />
                         </button> 
                     </div>  
                 </div>                          
             </div>            
-            <div v-if="activeBtnByRole('author')" class="flex justify-end">
+            <div v-if="activeBtnByRole('author') && editMode" class="flex justify-end">
                 <button type="button" :disabled="isLoading" v-on:click="submitArticle()"
                     class="absolute bottom-6 right-6 px-12 py-2 text-sm text-center text-white bg-gray-900 rounded-md focus:outline-none font-bold">
                     <span v-if="!isLoading">
@@ -128,7 +128,7 @@
                     </span>
                 </button>                
             </div>   
-            <div v-if="activeBtnByRole('advisor')" class="flex justify-end">
+            <div v-if="activeBtnByRole('advisor') && editMode" class="flex justify-end">
                 <div class="absolute bottom-6 right-6">
                     <button type="button" class="px-12 py-2 mr-2 text-sm text-center text-white bg-blue-800 rounded-md focus:outline-none font-bold">                                    
                         <font-awesome-icon :icon="['fas', 'file-word']" /> &nbsp; Exportar                                     
@@ -273,6 +273,7 @@ export default defineComponent({
             message: ''
         })
         
+        const editMode = ref(true)
         const eventID = ref()
         const articleID = ref()
         const pageTitle = ref("")
@@ -304,6 +305,7 @@ export default defineComponent({
 
         return {
             ...toRefs(state),            
+            editMode,
             eventID,
             articleID,
             pageTitle,
@@ -338,9 +340,9 @@ export default defineComponent({
         getArticleID() {
             return this.$route.params.articleid
         },
-        async loadPageSettings() {
+        async loadPage() {
             this.eventID = sessionStorage.getItem('event-id-selected')
-            this.articleID = this.getArticleID()
+            this.articleID = this.getArticleID()            
 
             if (this.eventID == undefined && this.articleID == '') {        
                 Toast().fire({icon: 'error', title: 'Evento ou artigo não selecionado!'})         
@@ -380,6 +382,7 @@ export default defineComponent({
             
             this.title = resultArticle.value['title'] != ' ' ? resultArticle.value['title'] : ''
             this.authors = resultArticle.value['authors']
+            this.status = resultArticle.value['status']
             this.advisors = resultArticle.value['advisors'] != ' ' ? resultArticle.value['advisors'] : ''
             this.keywords = resultArticle.value['keywords'] != ' ' ? (resultArticle.value['keywords']).split(';') : []
             this.summary = resultArticle.value['summary'] != ' ' ? resultArticle.value['summary'] : ''        
@@ -390,7 +393,11 @@ export default defineComponent({
             this.infoLoaded = true   
             this.authorLoaded = true
             this.keywordLoaded = true       
-            this.referenceLoaded = true 
+            this.referenceLoaded = true
+                        
+            if (getUserRole(true) == 'AUTHOR' && ! ['in_submission', 'in_correction'].includes(this.status)) {
+                this.editMode = false
+            }
         },
         async searchAuthors(){                  
             this.search_author_data = ref()
@@ -468,6 +475,11 @@ export default defineComponent({
             }            
         },
         async delKeyword(key_by_remove) {  
+            if (!this.editMode) {
+                Toast().fire({icon: 'info', title: 'Não é possível excluir'})
+                return    
+            }
+
             Toast().fire({icon: 'info', title: 'Carregando...'})
             this.keywordLoaded = false
 
@@ -568,7 +580,7 @@ export default defineComponent({
                         inputValidator: (value) => {
                             return new Promise((resolve) => {
                                 if (value) {
-                                    resolve();
+                                    resolve("");
                                 } else {
                                     resolve("Preencha essa informação!)");
                                 }
@@ -589,12 +601,13 @@ export default defineComponent({
                             if (result.isConfirmed) { 
                                 const result1 = await articleAddComment(this.getArticleID(), comment)
                                 const result2 = await articleEditStatus(this.getArticleID(), 2)
-                                if (result1.status == 'success' && result2.status == 'success') {                
-                                    router.push('/events')
+                                if (result1.status == 'success' && result2.status == 'success') {                                                    
                                     Toast().fire({icon: 'success', title: 'Artigo submetido com sucesso'})
+                                    this.editMode = false
                                 } else {
                                     Toast().fire({icon: 'error', title: result1.message + ' ' + result2.message})
-                                }                              
+                                }   
+                                router.push('/events')                           
                             }
                         })      
                     }                                     
@@ -606,17 +619,18 @@ export default defineComponent({
                         showCancelButton: true,
                         confirmButtonColor: "#3085d6",
                         cancelButtonColor: "#d33",
-                        confirmButtonText: "Sim, devolver para o aluno!",
+                        confirmButtonText: "Sim, enviar!",
                         cancelButtonText: "Cancelar",
                     }).then(async (result) => {
                         if (result.isConfirmed) { 
                             const result = await articleEditStatus(this.getArticleID(), 2)            
-                            if (result.status == 'success') {                
-                                router.push('/events')
+                            if (result.status == 'success') {                                                
                                 Toast().fire({icon: 'success', title: 'Artigo submetido com sucesso'})
+                                this.editMode = false
                             } else {
                                 Toast().fire({icon: 'error', title: result.message})
                             }    
+                            router.push('/events')
                         }
                     })      
                 }         
@@ -657,7 +671,7 @@ export default defineComponent({
                 inputValidator: (value) => {
                     return new Promise((resolve) => {
                         if (value) {
-                            resolve();
+                            resolve("");
                         } else {
                             resolve("Preencha essa informação!)");
                         }
@@ -747,8 +761,8 @@ export default defineComponent({
     },
     beforeMount() {                      
         this.checkRole()
-        this.loadPageSettings()             
-        this.pageTitle = 'Submissão'               
+        this.loadPage()             
+        this.pageTitle = 'Submissão'                  
     },    
     components: { Spinner, Loading, Modal }
 })
