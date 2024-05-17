@@ -7,11 +7,10 @@ import ChangePassword from './views/auth/ChangePassword.vue'
 import Dashboard from './views/Dashboard.vue'
 import CourseList from './views/admin/CourseList.vue'
 import Course from './views/admin/Course.vue'
-import ArticleList from './views/admin/ArticleList.vue'
-import Article from './views/admin/Article.vue'
+import Articles from './views/admin/Articles.vue'
 import UserList from './views/admin/UserList.vue'
 import NotFound from './views/NotFound.vue'
-import SubmissionsList from './views/advisor/SubmissionsList.vue'
+import Submissions from './views/advisor/Submissions.vue'
 import MyCourses from './views/advisor/MyCourses.vue'
 import Submit from './views/author/Submit.vue'
 import Settings from './views/admin/Settings.vue'
@@ -61,14 +60,8 @@ const routes: RouteRecordRaw[] = [
   },  
   {
     path: '/articles',
-    name: 'ArticleList',
-    component: ArticleList,
-    beforeEnter: authAdmin
-  },
-  {
-    path: '/article/:action',
-    name: 'Article',
-    component: Article,
+    name: 'Articles',
+    component: Articles,
     beforeEnter: authAdmin
   },
   {
@@ -88,7 +81,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/submissions',
     name: 'Submissions',
-    component: SubmissionsList,
+    component: Submissions,
     beforeEnter: authAdvisor
   },
   {

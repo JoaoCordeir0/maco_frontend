@@ -12,8 +12,8 @@
                             <tr>
                                 <th class="px-5 text-start border-b-2">ID</th>
                                 <th class="px-5 text-start border-b-2">Título</th>        
-                                <th class="px-5 text-start border-b-2">Curso</th> 
-                                <th class="px-5 text-start border-b-2">Aluno</th>        
+                                <th class="px-5 text-start border-b-2">Curso(s)</th> 
+                                <th class="px-5 text-start border-b-2">Aluno(s)</th>        
                                 <th class="px-5 text-start border-b-2">Status</th>
                                 <th class="px-5 text-start border-b-2">Ações</th>
                             </tr>
@@ -27,10 +27,10 @@
                                     <p class="text-gray-900 whitespace-nowrap">{{ item.title }}</p>
                                 </td>                                
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                    <p class="text-gray-900 whitespace-nowrap">{{ item.course }}</p>
+                                    <p class="text-gray-900 whitespace-nowrap">{{ formatCourseAndAuthors(item.authors, 'course_name') }}</p>
                                 </td>  
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                    <p class="text-gray-900 whitespace-nowrap">{{ item.author }}</p>
+                                    <p class="text-gray-900 whitespace-nowrap">{{ formatCourseAndAuthors(item.authors, 'name') }}</p>
                                 </td>  
                                 <td class="px-5 py-5 text-sm border-b border-gray-200">
                                     <p class="text-gray-900 whitespace-nowrap"><span class="bg-cyan-500 rounded pt-1 pb-1 pr-3 pl-3 text-white">Em revisão</span></p>
@@ -78,6 +78,11 @@ export default defineComponent({
         }
     },
     methods: {
+        viewSubmission(articleID, eventID) {            
+            sessionStorage.setItem('article-added', 'y')    
+            sessionStorage.setItem('event-id-selected', eventID)
+            router.push(`/submit/${articleID}`)
+        },
         async loadArticles() {
             const result = (await submissionsList('advisor', '')).value // Consome a API
 
@@ -88,12 +93,22 @@ export default defineComponent({
                 Toast().fire({icon: 'warning', title: 'Nenhum artigo encontrado'})
             }        
             this.infoLoaded = true        
-        },
-        viewSubmission(articleID, eventID) {            
-            sessionStorage.setItem('article-added', 'y')    
-            sessionStorage.setItem('event-id-selected', eventID)
-            router.push(`/submit/${articleID}`)
-        },
+        },              
+        formatCourseAndAuthors(data, key) {
+            let _array : string[] = [];            
+            let _str = ''
+            for(let c = 0; c < Object.keys(data).length; c++) {
+                try {
+                    if (! _array.includes(data[c][key])){
+                        _array.push(data[c][key])
+                    }                                        
+                } catch(e) {}                
+            }
+            _array.forEach(item => {
+                _str += item + ' / '
+            });
+            return _str.slice(0, -3)         
+        }    
     },
     beforeMount(){
         this.loadArticles()

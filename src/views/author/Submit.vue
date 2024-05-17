@@ -42,7 +42,7 @@
                                 <span class="text-sm text-gray-700">E-mail</span>                                    
                                 <div class="flex">
                                     <input :value="author.email" disabled type="text" class="w-full max-h-10 block mt-1 border-gray-300 rounded-md"/>                                
-                                    <a v-if="showBtnDelAuthor(author.id)" href="#" v-on:click="delAuthor(author.id)" class="ms-2 bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                    <a v-if="userIsLogged(author.id)" href="#" v-on:click="delAuthor(author.id)" class="ms-2 bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                         <font-awesome-icon class="mt-2" size="lg" :icon="['fas', 'trash-can']" />
                                     </a> 
                                 </div>                                
@@ -118,7 +118,7 @@
                 </div>                          
             </div>            
             <div v-if="activeBtnByRole('author')" class="flex justify-end">
-                <button type="button" :disabled="isLoading" v-on:click="submitAticle('author')"
+                <button type="button" :disabled="isLoading" v-on:click="submitArticle()"
                     class="absolute bottom-6 right-6 px-12 py-2 text-sm text-center text-white bg-gray-900 rounded-md focus:outline-none font-bold">
                     <span v-if="!isLoading">
                         <font-awesome-icon :icon="['fas', 'floppy-disk']" /> &nbsp; Enviar
@@ -142,7 +142,7 @@
                         <font-awesome-icon :icon="['fas', 'right-left']" /> &nbsp; Devolver para o aluno                                     
                     </button>
 
-                    <button type="button" :disabled="isLoading" v-on:click="submitAticle('advisor')"
+                    <button type="button" :disabled="isLoading" v-on:click="saveArticle()"
                         class="px-12 py-2 text-sm text-center text-white bg-gray-900 rounded-md focus:outline-none font-bold">
                         <span v-if="!isLoading">
                             <font-awesome-icon :icon="['fas', 'floppy-disk']" /> &nbsp; Salvar
@@ -163,16 +163,27 @@
         </template>
         <template #body>
             <div class="px-5 pb-5 pt-1">                
-                <div class="flex items-start gap-2.5 mt-3" v-for="comment in comments">
-                    <span class="text-gray-700"><font-awesome-icon size="xl" :icon="['fas', 'user']" /></span>
-                    <!-- <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="Jese image"> -->
-                    <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-700">
-                        <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                            <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ comment.name }}</span>
-                            <span class="text-sm font-normal text-gray-500 dark:text-gray-400">{{ formatDateComments(comment.created_at) }}</span>
-                        </div>
-                        <p class="text-sm font-normal py-2.5 text-gray-900 dark:text-white">{{ comment.comment }}</p>                        
-                    </div>                               
+                <div v-for="comment in comments">
+                    <div class="flex w-full items-start gap-2.5 mt-3" v-if="userIsLogged(comment.user_id)">
+                        <span class="text-gray-700"><font-awesome-icon size="xl" :icon="['fas', 'user']" /></span>                    
+                        <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-700">
+                            <div class="flex items-center space-x-2 rtl:space-x-reverse">
+                                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ comment.user_name }}</span>
+                                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">{{ formatDateComments(comment.created_at) }}</span>
+                            </div>
+                            <p class="text-sm font-normal py-2.5 text-gray-900 dark:text-white">{{ comment.comment }}</p>                        
+                        </div>                               
+                    </div>
+                    <div class="flex items-start gap-2.5 mt-3 mb-3 float-end" v-else>                        
+                        <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-b-xl rounded-tl-xl dark:bg-green-800">
+                            <div class="flex items-center space-x-2 rtl:space-x-reverse">
+                                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ comment.user_name }}</span>
+                                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">{{ formatDateComments(comment.created_at) }}</span>
+                            </div>
+                            <p class="text-sm font-normal py-2.5 text-gray-900 dark:text-white">{{ comment.comment }}</p>                        
+                        </div>                               
+                        <span class="text-green-800"><font-awesome-icon size="xl" :icon="['fas', 'user']" /></span>                    
+                    </div>
                 </div>            
             </div>
         </template>
@@ -406,6 +417,28 @@ export default defineComponent({
                 Toast().fire({icon: 'success', title: 'Author inserido com sucesso'})
             }
         },
+        delAuthor(authorID) {
+            Swal.fire({
+                title: "Tem certeza?",
+                html: `Você está prestes a excluir. Está certo disso?`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sim, excluir!",
+                cancelButtonText: "Cancelar",
+            }).then(async (result) => {
+                if (result.isConfirmed) {   
+                    this.authorLoaded = false                 
+                    const result = await authorDelete(this.getArticleID(), authorID)
+
+                    if (result.status == 'success') {                                      
+                        Toast().fire({icon: 'success', title: 'Autor excluído com sucesso!'})                
+                    }  
+                    this.loadAuthors()               
+                }
+            })     
+        },  
         async loadAuthors() {
             const result = await submissionDetails(getUserRole(true).toLowerCase(), this.getArticleID())                            
             this.authors = result.value['authors']
@@ -433,6 +466,19 @@ export default defineComponent({
                 this.keyword = ''
                 Toast().fire({icon: 'success', title: 'Palavra inserida com sucesso'})
             }            
+        },
+        async delKeyword(key_by_remove) {  
+            Toast().fire({icon: 'info', title: 'Carregando...'})
+            this.keywordLoaded = false
+
+            let keys = (this.keywords.filter(item => item !== key_by_remove)).toString().replaceAll(',', ';')
+      
+            const result = await articleEditKeywords(this.getArticleID(), keys == '' ? ' ' : keys)
+
+            if (result.status == 'success') {                
+                this.loadKeywords()
+                Toast().fire({icon: 'success', title: 'Palavra removida com sucesso'})
+            }                        
         },
         async loadKeywords() {
             const result = await submissionDetails(getUserRole(true).toLowerCase(), this.getArticleID())                            
@@ -471,20 +517,7 @@ export default defineComponent({
             const result = await submissionDetails(getUserRole(true).toLowerCase(), this.getArticleID())                            
             this.references = result.value['references'] 
             this.referenceLoaded = true        
-        },
-        async delKeyword(key_by_remove) {  
-            Toast().fire({icon: 'info', title: 'Carregando...'})
-            this.keywordLoaded = false
-
-            let keys = (this.keywords.filter(item => item !== key_by_remove)).toString().replaceAll(',', ';')
-      
-            const result = await articleEditKeywords(this.getArticleID(), keys == '' ? ' ' : keys)
-
-            if (result.status == 'success') {                
-                this.loadKeywords()
-                Toast().fire({icon: 'success', title: 'Palavra removida com sucesso'})
-            }                        
-        },
+        },        
         async delReference(refID) {            
             Swal.fire({
                 title: "Tem certeza?",
@@ -508,7 +541,90 @@ export default defineComponent({
                 }
             })             
         },
-        async submitAticle(role) {
+        async submitArticle() {
+            if (this.title == '') {
+                Toast().fire({icon: 'warning', title: 'Informe o título'})
+                return
+            }
+            if (this.summary == '') {
+                Toast().fire({icon: 'warning', title: 'Informe o resumo'})
+                return
+            }
+            this.isLoading = true                     
+            
+            const result = await articleSubmit(this.getArticleID(), this.title, this.summary)
+
+            if (result.status == 'success') {
+                if (this.comments[0] != undefined) {
+                    const { value: comment } = await Swal.fire({
+                        input: "textarea",
+                        icon: "question",
+                        inputLabel: "Informe o que foi corrigido no artigo",               
+                        showCancelButton: true,
+                        cancelButtonColor: "#d33",
+                        cancelButtonText: "Cancelar",
+                        confirmButtonColor: "#3085d6",
+                        confirmButtonText: "Confirmar",
+                        inputValidator: (value) => {
+                            return new Promise((resolve) => {
+                                if (value) {
+                                    resolve();
+                                } else {
+                                    resolve("Preencha essa informação!)");
+                                }
+                            });
+                        }
+                    })
+                    if (comment) {
+                        Swal.fire({
+                            title: "Tem certeza?",
+                            html: `Você está prestes a enviar esta correção. Está certo disso?`,
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Sim, enviar!",
+                            cancelButtonText: "Cancelar",
+                        }).then(async (result) => {
+                            if (result.isConfirmed) { 
+                                const result1 = await articleAddComment(this.getArticleID(), comment)
+                                const result2 = await articleEditStatus(this.getArticleID(), 2)
+                                if (result1.status == 'success' && result2.status == 'success') {                
+                                    router.push('/events')
+                                    Toast().fire({icon: 'success', title: 'Artigo submetido com sucesso'})
+                                } else {
+                                    Toast().fire({icon: 'error', title: result1.message + ' ' + result2.message})
+                                }                              
+                            }
+                        })      
+                    }                                     
+                } else {
+                    Swal.fire({
+                        title: "Tem certeza?",
+                        html: `Você está prestes a enviar este artigo. Está certo disso?`,
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Sim, devolver para o aluno!",
+                        cancelButtonText: "Cancelar",
+                    }).then(async (result) => {
+                        if (result.isConfirmed) { 
+                            const result = await articleEditStatus(this.getArticleID(), 2)            
+                            if (result.status == 'success') {                
+                                router.push('/events')
+                                Toast().fire({icon: 'success', title: 'Artigo submetido com sucesso'})
+                            } else {
+                                Toast().fire({icon: 'error', title: result.message})
+                            }    
+                        }
+                    })      
+                }         
+            } else {
+                Toast().fire({icon: 'error', title: result.message})
+            }                                                     
+        },      
+        async saveArticle() {
             if (this.title == '') {
                 Toast().fire({icon: 'warning', title: 'Informe o título'})
                 return
@@ -519,26 +635,14 @@ export default defineComponent({
             }
             this.isLoading = true
 
-            const result1 = await articleSubmit(this.getArticleID(), this.title, this.summary)
+            const result = await articleSubmit(this.getArticleID(), this.title, this.summary)
 
-            if (role == 'author') {
-                const result2 = await articleEditStatus(this.getArticleID(), 2)
-            
-                if (result1.status == 'success' && result2.status == 'success') {                
-                    router.push('/events')
-                    Toast().fire({icon: 'success', title: 'Artigo submetido com sucesso'})
-                } else {
-                    Toast().fire({icon: 'error', title: result1.message + result2.message})
-                }  
-            } else if (role == 'advisor') {
-                if (result1.status == 'success') {                
-                    Toast().fire({icon: 'success', title: 'Artigo salvo com sucesso'})
-                } else {
-                    Toast().fire({icon: 'error', title: result1.message})
-                }  
-                this.isLoading = false
-            }
-            
+            if (result.status == 'success') {                
+                Toast().fire({icon: 'success', title: 'Artigo salvo com sucesso'})
+            } else {
+                Toast().fire({icon: 'error', title: result.message})
+            }  
+            this.isLoading = false            
         },
         async returnToAuthor() {
             const { value: comment } = await Swal.fire({
@@ -614,38 +718,16 @@ export default defineComponent({
         },
         editReference() {
             
-        },
-        delAuthor(authorID) {
-            Swal.fire({
-                title: "Tem certeza?",
-                html: `Você está prestes a excluir. Está certo disso?`,
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Sim, excluir!",
-                cancelButtonText: "Cancelar",
-            }).then(async (result) => {
-                if (result.isConfirmed) {   
-                    this.authorLoaded = false                 
-                    const result = await authorDelete(this.getArticleID(), authorID)
-
-                    if (result.status == 'success') {                                      
-                        Toast().fire({icon: 'success', title: 'Autor excluído com sucesso!'})                
-                    }  
-                    this.loadAuthors()               
-                }
-            })     
-        },     
+        },           
         activeBtnByRole(role) {
             return this.infoLoaded && getUserRole(true).toLowerCase() == role
         },
         formatDateComments(date) {
-            return format(new Date(date), 'dd/MM hh:m')
+            return format(new Date(date), 'dd/MM HH:mm')
         }, 
-        showBtnDelAuthor(author) {
+        userIsLogged(author) {            
             return author != localStorage.getItem('user-id')
-        },      
+        },              
         showAuthorModal () {            
             this.isModalAuthorVisible = !this.isModalAuthorVisible
         },      
@@ -655,8 +737,16 @@ export default defineComponent({
         showCommentsModal() {
             this.isModalCommentsVisible = !this.isModalCommentsVisible
         },
+        checkRole() {
+            let roles = ['author', 'advisor', 'admin']
+
+            if (! roles.includes(getUserRole(true).toLowerCase())) {
+                router.push('/login')
+            }
+        }
     },
-    beforeMount() {              
+    beforeMount() {                      
+        this.checkRole()
         this.loadPageSettings()             
         this.pageTitle = 'Submissão'               
     },    
