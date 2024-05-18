@@ -50,13 +50,13 @@ export function authAdmin(to, from, next) {
 
 export function authAdvisor(to, from, next) {
     const token = localStorage.getItem('user-token') != undefined
-    const role = String(getUserRole()) == '2:ADVISOR'
+    const role = String(getUserRole()) == '2:ADVISOR' || String(getUserRole()) == '2:ADMIN'
     token && role ? next() : next('/login')    
 }
 
 export function authAuthor(to, from, next) {
     const token = localStorage.getItem('user-token') != undefined
-    const role = String(getUserRole()) == '3:AUTHOR'
+    const role = String(getUserRole()) == '3:AUTHOR' || String(getUserRole()) == '2:ADVISOR' || String(getUserRole()) == '2:ADMIN'
     token && role ? next() : next('/login')    
 }
 

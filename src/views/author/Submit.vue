@@ -99,13 +99,13 @@
                         <span v-if="!referenceLoaded">
                             <Spinner />
                         </span>
-                        <div class="flex mb-1" v-for="ref in references">
-                            <input type="text" :value="ref.reference"
+                        <div class="flex mb-1" v-for="(ref, index) in references" :key="index">
+                            <input type="text" :value="ref.reference" :ref="'inputRef' + index"
                                 class="block w-full max-h-10 mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"/>
-                            <a v-if="editMode" href="#" v-on:click="editReference()" class="ms-2 mt-1 bg-blue-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md">                                 
-                                <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'pen-to-square']" />
+                            <a v-if="editMode" href="#" v-on:click="editReference(ref.id, index)" title="Salvar alterações na referência" class="ms-2 mt-1 bg-gray-900 text-white ps-2 pe-2 pt-1 pb-1 rounded-md">                                 
+                                <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'floppy-disk']" />
                             </a> 
-                            <a v-if="editMode" href="#" v-on:click="delReference(ref.id)" class="ms-2 mt-1 bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                            <a v-if="editMode" href="#" v-on:click="delReference(ref.id)" title="Excluir referência" class="ms-2 mt-1 bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                 <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'trash-can']" />
                             </a> 
                         </div>
@@ -141,6 +141,27 @@
                     <button v-on:click="returnToAuthor()" type="button" class="px-12 py-2 mr-2 text-sm text-center text-white bg-orange-800 rounded-md focus:outline-none font-bold">                                    
                         <font-awesome-icon :icon="['fas', 'right-left']" /> &nbsp; Devolver para o aluno                                     
                     </button>
+
+                    <button type="button" :disabled="isLoading" v-on:click="saveArticle()"
+                        class="px-12 py-2 text-sm text-center text-white bg-gray-900 rounded-md focus:outline-none font-bold">
+                        <span v-if="!isLoading">
+                            <font-awesome-icon :icon="['fas', 'floppy-disk']" /> &nbsp; Salvar
+                        </span>
+                        <span v-else>
+                            <Loading />
+                        </span>
+                    </button>
+                </div>
+            </div>      
+            <div v-if="activeBtnByRole('admin') && editMode" class="flex justify-end">
+                <div class="absolute bottom-6 right-6">
+                    <button type="button" class="px-12 py-2 mr-2 text-sm text-center text-white bg-blue-800 rounded-md focus:outline-none font-bold">                                    
+                        <font-awesome-icon :icon="['fas', 'file-word']" /> &nbsp; Exportar                                     
+                    </button>
+
+                    <button v-on:click="approveArticle()" type="button" class="px-12 py-2 mr-2 text-sm text-center text-white bg-green-800 rounded-md focus:outline-none font-bold">                                    
+                        <font-awesome-icon :icon="['fas', 'arrow-up-from-bracket']" /> &nbsp; Finalizar                                     
+                    </button>                   
 
                     <button type="button" :disabled="isLoading" v-on:click="saveArticle()"
                         class="px-12 py-2 text-sm text-center text-white bg-gray-900 rounded-md focus:outline-none font-bold">
@@ -255,7 +276,7 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue';
 import router from "../../router"
-import { IArticleState, articleAdd, submissionDetails, articleEditStatus, articleAddComment, authorDelete, articleAddAuthor, articleEditKeywords, articleAddReference, articleDelReference, articleSubmit } from '../../hooks/useArticle';
+import { IArticleState, articleAdd, submissionDetails, articleEditReference, articleEditStatus, articleAddComment, authorDelete, articleAddAuthor, articleEditKeywords, articleAddReference, articleDelReference, articleSubmit } from '../../hooks/useArticle';
 import { eventDetails } from '../../hooks/useEvent';
 import { userList } from '../../hooks/useUser';
 import Swal from "sweetalert2"
@@ -543,7 +564,8 @@ export default defineComponent({
             }).then(async (result) => {
                 if (result.isConfirmed) { 
                     Toast().fire({icon: 'info', title: 'Carregando...'})  
-                    this.referenceLoaded = false                 
+                    this.referenceLoaded = false   
+                                  
                     const result = await articleDelReference(this.getArticleID(), refID)
 
                     if (result.status == 'success') {                                      
@@ -553,6 +575,22 @@ export default defineComponent({
                 }
             })             
         },
+        async editReference(refID, index) {            
+            const inputRefValue = this.$refs['inputRef' + index] as HTMLInputElement[];
+            if (inputRefValue && inputRefValue[0]) {                
+                Toast().fire({icon: 'info', title: 'Carregando...'})  
+                this.referenceLoaded = false
+
+                const result = await articleEditReference(this.getArticleID(), refID, inputRefValue[0].value)
+                    
+                if (result.status == 'success') {                
+                    Toast().fire({icon: 'success', title: 'Referência atualizada!'})   
+                    this.loadReferences()                       
+                } else {
+                    Toast().fire({icon: 'error', title: result.message})  
+                }
+            }
+        },  
         async submitArticle() {
             if (this.title == '') {
                 Toast().fire({icon: 'warning', title: 'Informe o título'})
@@ -725,14 +763,12 @@ export default defineComponent({
                     if (result.status == 'success') {                
                         Toast().fire({icon: 'success', title: 'Artigo aprovado!'})     
                         router.push('/submissions')
-                    } else
+                    } else {
                         Toast().fire({icon: 'error', title: result.message})  
+                    }                        
                 }
             });            
-        },
-        editReference() {
-            
-        },           
+        },                
         activeBtnByRole(role) {
             return this.infoLoaded && getUserRole(true).toLowerCase() == role
         },

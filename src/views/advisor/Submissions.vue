@@ -2,10 +2,19 @@
     <div class="mt-2">
         <div class="bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2 mb-2">
             <div class="flex flex-wrap">
-                <p class="text-gray-500 font-semibold text-xl border-b-2">Artigos submetidos</p>
-                <span v-if="!infoLoaded">
-                    <Spinner />
-                </span>
+                <div class="w-full grid grid-cols-6 gap-4">                    
+                    <div class="col-start-1 col-end-8 ...">
+                        <p class="text-gray-500 font-semibold text-xl"><span class="border-b-2"> {{ pageTitle }} </span>
+                            <span v-if="!infoLoaded">
+                                <Spinner />
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-end-10 col-span-2 ...">
+                        <ArticleAdminFilter @some-event="loadArticles" v-if="getRole() == 'admin'" />
+                        <ArticleAdvisorFilter @some-event="loadArticles" v-if="getRole() == 'advisor'" />
+                    </div>                
+                </div>
                 <div v-if="infonotnull" class="overflow-x-auto inline-block min-w-full rounded-lg">                    
                     <table class="min-w-full leading-normal mt-5">
                         <thead>
@@ -13,7 +22,7 @@
                                 <th class="px-5 text-start border-b-2">ID</th>
                                 <th class="px-5 text-start border-b-2">Título</th>        
                                 <th class="px-5 text-start border-b-2">Curso(s)</th> 
-                                <th class="px-5 text-start border-b-2">Aluno(s)</th>        
+                                <th class="px-5 text-start border-b-2">Autores(s)</th>        
                                 <th class="px-5 text-start border-b-2">Status</th>
                                 <th class="px-5 text-start border-b-2">Ações</th>
                             </tr>
@@ -24,7 +33,7 @@
                                     <p class="text-gray-900 whitespace-nowrap">{{ item.id }}</p>
                                 </td>
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                    <p class="text-gray-900 whitespace-nowrap">{{ item.title }}</p>
+                                    <p class="text-gray-900 whitespace-nowrap">{{ item.title == ' ' ? 'Título não informado' : item.title }}</p>
                                 </td>                                
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
                                     <p class="text-gray-900 whitespace-nowrap">{{ formatCourseAndAuthors(item.authors, 'course_name') }}</p>
@@ -33,11 +42,12 @@
                                     <p class="text-gray-900 whitespace-nowrap">{{ formatCourseAndAuthors(item.authors, 'name') }}</p>
                                 </td>  
                                 <td class="px-5 py-5 text-sm border-b border-gray-200">
-                                    <p class="text-gray-900 whitespace-nowrap"><span class="bg-cyan-500 rounded pt-1 pb-1 pr-3 pl-3 text-white">Em revisão</span></p>
+                                    <p class="text-gray-900 whitespace-nowrap"><span :class="getColorArticleStatus(item.status)" class="rounded pt-1 pb-1 pr-3 pl-3 text-white">{{ formatArticleStatus(item.status) }}</span></p>
                                 </td>                                
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200 min-w-72">
-                                    <div class="sm:inline-block">                                        
-                                        <a href="#" v-on:click="viewSubmission(item.id, item.event)" class="sm:px-5 sm:py-2 px-5 bg-gray-900 m-2 mt-2 text-white rounded"><font-awesome-icon :icon="['fas', 'eye']" /> &nbsp; <span class="hidden lg:inline">Visualizar</span></a>                                        
+                                    <div class="sm:inline-block">                                          
+                                        <a v-if="getRole() == 'admin'" href="#" v-on:click="" class="sm:px-5 sm:py-2 px-5 bg-blue-800 m-2 mt-2 text-white rounded"><font-awesome-icon :icon="['fas', 'file-word']" /> &nbsp; <span class="hidden lg:inline">Exportar</span></a>
+                                        <a href="#" v-on:click="viewSubmission(item.id, item.event)" class="sm:px-5 sm:py-2 px-5 bg-gray-900 m-2 mt-2 text-white rounded"><font-awesome-icon :icon="['fas', 'eye']" /> &nbsp; <span class="hidden lg:inline">Visualizar</span></a>
                                     </div>                                    
                                 </td>
                             </tr>
@@ -54,10 +64,13 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue';
-import { IArticleState, submissionsList } from '../../hooks/useArticle';
+import { IArticleState, articleList, submissionsList } from '../../hooks/useArticle';
 import Spinner from "../../components/Spinner.vue"
 import { Toast } from '../../hooks/useToast';
 import router from '../../router';
+import ArticleAdminFilter from '../../components/filters/ArticleAdminFilter.vue';
+import { getUserRole } from '../../hooks/useAuth';
+import ArticleAdvisorFilter from '../../components/filters/ArticleAdvisorFilter.vue';
 
 export default defineComponent({
     async setup(){
@@ -66,12 +79,14 @@ export default defineComponent({
             message: '',
         })
 
+        const pageTitle = 'Listagem de artigos'
         const articles = ref()
         const infonotnull = ref(false)
         const infoLoaded = ref(false)
 
         return {
             ...toRefs(state),
+            pageTitle,
             articles,
             infonotnull,
             infoLoaded,
@@ -83,16 +98,20 @@ export default defineComponent({
             sessionStorage.setItem('event-id-selected', eventID)
             router.push(`/submit/${articleID}`)
         },
-        async loadArticles() {
-            const result = (await submissionsList('advisor', '')).value // Consome a API
+        async loadArticles(filter) {        
+            this.infoLoaded = false
+            this.infonotnull = false
+            this.articles = null
 
+            let result = (await articleList(getUserRole(true).toLowerCase(), filter)).value                                 
+                            
             if(result[0] != undefined) {
                 this.articles = result
                 this.infonotnull = true
             } else {
                 Toast().fire({icon: 'warning', title: 'Nenhum artigo encontrado'})
             }        
-            this.infoLoaded = true        
+            this.infoLoaded = true      
         },              
         formatCourseAndAuthors(data, key) {
             let _array : string[] = [];            
@@ -108,12 +127,62 @@ export default defineComponent({
                 _str += item + ' / '
             });
             return _str.slice(0, -3)         
-        }    
+        },
+        formatArticleStatus(status) {
+            let newStatus = ''
+            switch(status) {
+                case 'in_submission':
+                    newStatus = 'Em submissão'
+                    break
+                case 'in_revision':
+                    newStatus = 'Em revisão'
+                    break
+                case 'in_correction':
+                    newStatus = 'Em correção'
+                    break
+                case 'approved':
+                    newStatus = 'Aprovado'
+                    break  
+                case 'finished':
+                    newStatus = 'Finalizado'
+                    break   
+            }
+            return newStatus;
+        },
+        getColorArticleStatus(status) {
+            let color = ''
+            switch(status) {
+                case 'in_submission':
+                    color = 'bg-yellow-500'
+                    break
+                case 'in_revision':
+                    color = 'bg-cyan-500'
+                    break
+                case 'in_correction':
+                    color = 'bg-red-500'
+                    break
+                case 'approved':
+                    color = 'bg-green-500'
+                    break  
+                case 'finished':
+                    color = 'bg-grenn-800'
+                    break   
+            }
+            return color;
+        },
+        getRole() {            
+            return getUserRole(true).toLowerCase()
+        }
     },
-    beforeMount(){
-        this.loadArticles()
+     beforeMount(){
+        if (getUserRole(true) == 'ADVISOR') {            
+            this.pageTitle = 'Submissões aguardando revisão'
+        }
+        if (getUserRole(true) == 'AUTHOR') {
+            router.push('/events')
+        }
     },
-    components: { Spinner }
+    components: { Spinner, ArticleAdminFilter, ArticleAdvisorFilter }
 })
 
 </script>

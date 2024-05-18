@@ -23,7 +23,7 @@
                     </div>                     
                 </div>
                 <div v-else class="overflow-x-auto inline-block min-w-full rounded-lg mt-5">                    
-                   <p>Nenhum evento disponível</p>
+                   <p>Nenhum evento disponível para submissão</p>
                 </div>
             </div>
         </div>
@@ -33,7 +33,7 @@
         <div class="bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2">
             <div class="flex flex-wrap">
                 <p class="text-gray-500 font-semibold text-xl border-b-2">Artigos incompletos</p>                     
-                <div v-if="infonotnull" class="w-full mt-5">                         
+                <div class="w-full mt-5">                         
                     <div class="border-2 rounded p-2 mb-3" v-for="item in articles">                        
                         <div class="w-full grid grid-cols-6 gap-4">                    
                             <div class="col-start-1 col-end-8 ...">
@@ -113,13 +113,13 @@ export default defineComponent({
             this.infoLoaded = true                 
         },       
         async loadArticlesIncomplete() {            
+            this.showIncomplete = false
             const result = (await submissionsList('author', 'article_status=1')).value
 
             if(result[0] != undefined) {
                 this.articles = result
                 this.showIncomplete = true
-            } else {                
-            }                    
+            }                  
         },
         async delArticleIncomplete(articleID) {
             Swal.fire({

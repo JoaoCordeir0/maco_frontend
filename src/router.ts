@@ -5,9 +5,8 @@ import Login from './views/auth/Login.vue'
 import ForgotPassword from './views/auth/ForgotPassword.vue'
 import ChangePassword from './views/auth/ChangePassword.vue'
 import Dashboard from './views/Dashboard.vue'
-import CourseList from './views/admin/CourseList.vue'
+import Courses from './views/admin/Courses.vue'
 import Course from './views/admin/Course.vue'
-import Articles from './views/admin/Articles.vue'
 import UserList from './views/admin/UserList.vue'
 import NotFound from './views/NotFound.vue'
 import Submissions from './views/advisor/Submissions.vue'
@@ -48,8 +47,8 @@ const routes: RouteRecordRaw[] = [
   // Admin routes
   {
     path: '/courses',
-    name: 'CourseList',
-    component: CourseList,   
+    name: 'Courses',
+    component: Courses,   
     beforeEnter: authAdmin,
   },
   {
@@ -58,12 +57,6 @@ const routes: RouteRecordRaw[] = [
     component: Course,   
     beforeEnter: authAdmin,
   },  
-  {
-    path: '/articles',
-    name: 'Articles',
-    component: Articles,
-    beforeEnter: authAdmin
-  },
   {
     path: '/users',
     name: 'UsersList',
@@ -82,7 +75,7 @@ const routes: RouteRecordRaw[] = [
     path: '/submissions',
     name: 'Submissions',
     component: Submissions,
-    beforeEnter: authAdvisor
+    beforeEnter: authBasic
   },
   {
     path: '/mycourses',

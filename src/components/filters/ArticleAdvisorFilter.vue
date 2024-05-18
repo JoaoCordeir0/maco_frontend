@@ -18,24 +18,15 @@
         leave-to-class="scale-95 opacity-0">
         <div
             v-show="filter"
-            class="absolute right-10 z-20 p-3 mt-2 bg-white rounded-md shadow-xl border-2">       
-            <p class="mt-2">Filtro por status</p>
-            <select v-model="status" @change="$emit('someEvent', { status: status, course: course, event: event })" class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full">
-                <!-- <option value="0" selected>Todos os status</option> -->
-                <option value="1">Artigos em submissão</option>
-                <option value="2">Artigos em revisão</option>
-                <option value="3">Artigos em correção</option>
-                <option value="4">Artigos aprovados</option>
-            </select>
-            <br>
+            class="absolute right-10 z-20 p-3 mt-2 bg-white rounded-md shadow-xl border-2">               
             <p>Filtro por curso</p>
-            <select v-model="course" @change="$emit('someEvent', { status: status, course: course, event: event })" class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full">
+            <select v-model="course" @change="$emit('someEvent', { course: course, event: event })" class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full">
                 <option value="0" selected>Todos os cursos</option>    
                 <option v-for="item in courses" v-bind:value="item.id">{{ item.name }}</option>                        
             </select>
             <br>
             <p>Filtro por evento</p>
-            <select v-model="event" @change="$emit('someEvent', { status: status, course: course, event: event })" class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full">
+            <select v-model="event" @change="$emit('someEvent', { course: course, event: event })" class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full">
                 <!-- <option value="0" selected>Todos os eventos</option> -->
                 <option v-for="item in events" v-bind:value="item.id">{{ item.name }}</option>                        
             </select>
@@ -45,7 +36,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { courseList } from '../../hooks/useCourse';
+import { courseListByUser } from '../../hooks/useCourse';
 import { eventList } from '../../hooks/useEvent';
 
 export default defineComponent({
@@ -68,7 +59,7 @@ export default defineComponent({
     },    
     methods: {
         async loadCourses() {
-            const result = await courseList()                                            
+            const result = await courseListByUser()                                            
             this.courses = result
         }, 
         async loadEvents() {
@@ -80,7 +71,7 @@ export default defineComponent({
     beforeMount() {
         this.loadCourses()   
         this.loadEvents()        
-        this.$emit('someEvent', { status: this.status, course: this.course, event: this.event })
+        this.$emit('someEvent', { course: this.course, event: this.event })
     }  
 })
 </script>

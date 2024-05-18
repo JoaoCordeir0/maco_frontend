@@ -23,12 +23,12 @@
 
         <div v-if="roleUser == '1:ADMIN'">
           <router-link class="flex items-center px-4 py-2 mt-2 duration-200"
-            :class="[$route.name === 'ArticleList' ? activeClass : inactiveClass]" to="/articles">
+            :class="[$route.name === 'Submissions' ? activeClass : inactiveClass]" to="/submissions">
             <font-awesome-icon :icon="['fas', 'newspaper']" />
             <span class="mx-4 font-semibold">Artigos</span>
           </router-link>
           <router-link class="flex items-center px-4 py-2 mt-2 duration-200"
-            :class="[$route.name === 'CourseList' ? activeClass : inactiveClass]" to="/courses">
+            :class="[$route.name === 'Courses' ? activeClass : inactiveClass]" to="/courses">
             <font-awesome-icon :icon="['fas', 'scroll']" />
             <span class="mx-4 font-semibold">Cursos</span>
           </router-link>       
@@ -46,7 +46,7 @@
         
         <div v-if="roleUser == '2:ADVISOR'">
           <router-link class="flex items-center px-4 py-2 mt-2 duration-200"
-            :class="[$route.name === 'SubmissionsList' ? activeClass : inactiveClass]" to="/submissions">
+            :class="[$route.name === 'Submissions' ? activeClass : inactiveClass]" to="/submissions">
             <font-awesome-icon :icon="['fas', 'newspaper']" />
             <span class="mx-4 font-semibold">Submissões</span>
           </router-link>

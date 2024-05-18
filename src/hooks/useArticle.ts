@@ -9,8 +9,8 @@ export interface IArticleState {
     message: String
 }
 
-export async function articleList(filter) {
-    let path = '/article/list/admin'
+export async function articleList(level, filter) {
+    let path = `/article/list/${level}`
     let char = '?'
     if (filter.status != undefined && filter.status != 0) {
         path = `${path}?article_status=${filter.status}`
@@ -32,7 +32,7 @@ export async function articleList(filter) {
     return ref<IArticleState[]>(data)
 }
 
-export async function submissionsList(level, filter) {    
+export async function submissionsList(level, filter) {     
     const { data } = await axios.get(`${api.url}/article/list/${level}?${filter}`, {
         headers: api.authBearer
     })
@@ -159,4 +159,19 @@ export async function articleSubmit(article, title, summary) {
 
     return data
 }
+
+export async function articleEditReference(article, ref, value) {    
+    let params = {
+        'article': article,
+        'ref_id': ref,
+        'ref_str': value,
+    }
+
+    const { data } = await axios.post(`${api.url}/article/edit/reference`, params, {
+        headers: api.authBearer
+    })
+
+    return data
+}
+
 
