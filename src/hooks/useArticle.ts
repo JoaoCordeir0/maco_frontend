@@ -56,8 +56,16 @@ export async function submissionDelete(articleID) {
     return data
 }
 
-export async function authorDelete(article, user) {    
+export async function articleDelAuthor(article, user) {    
     const { data } = await axios.delete(`${api.url}/article/author/del/${article}/${user}`, {
+        headers: api.authBearer,        
+    })
+
+    return data
+}
+
+export async function articleDelAdvisor(article, user) {    
+    const { data } = await axios.delete(`${api.url}/article/advisor/del/${article}/${user}`, {
         headers: api.authBearer,        
     })
 
@@ -106,6 +114,20 @@ export async function articleAddAuthor(article, author) {
     }
 
     const { data } = await axios.post(`${api.url}/article/add/author`, params, {
+        headers: api.authBearer
+    })
+
+    return data
+}
+
+export async function articleAddAdvisor(article, adivisor, coadvisor) {    
+    let params = {
+        'article': article,
+        'advisor': adivisor,
+        'coadvisor': coadvisor,
+    }
+
+    const { data } = await axios.post(`${api.url}/article/add/advisor`, params, {
         headers: api.authBearer
     })
 

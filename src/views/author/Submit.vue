@@ -57,12 +57,32 @@
                 </div>  
                 <div class="... bg-white border-2 rounded-xl border-gray px-5 pb-5 pt-3 mt-2">
                     <label class="block">
-                        <span class="text-sm text-gray-700">Nome dos orientadores <span class="text-red-500 font-semibold">*</span></span>
-                        <input type="text" :disabled="!infoLoaded"
-                            class="block w-full max-h-10 mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
-                            v-model="advisors" />
+                        <span class="text-sm text-gray-700">Orientadores <span class="text-red-500 font-semibold">*</span></span>    
+                        <span v-if="!authorLoaded">
+                            <Spinner />
+                        </span>                                
+                        <div v-for="advisor in advisors" class="grid grid-cols-2 gap-4 md:grid-cols-2 xl:grid-cols-2">                                        
+                            <div class="... mt-1">
+                                <span class="text-sm text-gray-700">Nome</span>                                    
+                                <input :value="advisor.name" disabled type="text" class="block w-full max-h-10 mt-1 border-gray-300 rounded-md"/>
+                            </div>
+                            <div class="... mt-1">
+                                <span class="text-sm text-gray-700">E-mail</span>                                    
+                                <div class="flex">
+                                    <input :value="advisor.email" disabled type="text" class="w-full max-h-10 block mt-1 border-gray-300 rounded-md"/>                                
+                                    <a v-if="userIsLogged(advisor.id) && editMode" href="#" v-on:click="delAdvisor(advisor.id)" class="ms-2 bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                        <font-awesome-icon class="mt-2" size="lg" :icon="['fas', 'trash-can']" />
+                                    </a> 
+                                </div>                                
+                            </div>                               
+                        </div>  
+                        <div v-if="editMode" class="mt-4 w-full flex justify-center">
+                            <button type="button" v-on:click="showAdvisorModal" class="bg-blue-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                Adicionar orientador <font-awesome-icon :icon="['fas', 'user-plus']" />
+                            </button> 
+                        </div>                            
                     </label>
-                </div>                   
+                </div>                    
                 <div class="... bg-white border-2 rounded-xl border-gray px-5 pb-5 pt-3 mt-2">                      
                     <label class="block">
                         <span class="text-sm text-gray-700">Resumo <span class="text-red-500 font-semibold">*</span> <br> {{ allowedChars }}</span>
@@ -247,6 +267,43 @@
         </template>
     </Modal>
 
+    <!-- Modal de adição dos orientadores -->
+    <Modal v-show="isModalAdvisorVisible" @some-event="showAdvisorModal">
+        <template #header>
+            <p class="text-xl">Adição de orientadores</p>
+        </template>
+        <template #body>
+            <div class="px-5 py-5 mt-0">
+                <form @submit.prevent="">
+                    <label class="block">
+                        <span class="text-sm text-gray-700">Informe o nome ou e-mail para buscar:</span>
+                        <div class="flex">
+                            <input type="text"
+                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                            placeholder="Exemplo: João Vi..."                                                        
+                            v-model="search_advisor_info"/>
+                            <button class="bg-gray-300 ml-2 rounded p-3" v-on:click="searchAdvisors()"><font-awesome-icon :icon="['fas', 'magnifying-glass']" /></button>  
+                        </div>                        
+                    </label>   
+                </form>
+
+                <span v-if="!search_advisor_loaded" class="flex justify-center mt-2">
+                    <Spinner />
+                </span>
+                <div v-for="advisor in search_advisor_data" class="mt-3">                    
+                    <div class="bg-gray-300 p-3 rounded">                        
+                        <p>{{ advisor.name }} - <a :href="advisor.email" class="text-blue-700">{{ advisor.email }}</a>
+                            <a href="#" v-on:click="addAdvisor(advisor.id)" class="bg-blue-600 text-white px-3 rounded-md float-end">Adicionar <font-awesome-icon :icon="['fas', 'user-plus']" /></a>
+                        </p>
+                    </div>                    
+                </div>    
+                <div v-if="!search_advisor_data" class="bg-gray-300 p-3 rounded mt-3">
+                    <p>Nenhum orientador encontrado</p>
+                </div>
+            </div>
+        </template>
+    </Modal>
+
     <!-- Modal de adição de referências -->
     <Modal v-show="isModalReferenceVisible" @some-event="showReferenceModal">
         <template #header>
@@ -276,7 +333,22 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue';
 import router from "../../router"
-import { IArticleState, articleAdd, submissionDetails, articleEditReference, articleEditStatus, articleAddComment, authorDelete, articleAddAuthor, articleEditKeywords, articleAddReference, articleDelReference, articleSubmit } from '../../hooks/useArticle';
+import { 
+    IArticleState, 
+    articleAdd, 
+    submissionDetails, 
+    articleAddAdvisor, 
+    articleEditReference,
+    articleEditStatus, 
+    articleAddComment, 
+    articleDelAuthor, 
+    articleDelAdvisor,
+    articleAddAuthor, 
+    articleEditKeywords, 
+    articleAddReference, 
+    articleDelReference,
+    articleSubmit 
+} from '../../hooks/useArticle';
 import { eventDetails } from '../../hooks/useEvent';
 import { userList } from '../../hooks/useUser';
 import Swal from "sweetalert2"
@@ -315,14 +387,19 @@ export default defineComponent({
         const keywordLoaded = ref(false)
         const referenceLoaded = ref(false)
         const authorLoaded = ref(false)
+        const advisorLoaded = ref(false)
         const eventName = ref("")
         const allowedChars = ref("")
         const isModalAuthorVisible = ref(false)
+        const isModalAdvisorVisible = ref(false)
         const isModalReferenceVisible = ref(false)
         const isModalCommentsVisible = ref(false)      
         const search_author_info = ref("")
         const search_author_data = ref()
         const search_author_loaded = ref(true)
+        const search_advisor_info = ref("")
+        const search_advisor_data = ref()
+        const search_advisor_loaded = ref(true)
 
         return {
             ...toRefs(state),            
@@ -347,14 +424,19 @@ export default defineComponent({
             keywordLoaded,
             referenceLoaded,
             authorLoaded,
+            advisorLoaded,
             eventName,      
             allowedChars,   
             isModalAuthorVisible,
+            isModalAdvisorVisible,
             isModalReferenceVisible,
             isModalCommentsVisible,
             search_author_info,
             search_author_data,
             search_author_loaded,
+            search_advisor_info,
+            search_advisor_data,
+            search_advisor_loaded,
         }
     }, 
     methods: {   
@@ -421,7 +503,7 @@ export default defineComponent({
             }
         },
         async searchAuthors(){                  
-            this.search_author_data = ref()
+            this.search_author_data = ref()            
             if (this.search_author_info == '') {            
                 Toast().fire({icon: 'warning', title: 'Informe o nome, RA ou e-mail para buscar!'})                         
                 return
@@ -433,6 +515,19 @@ export default defineComponent({
             }            
             this.search_author_loaded = true
         },
+        async searchAdvisors(){                  
+            this.search_advisor_data = ref()            
+            if (this.search_advisor_info == '') {            
+                Toast().fire({icon: 'warning', title: 'Informe o nome ou e-mail para buscar!'})                         
+                return
+            }                   
+            this.search_advisor_loaded = false     
+            const result = (await userList('advisor', { 'user_info': this.search_advisor_info, 'article_id': this.getArticleID() })).value
+            if (result[0] != undefined) {
+                this.search_advisor_data = result
+            }            
+            this.search_advisor_loaded = true
+        },
         async addAuthor(authorID) {
             Toast().fire({icon: 'info', title: 'Carregando...'})
             this.authorLoaded = false
@@ -442,7 +537,19 @@ export default defineComponent({
             if (result.status == 'success') {
                 this.isModalAuthorVisible = false
                 this.loadAuthors()
-                Toast().fire({icon: 'success', title: 'Author inserido com sucesso'})
+                Toast().fire({icon: 'success', title: 'Autor inserido com sucesso'})
+            }
+        },
+        async addAdvisor(advisorID) {
+            Toast().fire({icon: 'info', title: 'Carregando...'})
+            this.advisorLoaded = false
+
+            const result = await articleAddAdvisor(this.getArticleID(), advisorID, '0')
+
+            if (result.status == 'success') {
+                this.isModalAdvisorVisible = false
+                this.loadAdvisors()
+                Toast().fire({icon: 'success', title: 'Orientador inserido com sucesso'})
             }
         },
         delAuthor(authorID) {
@@ -458,7 +565,7 @@ export default defineComponent({
             }).then(async (result) => {
                 if (result.isConfirmed) {   
                     this.authorLoaded = false                 
-                    const result = await authorDelete(this.getArticleID(), authorID)
+                    const result = await articleDelAuthor(this.getArticleID(), authorID)
 
                     if (result.status == 'success') {                                      
                         Toast().fire({icon: 'success', title: 'Autor excluído com sucesso!'})                
@@ -467,10 +574,37 @@ export default defineComponent({
                 }
             })     
         },  
+        delAdvisor(advisorID) {
+            Swal.fire({
+                title: "Tem certeza?",
+                html: `Você está prestes a excluir. Está certo disso?`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sim, excluir!",
+                cancelButtonText: "Cancelar",
+            }).then(async (result) => {
+                if (result.isConfirmed) {   
+                    this.advisorLoaded = false                 
+                    const result = await articleDelAdvisor(this.getArticleID(), advisorID)
+
+                    if (result.status == 'success') {                                      
+                        Toast().fire({icon: 'success', title: 'Orientador excluído com sucesso!'})                
+                    }  
+                    this.loadAdvisors()               
+                }
+            })     
+        },  
         async loadAuthors() {
             const result = await submissionDetails(getUserRole(true).toLowerCase(), this.getArticleID())                            
             this.authors = result.value['authors']
             this.authorLoaded = true
+        },
+        async loadAdvisors() {
+            const result = await submissionDetails(getUserRole(true).toLowerCase(), this.getArticleID())                            
+            this.advisors = result.value['advisors']
+            this.advisorLoaded = true
         },
         async addKeyword() {
             if (this.keyword.trim().length === 0) {            
@@ -781,6 +915,9 @@ export default defineComponent({
         showAuthorModal () {            
             this.isModalAuthorVisible = !this.isModalAuthorVisible
         },      
+        showAdvisorModal () {            
+            this.isModalAdvisorVisible = !this.isModalAdvisorVisible
+        },
         showReferenceModal() {
             this.isModalReferenceVisible = !this.isModalReferenceVisible
         },
