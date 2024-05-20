@@ -2,7 +2,10 @@
     <div class="mt-2">
         <div class="bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2">
             <div class="flex flex-wrap">
-                <p class="text-gray-500 font-semibold text-xl border-b-2">Artigos em correção</p>                     
+                <p class="text-gray-500 font-semibold text-xl border-b-2">Artigos em correção</p>    
+                <span v-if="!infoLoaded">
+                    <Spinner />
+                </span>                      
                 <div v-if="!infoNull" class="w-full mt-5">                         
                     <div class="border-2 rounded p-2 mb-3" v-for="item in articles">                        
                         <div class="w-full grid grid-cols-6 gap-4">                    
@@ -76,6 +79,7 @@ export default defineComponent({
 
             if(result[0] != undefined) {      
                 this.infoNull = false          
+                this.infoLoaded = true
                 this.articles = result                
             }                    
         },

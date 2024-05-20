@@ -1,0 +1,54 @@
+<template>
+    <button
+        @click="filter = !filter"
+        class="relative z-10 block h-9 text-bold bg-blue-700 text-white ps-4 pe-4 rounded">
+        <font-awesome-icon :icon="['fas', 'filter']" /> Filtro
+    </button>
+    <div
+        v-show="filter"
+        @click="filter = false"
+        class="fixed inset-0 z-10 w-full h-full">        
+    </div>
+    <transition
+        enter-active-class="transition duration-150 ease-out transform"
+        enter-from-class="scale-95 opacity-0"
+        enter-to-class="scale-100 opacity-100"
+        leave-active-class="transition duration-150 ease-in transform"
+        leave-from-class="scale-100 opacity-100"
+        leave-to-class="scale-95 opacity-0">
+        <div
+            v-show="filter"
+            class="absolute right-10 z-20 p-3 mt-2 bg-white rounded-md shadow-xl border-2">       
+            <p class="mt-2">Filtro por nível de usuário</p>
+            <select v-model="role" @change="$emit('someEvent', { user_role: role })" class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full">                
+                <option value="1">Administrador</option>
+                <option value="2">Revisor</option>
+                <option value="3">Aluno</option>                
+            </select>           
+        </div>
+    </transition>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
+import { courseList } from '../../hooks/useCourse';
+import { eventList } from '../../hooks/useEvent';
+
+export default defineComponent({
+    async setup(){       
+        const filter = ref(false);        
+        const role = ref(1)        
+
+        return {            
+            filter,            
+            role,        
+        }
+    },    
+    methods: {
+
+    },
+    beforeMount() {      
+        this.$emit('someEvent', { user_role: this.role })
+    }  
+})
+</script>

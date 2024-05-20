@@ -2,10 +2,18 @@
     <div class="mt-2">
         <div class="bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2 mb-2">
             <div class="flex flex-wrap">
-                <p class="text-gray-500 font-semibold text-xl border-b-2">Listagem de usuários</p>
-                <span v-if="!infoLoaded">
-                    <Spinner />
-                </span>
+                <div class="w-full grid grid-cols-6 gap-4">                    
+                    <div class="col-start-1 col-end-8 ...">
+                        <p class="text-gray-500 font-semibold text-xl"><span class="border-b-2"> Listagem de usuários </span>
+                            <span v-if="!infoLoaded">
+                                <Spinner />
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-end-10 col-span-2 ...">
+                        <UserAdminFilter @some-event="loadUsers" />                        
+                    </div>                
+                </div>               
                 <div v-if="infonotnull" class="overflow-x-auto inline-block min-w-full rounded-lg">                    
                     <table class="min-w-full leading-normal mt-5">
                         <thead>
@@ -53,6 +61,7 @@ import Spinner from "../../components/Spinner.vue"
 import { IUserState, userList, userDel } from "../../hooks/useUser"
 import Swal from "sweetalert2"
 import { Toast } from "../../hooks/useToast"
+import UserAdminFilter from '../../components/filters/UserAdminFilter.vue'
 
 export default defineComponent({
     async setup() {
@@ -72,8 +81,9 @@ export default defineComponent({
         }
     },
     methods: {
-        async loadUsers() {                        
-            const result = (await userList('admin', {})).value // Consome a API
+        async loadUsers(filter) {                        
+            this.infoLoaded = false
+            const result = (await userList('admin', filter)).value // Consome a API
             
             if (result[0] != undefined) {
                 this.users = result
@@ -81,7 +91,7 @@ export default defineComponent({
             } else {
                 Toast().fire({icon: 'warning', title: 'Nenhum usuário encontrado'})      
             }            
-            this.infoLoaded = true                                          
+            this.infoLoaded = true
         },             
         formatCPF(cpf) {            
             cpf = cpf.replace(/[^\d]/g, "");                    
@@ -118,9 +128,6 @@ export default defineComponent({
             return courses_str.slice(0, -3)           
         }
     },
-    beforeMount() {
-        this.loadUsers()
-    },
-    components: { Spinner }
+    components: { Spinner, UserAdminFilter }
 })
 </script>

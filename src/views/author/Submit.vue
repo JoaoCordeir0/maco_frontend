@@ -32,56 +32,97 @@
                         <span class="text-sm text-gray-700">Autores <span class="text-red-500 font-semibold">*</span></span>    
                         <span v-if="!authorLoaded">
                             <Spinner />
-                        </span>                                
-                        <div v-for="author in authors" class="grid grid-cols-2 gap-4 md:grid-cols-2 xl:grid-cols-2">                                        
-                            <div class="... mt-1">
-                                <span class="text-sm text-gray-700">Nome</span>                                    
-                                <input :value="author.name" disabled type="text" class="block w-full max-h-10 mt-1 border-gray-300 rounded-md"/>
-                            </div>
-                            <div class="... mt-1">
-                                <span class="text-sm text-gray-700">E-mail</span>                                    
-                                <div class="flex">
-                                    <input :value="author.email" disabled type="text" class="w-full max-h-10 block mt-1 border-gray-300 rounded-md"/>                                
-                                    <a v-if="userIsLogged(author.id) && editMode" href="#" v-on:click="delAuthor(author.id)" class="ms-2 bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
-                                        <font-awesome-icon class="mt-2" size="lg" :icon="['fas', 'trash-can']" />
-                                    </a> 
-                                </div>                                
-                            </div>                               
-                        </div>  
-                        <div v-if="editMode" class="mt-4 w-full flex justify-center">
+                        </span>    
+                        <div v-if="authors[0] != undefined" class="mb-4">
+                            <div v-for="author in authors" class="grid grid-cols-2 gap-4 md:grid-cols-2 xl:grid-cols-2">                                        
+                                <div class="... mt-1">
+                                    <span class="text-sm text-gray-700">Nome</span>                                    
+                                    <input :value="author.name" disabled type="text" class="block w-full max-h-10 mt-1 border-gray-300 rounded-md"/>
+                                </div>
+                                <div class="... mt-1">
+                                    <span class="text-sm text-gray-700">E-mail</span>                                    
+                                    <div class="flex">
+                                        <input :value="author.email" disabled type="text" class="w-full max-h-10 block mt-1 border-gray-300 rounded-md"/>                                
+                                        <a v-if="userIsLogged(author.id) && editMode" href="#" v-on:click="delAuthor(author.id)" class="ms-2 bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                            <font-awesome-icon class="mt-2" size="lg" :icon="['fas', 'trash-can']" />
+                                        </a> 
+                                    </div>                                
+                                </div>                               
+                            </div>                          
+                        </div>
+                        <div v-else-if="infoLoaded" class="mb-2">
+                            <p class="text-sm"> Nenhum autor inserido. </p>
+                        </div>
+                        <div v-if="editMode && infoLoaded" class="w-full flex justify-center">
                             <button type="button" v-on:click="showAuthorModal" class="bg-blue-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                 Adicionar autor <font-awesome-icon :icon="['fas', 'user-plus']" />
                             </button> 
                         </div>                            
                     </label>
                 </div>  
-                <div class="... bg-white border-2 rounded-xl border-gray px-5 pb-5 pt-3 mt-2">
+                <div class="... bg-white border-2 rounded-xl border-gray px-5 pb-5 pt-3 mt-2">                    
+                    <label class="block">
+                        <span class="text-sm text-gray-700">Co-orientadores</span>    
+                        <span v-if="!advisorLoaded">
+                            <Spinner />
+                        </span>  
+                        <div v-if="showCoAdvisorAndAdvisor(1, advisors)" class="mb-4">
+                            <div v-for="advisor in advisors"> 
+                                <div v-if="advisor.is_coadvisor == 1" class="grid grid-cols-2 gap-4 md:grid-cols-2 xl:grid-cols-2">                                                                        
+                                    <div class="... mt-1">
+                                        <span class="text-sm text-gray-700">Nome</span>
+                                        <input :value="advisor.name" disabled type="text" class="block w-full max-h-10 mt-1 border-gray-300 rounded-md"/>
+                                    </div>
+                                    <div class="... mt-1">                                    
+                                        <span class="text-sm text-gray-700">E-mail</span>                                 
+                                        <div class="flex">
+                                            <input :value="advisor.email" disabled type="text" class="w-full max-h-10 border-gray-300 block mt-1 rounded-md"/>                                
+                                            <a v-if="userIsLogged(advisor.id) && editMode" href="#" v-on:click="delAdvisor(advisor.id)" class="ms-2 bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                                <font-awesome-icon class="mt-2" size="lg" :icon="['fas', 'trash-can']" />
+                                            </a> 
+                                        </div>                                
+                                    </div>                                                                
+                                </div>                                      
+                            </div>                                         
+                        </div>      
+                        <div v-else-if="infoLoaded">
+                            <p class="text-sm">Nenhum orientador inserido.</p>
+                        </div>                                                                                                                                   
+                    </label>
+                    <hr class="my-3">
                     <label class="block">
                         <span class="text-sm text-gray-700">Orientadores <span class="text-red-500 font-semibold">*</span></span>    
-                        <span v-if="!authorLoaded">
+                        <span v-if="!advisorLoaded">
                             <Spinner />
-                        </span>                                
-                        <div v-for="advisor in advisors" class="grid grid-cols-2 gap-4 md:grid-cols-2 xl:grid-cols-2">                                        
-                            <div class="... mt-1">
-                                <span class="text-sm text-gray-700">Nome</span>                                    
-                                <input :value="advisor.name" disabled type="text" class="block w-full max-h-10 mt-1 border-gray-300 rounded-md"/>
-                            </div>
-                            <div class="... mt-1">
-                                <span class="text-sm text-gray-700">E-mail</span>                                    
-                                <div class="flex">
-                                    <input :value="advisor.email" disabled type="text" class="w-full max-h-10 block mt-1 border-gray-300 rounded-md"/>                                
-                                    <a v-if="userIsLogged(advisor.id) && editMode" href="#" v-on:click="delAdvisor(advisor.id)" class="ms-2 bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
-                                        <font-awesome-icon class="mt-2" size="lg" :icon="['fas', 'trash-can']" />
-                                    </a> 
-                                </div>                                
-                            </div>                               
-                        </div>  
-                        <div v-if="editMode" class="mt-4 w-full flex justify-center">
-                            <button type="button" v-on:click="showAdvisorModal" class="bg-blue-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
-                                Adicionar orientador <font-awesome-icon :icon="['fas', 'user-plus']" />
-                            </button> 
-                        </div>                            
+                        </span>  
+                        <div v-if="showCoAdvisorAndAdvisor(0, advisors)" class="mb-4">
+                            <div v-for="advisor in advisors"> 
+                                <div v-if="advisor.is_coadvisor == 0" class="grid grid-cols-2 gap-4 md:grid-cols-2 xl:grid-cols-2">                                                                        
+                                    <div class="... mt-1">
+                                        <span class="text-sm text-gray-700">Nome</span>
+                                        <input :value="advisor.name" disabled type="text" class="block w-full max-h-10 mt-1 border-gray-300 rounded-md"/>
+                                    </div>
+                                    <div class="... mt-1">                                    
+                                        <span class="text-sm text-gray-700">E-mail</span>                                 
+                                        <div class="flex">
+                                            <input :value="advisor.email" disabled type="text" class="w-full max-h-10 border-gray-300 block mt-1 rounded-md"/>                                
+                                            <a v-if="userIsLogged(advisor.id) && editMode" href="#" v-on:click="delAdvisor(advisor.id)" class="ms-2 bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                                <font-awesome-icon class="mt-2" size="lg" :icon="['fas', 'trash-can']" />
+                                            </a> 
+                                        </div>                                
+                                    </div>                                                                
+                                </div>                                      
+                            </div>                                         
+                        </div>      
+                        <div v-else-if="infoLoaded">
+                            <p class="text-sm">Nenhum orientador inserido.</p>
+                        </div>                                                                                                                                   
                     </label>
+                    <div v-if="editMode && infoLoaded" class="w-full flex justify-center">
+                        <button :disable="infoLoaded" type="button" v-on:click="showAdvisorModal" class="bg-blue-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                            Adicionar orientador <font-awesome-icon :icon="['fas', 'user-plus']" />
+                        </button> 
+                    </div>   
                 </div>                    
                 <div class="... bg-white border-2 rounded-xl border-gray px-5 pb-5 pt-3 mt-2">                      
                     <label class="block">
@@ -102,7 +143,7 @@
                                     <Spinner />
                                 </span>
                             </div>
-                            <div v-if="editMode" class="flex">
+                            <div v-if="editMode && infoLoaded" class="flex">
                                 <input type="text" :disabled="!infoLoaded"
                                     class="block w-72 max-h-10 mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
                                     v-model="keyword" />
@@ -130,7 +171,7 @@
                             </a> 
                         </div>
                     </label>
-                    <div v-if="editMode" class="mt-4 w-full flex justify-center">
+                    <div v-if="editMode && infoLoaded" class="mt-4 w-full flex justify-center">
                         <button type="button" v-on:click="showReferenceModal" class="bg-blue-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                             Adicionar referência <font-awesome-icon :icon="['fas', 'circle-plus']" />
                         </button> 
@@ -242,9 +283,9 @@
                         <span class="text-sm text-gray-700">Informe o nome, e-mail ou RA para buscar:</span>
                         <div class="flex">
                             <input type="text"
-                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
-                            placeholder="Exemplo: João Vi..."                                                        
-                            v-model="search_author_info"/>
+                                class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                                placeholder="Exemplo: João Vi..."                                                        
+                                v-model="search_author_info"/>
                             <button class="bg-gray-300 ml-2 rounded p-3" v-on:click="searchAuthors()"><font-awesome-icon :icon="['fas', 'magnifying-glass']" /></button>  
                         </div>                        
                     </label>   
@@ -254,13 +295,19 @@
                     <Spinner />
                 </span>
                 <div v-for="author in search_author_data" class="mt-3">                    
-                    <div class="bg-gray-300 p-3 rounded">                        
-                        <p>{{ author.name }} - <a :href="author.email" class="text-blue-700">{{ author.email }}</a>
-                            <a href="#" v-on:click="addAuthor(author.id)" class="bg-blue-600 text-white px-3 rounded-md float-end">Adicionar <font-awesome-icon :icon="['fas', 'user-plus']" /></a>
-                        </p>
+                    <div class="bg-gray-300 p-2 rounded">                                                
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="col-start-1 col-end-8 ...">
+                                <p>Nome: {{ author.name }}</p>
+                                <p>E-mail: <a :href="author.email" class="text-blue-700">{{ author.email }}</a></p>
+                            </div>                            
+                            <div class="col-end-10 col-span-2 m-auto">
+                                <a href="#" v-on:click="addAuthor(author.id)" class="bg-blue-600 text-white px-3 py-1 rounded-md">Adicionar <font-awesome-icon :icon="['fas', 'user-plus']" /></a>
+                            </div>
+                        </div>
                     </div>                    
                 </div>    
-                <div v-if="!search_author_data" class="bg-gray-300 p-3 rounded mt-3">
+                <div v-if="!search_author_data && search_author_loaded" class="bg-gray-300 p-3 rounded mt-3">
                     <p>Nenhum autor encontrado</p>
                 </div>
             </div>
@@ -279,9 +326,9 @@
                         <span class="text-sm text-gray-700">Informe o nome ou e-mail para buscar:</span>
                         <div class="flex">
                             <input type="text"
-                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
-                            placeholder="Exemplo: João Vi..."                                                        
-                            v-model="search_advisor_info"/>
+                                class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                                placeholder="Exemplo: João Vi..."                                                        
+                                v-model="search_advisor_info"/>
                             <button class="bg-gray-300 ml-2 rounded p-3" v-on:click="searchAdvisors()"><font-awesome-icon :icon="['fas', 'magnifying-glass']" /></button>  
                         </div>                        
                     </label>   
@@ -289,15 +336,21 @@
 
                 <span v-if="!search_advisor_loaded" class="flex justify-center mt-2">
                     <Spinner />
-                </span>
+                </span>                
                 <div v-for="advisor in search_advisor_data" class="mt-3">                    
-                    <div class="bg-gray-300 p-3 rounded">                        
-                        <p>{{ advisor.name }} - <a :href="advisor.email" class="text-blue-700">{{ advisor.email }}</a>
-                            <a href="#" v-on:click="addAdvisor(advisor.id)" class="bg-blue-600 text-white px-3 rounded-md float-end">Adicionar <font-awesome-icon :icon="['fas', 'user-plus']" /></a>
-                        </p>
+                    <div class="bg-gray-300 p-2 rounded">                        
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="col-start-1 col-end-8 ...">
+                                <p>Nome: {{ advisor.name }}</p>
+                                <p>E-mail: <a :href="advisor.email" class="text-blue-700">{{ advisor.email }}</a></p>
+                            </div>                            
+                            <div class="col-end-10 col-span-2 m-auto">
+                                <a href="#" v-on:click="addAdvisor(advisor.id)" class="bg-blue-600 text-white px-3 py-1 rounded-md">Adicionar <font-awesome-icon :icon="['fas', 'user-plus']" /></a>
+                            </div>
+                        </div>
                     </div>                    
                 </div>    
-                <div v-if="!search_advisor_data" class="bg-gray-300 p-3 rounded mt-3">
+                <div v-if="!search_advisor_data && search_advisor_loaded" class="bg-gray-300 p-3 rounded mt-3">
                     <p>Nenhum orientador encontrado</p>
                 </div>
             </div>
@@ -495,6 +548,7 @@ export default defineComponent({
             this.allowedChars = ' Número de caracteres permitidos: ' + resultEvent.value['number_characters']
             this.infoLoaded = true   
             this.authorLoaded = true
+            this.advisorLoaded = true
             this.keywordLoaded = true       
             this.referenceLoaded = true
                         
@@ -540,17 +594,36 @@ export default defineComponent({
                 Toast().fire({icon: 'success', title: 'Autor inserido com sucesso'})
             }
         },
-        async addAdvisor(advisorID) {
-            Toast().fire({icon: 'info', title: 'Carregando...'})
-            this.advisorLoaded = false
-
-            const result = await articleAddAdvisor(this.getArticleID(), advisorID, '0')
-
-            if (result.status == 'success') {
-                this.isModalAdvisorVisible = false
-                this.loadAdvisors()
-                Toast().fire({icon: 'success', title: 'Orientador inserido com sucesso'})
-            }
+        async addAdvisor(advisorID) {                        
+            Swal.fire({                
+                html: `Adicionar como:`,
+                icon: "question",
+                showCancelButton: true,
+                showDenyButton: true,
+                confirmButtonColor: "#3085d6",
+                denyButtonColor: "#111827",
+                confirmButtonText: "Co-orientador",
+                denyButtonText: "Orientador",
+                cancelButtonText: "Cancelar",
+            }).then(async (modal) => {     
+                if (modal.isConfirmed) {
+                    this.advisorLoaded = false
+                    const result = await articleAddAdvisor(this.getArticleID(), advisorID, 1)
+                    if (result.status == 'success') {
+                        this.isModalAdvisorVisible = false
+                        this.loadAdvisors()
+                        Toast().fire({icon: 'success', title: 'Co-orientador inserido com sucesso'})
+                    }
+                } else if (modal.isDenied) {
+                    this.advisorLoaded = false
+                    const result = await articleAddAdvisor(this.getArticleID(), advisorID, 0)
+                    if (result.status == 'success') {
+                        this.isModalAdvisorVisible = false
+                        this.loadAdvisors()
+                        Toast().fire({icon: 'success', title: 'Orientador inserido com sucesso'})
+                    }
+                }                                 
+            })               
         },
         delAuthor(authorID) {
             Swal.fire({
@@ -562,8 +635,8 @@ export default defineComponent({
                 cancelButtonColor: "#d33",
                 confirmButtonText: "Sim, excluir!",
                 cancelButtonText: "Cancelar",
-            }).then(async (result) => {
-                if (result.isConfirmed) {   
+            }).then(async (modal) => {
+                if (modal.isConfirmed) {   
                     this.authorLoaded = false                 
                     const result = await articleDelAuthor(this.getArticleID(), authorID)
 
@@ -584,8 +657,8 @@ export default defineComponent({
                 cancelButtonColor: "#d33",
                 confirmButtonText: "Sim, excluir!",
                 cancelButtonText: "Cancelar",
-            }).then(async (result) => {
-                if (result.isConfirmed) {   
+            }).then(async (modal) => {
+                if (modal.isConfirmed) {   
                     this.advisorLoaded = false                 
                     const result = await articleDelAdvisor(this.getArticleID(), advisorID)
 
@@ -666,8 +739,8 @@ export default defineComponent({
                 cancelButtonColor: "#d33",
                 confirmButtonText: "Sim, adicionar!",
                 cancelButtonText: "Cancelar",
-            }).then(async (result) => {
-                if (result.isConfirmed) {  
+            }).then(async (modal) => {
+                if (modal.isConfirmed) {  
                     Toast().fire({icon: 'info', title: 'Carregando...'}) 
                     this.referenceLoaded = false             
                     const result = await articleAddReference(this.getArticleID(), this.reference)
@@ -695,8 +768,8 @@ export default defineComponent({
                 cancelButtonColor: "#d33",
                 confirmButtonText: "Sim, excluir!",
                 cancelButtonText: "Cancelar",
-            }).then(async (result) => {
-                if (result.isConfirmed) { 
+            }).then(async (modal) => {
+                if (modal.isConfirmed) { 
                     Toast().fire({icon: 'info', title: 'Carregando...'})  
                     this.referenceLoaded = false   
                                   
@@ -769,8 +842,8 @@ export default defineComponent({
                             cancelButtonColor: "#d33",
                             confirmButtonText: "Sim, enviar!",
                             cancelButtonText: "Cancelar",
-                        }).then(async (result) => {
-                            if (result.isConfirmed) { 
+                        }).then(async (modal) => {
+                            if (modal.isConfirmed) { 
                                 const result1 = await articleAddComment(this.getArticleID(), comment)
                                 const result2 = await articleEditStatus(this.getArticleID(), 2)
                                 if (result1.status == 'success' && result2.status == 'success') {                                                    
@@ -793,8 +866,8 @@ export default defineComponent({
                         cancelButtonColor: "#d33",
                         confirmButtonText: "Sim, enviar!",
                         cancelButtonText: "Cancelar",
-                    }).then(async (result) => {
-                        if (result.isConfirmed) { 
+                    }).then(async (modal) => {
+                        if (modal.isConfirmed) { 
                             const result = await articleEditStatus(this.getArticleID(), 2)            
                             if (result.status == 'success') {                                                
                                 Toast().fire({icon: 'success', title: 'Artigo submetido com sucesso'})
@@ -808,7 +881,8 @@ export default defineComponent({
                 }         
             } else {
                 Toast().fire({icon: 'error', title: result.message})
-            }                                                     
+            }     
+            this.isLoading = false                                                
         },      
         async saveArticle() {
             if (this.title == '') {
@@ -861,8 +935,8 @@ export default defineComponent({
                     cancelButtonColor: "#d33",
                     confirmButtonText: "Sim, devolver para o aluno!",
                     cancelButtonText: "Cancelar",
-                }).then(async (result) => {
-                    if (result.isConfirmed) { 
+                }).then(async (modal) => {
+                    if (modal.isConfirmed) { 
                         Toast().fire({icon: 'info', title: 'Carregando...'})
 
                         const resultStatus = await articleEditStatus(this.getArticleID(), 3)
@@ -888,8 +962,8 @@ export default defineComponent({
                 cancelButtonColor: "#d33",
                 confirmButtonText: "Sim, aprovar o artigo!",
                 cancelButtonText: "Cancelar",
-            }).then(async (result) => {
-                if (result.isConfirmed) {        
+            }).then(async (modal) => {
+                if (modal.isConfirmed) {        
                     Toast().fire({icon: 'info', title: 'Carregando...'})            
 
                     const result = await articleEditStatus(this.getArticleID(), 4)
@@ -913,9 +987,11 @@ export default defineComponent({
             return author != localStorage.getItem('user-id')
         },              
         showAuthorModal () {            
+            this.search_author_data = ref()
             this.isModalAuthorVisible = !this.isModalAuthorVisible
         },      
         showAdvisorModal () {            
+            this.search_advisor_data = ref()
             this.isModalAdvisorVisible = !this.isModalAdvisorVisible
         },
         showReferenceModal() {
@@ -924,6 +1000,14 @@ export default defineComponent({
         showCommentsModal() {
             this.isModalCommentsVisible = !this.isModalCommentsVisible
         },
+        showCoAdvisorAndAdvisor(flag, advisors) {
+            for(let c = 0; c < Object.keys(advisors).length; c++) {
+                if (advisors[c].is_coadvisor == flag) {
+                    return true
+                }             
+            }            
+            return false
+        },       
         checkRole() {
             let roles = ['author', 'advisor', 'admin']
 

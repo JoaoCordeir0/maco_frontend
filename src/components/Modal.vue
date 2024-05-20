@@ -8,7 +8,7 @@
           leave-to-class="scale-95 opacity-0"
     >
         <div id="modal-backdrop" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-            <div id="modal" class="bg-white rounded-3xl overflow-x-auto flex flex-col w-2/6 h-auto" >
+            <div id="modal" class="bg-white rounded-3xl overflow-x-auto flex flex-col sm:w-full md:w-4/6 xl:w-2/6 h-auto" >
                 <!-- Modal Header -->
                 <header id="modal-header" class="ps-5 pe-3 py-3 flex justify-between items-center border-b-2 border-gray">
                     <slot name="header"></slot>
