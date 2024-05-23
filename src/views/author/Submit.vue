@@ -11,7 +11,7 @@
                         </p>
                     </div>
                     <div class="col-end-10 col-span-2 ...">
-                        <a v-if="activeBtnByRole('admin')" href="#" v-on:click="editMode = !editMode" class="mr-4 bg-gray-900 text-white rounded-md py-1 px-3">{{ editMode ? 'Desabilitar' : 'Habilitar' }} edição <font-awesome-icon size="lg" :icon="['fas', 'pen-to-square']" /> </a>
+                        <a v-if="activeBtnByRole('admin') && status == 'approved'" href="#" v-on:click="editMode = !editMode" class="mr-4 bg-gray-900 text-white rounded-md py-1 px-3">{{ editMode ? 'Desabilitar' : 'Habilitar' }} edição <font-awesome-icon size="lg" :icon="['fas', 'pen-to-square']" /> </a>
                         <a v-if="comments != ''" href="#" v-on:click="showCommentsModal()" class="mr-4 bg-cyan-600 text-white rounded-md py-1 px-3">Comentários <font-awesome-icon size="xl" :icon="['fas', 'comment-dots']" /></a>
                         <a href="#" class="bg-green-700 text-white rounded-md py-1 px-3">Ajuda <font-awesome-icon :icon="['fas', 'question']" /></a>
                     </div>                
@@ -162,7 +162,7 @@
                             <Spinner />
                         </span>
                         <div class="flex mb-1" v-for="(ref, index) in references" :key="index">
-                            <input type="text" :value="ref.reference" :ref="'inputRef' + index"
+                            <input type="text" :value="ref.reference" :ref="'inputRef' + index" :disabled="!infoLoaded || !editMode"
                                 class="block w-full max-h-10 mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"/>
                             <a v-if="editMode" href="#" v-on:click="editReference(ref.id, index)" title="Salvar alterações na referência" class="ms-2 mt-1 bg-gray-900 text-white ps-2 pe-2 pt-1 pb-1 rounded-md">                                 
                                 <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'floppy-disk']" />
@@ -215,7 +215,7 @@
                     </button>
                 </div>
             </div>      
-            <div v-if="activeBtnByRole('admin')" class="flex justify-end">
+            <div v-if="activeBtnByRole('admin') && status == 'approved'" class="flex justify-end">
                 <div class="absolute bottom-6 right-6">
                     <button type="button" class="px-12 py-2 mr-2 text-sm text-center text-white bg-blue-800 rounded-md focus:outline-none font-bold">                                    
                         <font-awesome-icon :icon="['fas', 'file-word']" /> &nbsp; Exportar                                     
