@@ -26,6 +26,7 @@
                 <option value="2">Artigos em revisão</option>
                 <option value="3">Artigos em correção</option>
                 <option value="4">Artigos aprovados</option>
+                <option value="5">Artigos finalizados</option>
             </select>
             <br>
             <p>Filtro por curso</p>

@@ -11,6 +11,7 @@
                         </p>
                     </div>
                     <div class="col-end-10 col-span-2 ...">
+                        <a v-if="activeBtnByRole('admin')" href="#" v-on:click="editMode = !editMode" class="mr-4 bg-gray-900 text-white rounded-md py-1 px-3">{{ editMode ? 'Desabilitar' : 'Habilitar' }} edição <font-awesome-icon size="lg" :icon="['fas', 'pen-to-square']" /> </a>
                         <a v-if="comments != ''" href="#" v-on:click="showCommentsModal()" class="mr-4 bg-cyan-600 text-white rounded-md py-1 px-3">Comentários <font-awesome-icon size="xl" :icon="['fas', 'comment-dots']" /></a>
                         <a href="#" class="bg-green-700 text-white rounded-md py-1 px-3">Ajuda <font-awesome-icon :icon="['fas', 'question']" /></a>
                     </div>                
@@ -86,7 +87,7 @@
                             </div>                                         
                         </div>      
                         <div v-else-if="infoLoaded">
-                            <p class="text-sm">Nenhum orientador inserido.</p>
+                            <p class="text-sm">Nenhum co-orientador inserido.</p>
                         </div>                                                                                                                                   
                     </label>
                     <hr class="my-3">
@@ -214,17 +215,17 @@
                     </button>
                 </div>
             </div>      
-            <div v-if="activeBtnByRole('admin') && editMode" class="flex justify-end">
+            <div v-if="activeBtnByRole('admin')" class="flex justify-end">
                 <div class="absolute bottom-6 right-6">
                     <button type="button" class="px-12 py-2 mr-2 text-sm text-center text-white bg-blue-800 rounded-md focus:outline-none font-bold">                                    
                         <font-awesome-icon :icon="['fas', 'file-word']" /> &nbsp; Exportar                                     
                     </button>
 
-                    <button v-on:click="approveArticle()" type="button" class="px-12 py-2 mr-2 text-sm text-center text-white bg-green-800 rounded-md focus:outline-none font-bold">                                    
+                    <button v-on:click="finalizeArticle()" type="button" class="px-12 py-2 mr-2 text-sm text-center text-white bg-green-800 rounded-md focus:outline-none font-bold">                                    
                         <font-awesome-icon :icon="['fas', 'arrow-up-from-bracket']" /> &nbsp; Finalizar                                     
                     </button>                   
 
-                    <button type="button" :disabled="isLoading" v-on:click="saveArticle()"
+                    <button v-if="editMode" type="button" :disabled="isLoading" v-on:click="saveArticle()"
                         class="px-12 py-2 text-sm text-center text-white bg-gray-900 rounded-md focus:outline-none font-bold">
                         <span v-if="!isLoading">
                             <font-awesome-icon :icon="['fas', 'floppy-disk']" /> &nbsp; Salvar
@@ -505,13 +506,18 @@ export default defineComponent({
                 router.push('/events')
             }      
            
-            if (sessionStorage.getItem('article-added') == 'n' && this.articleID == '') { 
+            if (sessionStorage.getItem('article-added') == 'n' && this.articleID == '') {                 
                 await this.createArticle()
             } else {
                 await this.loadArticle(this.articleID)
-            }              
+            }  
+            
+            if (getUserRole(true) == 'ADMIN') {
+                this.editMode = false
+            }
         },  
         async createArticle() {
+            Toast().fire({icon: 'info', title: 'Aguarde, estamos configurando seu artigo'})         
             const article = await articleAdd({
                 'event': this.eventID,
                 'title': ' ',
@@ -523,7 +529,7 @@ export default defineComponent({
             })                
             sessionStorage.setItem('article-added', 'y')            
             this.infoLoaded = true                        
-            this.loadArticle(article.returnid)
+            this.loadArticle(article.returnid)            
             router.push(`/submit/${article.returnid}`)    
         },  
         async loadArticle(articleID) {      
@@ -594,7 +600,9 @@ export default defineComponent({
                 Toast().fire({icon: 'success', title: 'Autor inserido com sucesso'})
             }
         },
-        async addAdvisor(advisorID) {                        
+        async addAdvisor(advisorID) {       
+            this.search_advisor_info = ""
+            this.search_advisor_data = ref()                 
             Swal.fire({                
                 html: `Adicionar como:`,
                 icon: "question",
@@ -602,25 +610,25 @@ export default defineComponent({
                 showDenyButton: true,
                 confirmButtonColor: "#3085d6",
                 denyButtonColor: "#111827",
-                confirmButtonText: "Co-orientador",
-                denyButtonText: "Orientador",
+                confirmButtonText: "Orientador",
+                denyButtonText: "Co-orientador",
                 cancelButtonText: "Cancelar",
             }).then(async (modal) => {     
                 if (modal.isConfirmed) {
-                    this.advisorLoaded = false
-                    const result = await articleAddAdvisor(this.getArticleID(), advisorID, 1)
-                    if (result.status == 'success') {
-                        this.isModalAdvisorVisible = false
-                        this.loadAdvisors()
-                        Toast().fire({icon: 'success', title: 'Co-orientador inserido com sucesso'})
-                    }
-                } else if (modal.isDenied) {
                     this.advisorLoaded = false
                     const result = await articleAddAdvisor(this.getArticleID(), advisorID, 0)
                     if (result.status == 'success') {
                         this.isModalAdvisorVisible = false
                         this.loadAdvisors()
                         Toast().fire({icon: 'success', title: 'Orientador inserido com sucesso'})
+                    }
+                } else if (modal.isDenied) {
+                    this.advisorLoaded = false
+                    const result = await articleAddAdvisor(this.getArticleID(), advisorID, 1)
+                    if (result.status == 'success') {
+                        this.isModalAdvisorVisible = false
+                        this.loadAdvisors()
+                        Toast().fire({icon: 'success', title: 'Co-orientador inserido com sucesso'})
                     }
                 }                                 
             })               
@@ -976,7 +984,31 @@ export default defineComponent({
                     }                        
                 }
             });            
-        },                
+        },       
+        async finalizeArticle() {
+            Swal.fire({
+                title: "Tem certeza?",
+                html: `Você está prestes a finalizar o artigo "<b>${this.title}</b>". Está certo disso?`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sim, finalizar o artigo!",
+                cancelButtonText: "Cancelar",
+            }).then(async (modal) => {
+                if (modal.isConfirmed) {        
+                    Toast().fire({icon: 'info', title: 'Carregando...'})            
+
+                    const result = await articleEditStatus(this.getArticleID(), 5)
+                    
+                    if (result.status == 'success') {                
+                        Toast().fire({icon: 'success', title: 'Artigo finalizado!'})                             
+                    } else {
+                        Toast().fire({icon: 'error', title: result.message})  
+                    }                        
+                }
+            });            
+        },                 
         activeBtnByRole(role) {
             return this.infoLoaded && getUserRole(true).toLowerCase() == role
         },

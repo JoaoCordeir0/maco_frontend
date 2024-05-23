@@ -165,7 +165,7 @@ export default defineComponent({
                     color = 'bg-green-500'
                     break  
                 case 'finished':
-                    color = 'bg-grenn-800'
+                    color = 'bg-gray-900'
                     break   
             }
             return color;

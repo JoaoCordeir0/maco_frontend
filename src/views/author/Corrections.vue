@@ -79,9 +79,9 @@ export default defineComponent({
 
             if(result[0] != undefined) {      
                 this.infoNull = false          
-                this.infoLoaded = true
                 this.articles = result                
-            }                    
+            }   
+            this.infoLoaded = true                 
         },
         async delArticleInCorrection(articleID) {
             Swal.fire({
@@ -94,7 +94,8 @@ export default defineComponent({
                 confirmButtonText: "Sim, excluir!",
                 cancelButtonText: "Cancelar",
             }).then(async (result) => {
-                if (result.isConfirmed) {                    
+                if (result.isConfirmed) {    
+                    Toast().fire({icon: 'info', title: 'Carregando...'})                
                     const result = await submissionDelete(articleID)
                     if (result.status == 'success') {                            
                         Toast().fire({icon: 'success', title: 'Artigo excluído com sucesso'})      
