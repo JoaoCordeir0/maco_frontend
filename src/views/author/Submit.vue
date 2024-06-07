@@ -530,6 +530,7 @@ export default defineComponent({
             sessionStorage.setItem('article-added', 'y')            
             this.infoLoaded = true                        
             this.loadArticle(article.returnid)            
+            Toast().fire({icon: 'success', title: 'Artigo configurado! Preencha os campos'})         
             router.push(`/submit/${article.returnid}`)    
         },  
         async loadArticle(articleID) {      
