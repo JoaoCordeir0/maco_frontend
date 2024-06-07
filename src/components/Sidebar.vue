@@ -68,6 +68,11 @@
                         <font-awesome-icon :icon="['fas', 'file-pen']" />
                         <span class="mx-4 font-semibold">Em correção</span>
                     </router-link>
+                    <router-link class="flex items-center px-4 py-2 mt-2 duration-200"
+                        :class="[$route.name === 'MyArticles' ? activeClass : inactiveClass]" to="/myarticles">
+                        <font-awesome-icon :icon="['fas', 'newspaper']" />
+                        <span class="mx-4 font-semibold">Meus artigos</span>
+                    </router-link>
                 </div>
             </nav>
 

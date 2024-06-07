@@ -15,6 +15,7 @@ import Submit from './views/author/Submit.vue'
 import Settings from './views/admin/Settings.vue'
 import Events from './views/author/Events.vue'
 import Corrections from './views/author/Corrections.vue'
+import MyArticles from './views/author/MyArticles.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -101,6 +102,12 @@ const routes: RouteRecordRaw[] = [
     path: '/corrections',
     name: 'Corrections',
     component: Corrections,
+    beforeEnter: authAuthor
+  },
+  {
+    path: '/myarticles',
+    name: 'MyArticles',
+    component: MyArticles,
     beforeEnter: authAuthor
   },
 
