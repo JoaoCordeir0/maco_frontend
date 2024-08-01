@@ -1003,7 +1003,8 @@ export default defineComponent({
                     const result = await articleEditStatus(this.getArticleID(), 5)
                     
                     if (result.status == 'success') {                
-                        Toast().fire({icon: 'success', title: 'Artigo finalizado!'})                             
+                        Toast().fire({icon: 'success', title: 'Artigo finalizado!'})
+                        router.push('/submissions')                    
                     } else {
                         Toast().fire({icon: 'error', title: result.message})  
                     }                        
