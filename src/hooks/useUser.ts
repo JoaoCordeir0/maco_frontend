@@ -11,7 +11,6 @@ export interface IUserState {
 
 export async function userList(mode, filter) {
     let path = ''    
-    console.log(filter)
     if (filter.user_info != undefined) {
         path = `&user_info=${filter.user_info}&article_id=${filter.article_id}`
     }
@@ -27,30 +26,23 @@ export async function userList(mode, filter) {
 }
 
 export async function userDetails(id) {
-    const { data } = await axios.get(`${api.url}/user/list?id=${id}`, {
+    const { data } = await axios.get(`${api.url}/user/list?user_id=${id}`, {
         headers: api.authBearer
     })
 
     return ref<IUserState[]>(data[0])
 }
 
-export async function userAdd(infos) {    
-    var params = new URLSearchParams()
-    params.append('name', infos.name)
-    params.append('description', infos.description)    
-
-    const { data } = await axios.post(`${api.url}/user/add`, params)
+export async function userAdd(params) {        
+    const { data } = await axios.post(`${api.url}/user/register`, params)
 
     return data
 }
 
-export async function userEdit(infos) {
-    var params = new URLSearchParams()
-    params.append('id', infos.id)
-    params.append('name', infos.name)
-    params.append('description', infos.description)    
-
-    const { data } = await axios.post(`${api.url}/user/edit`, params)
+export async function userEdit(params) {    
+    const { data } = await axios.post(`${api.url}/user/edit`, params, {
+        headers: api.authBearer,        
+    })
 
     return data
 }
@@ -61,4 +53,9 @@ export async function userDel(id) {
     })
 
     return data
+}
+
+export function userFormatCPF(cpf) {            
+    cpf = cpf.replace(/[^\d]/g, "");                    
+    return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
 }

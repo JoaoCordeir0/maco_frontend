@@ -35,6 +35,10 @@
                         </span>
                     </button>
                 </div>
+                
+                <div class="mt-3">
+                    <p class="flex justify-center text-sm">Não possui uma conta?&nbsp;<a href="/register" class="text-blue-500">Crie já</a></p>
+                </div>
             </form>
         </div>
     </div>

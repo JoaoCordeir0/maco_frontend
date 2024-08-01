@@ -9,8 +9,8 @@ export interface ICourseState {
     message: String,
 }
 
-export async function courseList() {
-    const { data } = await axios.get(`${api.url}/course/list`, {
+export async function courseList(path = '/') {
+    const { data } = await axios.get(`${api.url}${path}course/list`, {
         headers: api.authBearer
     })
 

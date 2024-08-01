@@ -58,8 +58,7 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from "vue"
 import Spinner from "../../components/Spinner.vue"
-import { IUserState, userList, userDel } from "../../hooks/useUser"
-import Swal from "sweetalert2"
+import { IUserState, userList, userFormatCPF } from "../../hooks/useUser"
 import { Toast } from "../../hooks/useToast"
 import UserAdminFilter from '../../components/filters/UserAdminFilter.vue'
 
@@ -92,10 +91,9 @@ export default defineComponent({
                 Toast().fire({icon: 'warning', title: 'Nenhum usuário encontrado'})      
             }            
             this.infoLoaded = true
-        },             
-        formatCPF(cpf) {            
-            cpf = cpf.replace(/[^\d]/g, "");                    
-            return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+        },    
+        formatCPF(cpf) {
+            return userFormatCPF(cpf)
         },
         getRole(id) {
             let paper

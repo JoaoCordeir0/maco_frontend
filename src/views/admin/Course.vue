@@ -7,7 +7,7 @@
                     <Spinner />
                 </span>
                 <div class="w-full">                    
-                    <form class="mt-4 mt-10" @submit.prevent="saveCourse">
+                    <form class="mt-4" @submit.prevent="saveCourse">
                         <div class="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-3">
                             <div class="...">
                                 <label class="block">

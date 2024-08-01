@@ -8,6 +8,7 @@ import Dashboard from './views/Dashboard.vue'
 import Courses from './views/admin/Courses.vue'
 import Course from './views/admin/Course.vue'
 import Users from './views/admin/Users.vue'
+import User from './views/author/User.vue'
 import NotFound from './views/NotFound.vue'
 import Submissions from './views/advisor/Submissions.vue'
 import MyCourses from './views/advisor/MyCourses.vue'
@@ -16,6 +17,7 @@ import Settings from './views/admin/Settings.vue'
 import Events from './views/author/Events.vue'
 import Corrections from './views/author/Corrections.vue'
 import MyArticles from './views/author/MyArticles.vue'
+import Register from './views/auth/Register.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -42,6 +44,12 @@ const routes: RouteRecordRaw[] = [
     path: '/changepassword/:token',
     name: 'ChangePassword',
     component: ChangePassword,
+    meta: { layout: 'empty' }
+  }, 
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register,
     meta: { layout: 'empty' }
   }, 
 
@@ -115,6 +123,12 @@ const routes: RouteRecordRaw[] = [
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard,   
+    beforeEnter: authBasic,
+  },
+  {
+    path: '/user/:action',
+    name: 'User',
+    component: User,   
     beforeEnter: authBasic,
   },
   { 

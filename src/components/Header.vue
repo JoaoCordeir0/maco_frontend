@@ -47,7 +47,7 @@
             class="absolute right-0 z-20 w-48 py-2 mt-2 bg-white rounded-md shadow-xl"
           >
             <a
-              href="#"              
+              :href="'/user/' + getIdUserLogged()"  
               class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-400 hover:bg-opacity-30 hover:text-gray-900"
               >Profile</a
             >                
@@ -103,6 +103,9 @@ export default defineComponent({
         return (char1 + char2).toUpperCase()
       }      
       return 'JC'
+    },
+    getIdUserLogged() {
+      return window.localStorage.getItem('user-id')
     }
   }, 
   beforeMount() {

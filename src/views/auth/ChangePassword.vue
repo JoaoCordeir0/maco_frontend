@@ -2,8 +2,11 @@
     <img src="/logo_maco.png" alt="Logo Maco" width="100" class="fixed top-0 pl-2 pt-2">
     <div class="flex items-center justify-center h-screen px-6 bg-zinc-100">
         <div class="w-full max-w-sm bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2">
-            <div class="space-y-2">
-                <p class="font-semibold text-2xl text-gray-800">Alterar Senha</p>
+            <div class="space-y-2 flex">
+                <a href="#" onclick="history.go(-1)" class="mt-3 mr-3"><font-awesome-icon :icon="['fas', 'arrow-left']" /></a>
+                <p class="font-semibold text-2xl text-gray-800">Alterar Senha</p>                
+            </div>
+            <div class="mt-2">
                 <p class="text-xs text-gray-400">Digite sua nova senha no campo abaixo e a confirme.</p>
             </div>
             <form class="mt-4" @submit.prevent="sendEmail">

@@ -64,7 +64,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue';
-import { IArticleState, articleList, submissionsList } from '../../hooks/useArticle';
+import { IArticleState, articleList } from '../../hooks/useArticle';
 import Spinner from "../../components/Spinner.vue"
 import { Toast } from '../../hooks/useToast';
 import router from '../../router';
