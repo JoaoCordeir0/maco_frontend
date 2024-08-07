@@ -24,7 +24,19 @@
                                         class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
                                         v-model="description" />
                                 </label>
-                            </div>                           
+                            </div>       
+                            <div class="...">
+                                <label class="block">
+                                    <label class="block">
+                                        <span class="text-sm text-gray-700">Status <span class="text-red-500 font-semibold">*</span></span>
+                                    </label>
+                                    <label class="relative inline-flex cursor-pointer items-center mt-4">                        
+                                        <input id="switch-2" type="checkbox" class="peer sr-only" :checked="status" v-on:click="status = !status">
+                                        <div class="peer h-4 w-11 rounded-full border bg-slate-200 after:absolute after:-top-1 after:left-0 after:h-6 after:w-6 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-green-300 peer-checked:after:translate-x-full peer-focus:ring-green-300"></div>
+                                    </label>                        
+                                    <span class="absolute ml-3 mt-3">{{ getStatus() }}</span>
+                                </label>                                            
+                            </div>                    
                         </div>
                         <div v-if="infoLoaded" class="mt-5">
                             <div class="flex justify-end">
@@ -57,11 +69,10 @@
   
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from "vue"
-import router from "../../router"
 import { ICourseState, courseAdd, courseDetails, courseEdit } from "../../hooks/useCourse"
 import Spinner from "../../components/Spinner.vue"
-import Swal from "sweetalert2"
 import { Toast } from "../../hooks/useToast"
+import router from "../../router"
 
 export default defineComponent({
     setup() {
@@ -74,7 +85,8 @@ export default defineComponent({
         const pageTitle = ref("")
         const id = ref("")
         const name = ref("")
-        const description = ref("")        
+        const description = ref("")     
+        const status = ref()   
         const isEdit = false
        
         async function saveCourse() {
@@ -89,7 +101,8 @@ export default defineComponent({
             if (router.currentRoute.value.params.action == 'add') {        
                 const result = await courseAdd({
                     name: name.value,
-                    description: description.value,                    
+                    description: description.value, 
+                    status: status.value                   
                 })
                 if (result.status == 'success')
                     Toast().fire({icon: 'success', title: 'Curso gravado!'})
@@ -99,7 +112,8 @@ export default defineComponent({
                 const result = await courseEdit({
                     id: id.value,
                     name: name.value,
-                    description: description.value,                    
+                    description: description.value,       
+                    status: status.value             
                 })
                 if (result.status == 'success')
                     Toast().fire({icon: 'success', title: 'Curso editado!'})
@@ -118,6 +132,7 @@ export default defineComponent({
             id,
             name,
             description,
+            status,
             isEdit,
             saveCourse,
         }
@@ -132,8 +147,12 @@ export default defineComponent({
             this.id = result.value['id']
             this.name = result.value['name']
             this.description = result.value['description']            
+            this.status = result.value['status']
             this.infoLoaded = true          
-        },       
+        },      
+        getStatus() {            
+            return this.status ? 'Ativo' : 'Inativo'
+        }, 
     },
     beforeMount() {
         switch (router.currentRoute.value.params.action) {

@@ -198,7 +198,7 @@
             </div>   
             <div v-if="activeBtnByRole('advisor') && editMode" class="flex justify-end">
                 <div class="absolute bottom-6 right-6">
-                    <button type="button" class="px-12 py-2 mr-2 text-sm text-center text-white bg-blue-800 rounded-md focus:outline-none font-bold">                                    
+                    <button v-on:click="exportArticle()" type="button" class="px-12 py-2 mr-2 text-sm text-center text-white bg-blue-800 rounded-md focus:outline-none font-bold">                                    
                         <font-awesome-icon :icon="['fas', 'file-word']" /> &nbsp; Exportar                                     
                     </button>
 

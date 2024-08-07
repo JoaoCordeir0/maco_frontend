@@ -16,7 +16,7 @@ import Submit from './views/author/Submit.vue'
 import Settings from './views/admin/Settings.vue'
 import Events from './views/author/Events.vue'
 import Corrections from './views/author/Corrections.vue'
-import MyArticles from './views/author/MyArticles.vue'
+import Historic from './views/author/Historic.vue'
 import Register from './views/auth/Register.vue'
 
 const routes: RouteRecordRaw[] = [
@@ -113,10 +113,10 @@ const routes: RouteRecordRaw[] = [
     beforeEnter: authAuthor
   },
   {
-    path: '/myarticles',
-    name: 'MyArticles',
-    component: MyArticles,
-    beforeEnter: authAuthor
+    path: '/historic/:userid?',
+    name: 'Historic',
+    component: Historic,
+    beforeEnter: authBasic
   },
 
   {

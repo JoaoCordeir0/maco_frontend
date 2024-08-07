@@ -19,13 +19,13 @@
                         <tbody>
                             <tr v-for="item in courses">
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                    <p class="text-gray-900 whitespace-nowrap">{{ item.id }}</p>
+                                    <p :class="!item.status ? 'text-red-500' : ''" class="text-gray-900 whitespace-nowrap">{{ item.id }}</p>
                                 </td>
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                    <p class="text-gray-900 whitespace-nowrap">{{ item.name }}</p>
+                                    <p :class="!item.status ? 'text-red-500' : ''" class="text-gray-900 whitespace-nowrap">{{ item.name }}</p>
                                 </td>                                
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                    <p class="text-gray-900 whitespace-nowrap">{{ item.description }}</p>
+                                    <p :class="!item.status ? 'text-red-500' : ''" class="text-gray-900 whitespace-nowrap">{{ item.description }}</p>
                                 </td>                                
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200 min-w-72">
                                     <div class="sm:inline-block">                                        

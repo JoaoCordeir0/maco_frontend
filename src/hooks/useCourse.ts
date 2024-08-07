@@ -35,22 +35,30 @@ export async function courseDetails(id) {
 }
 
 export async function courseAdd(infos) {    
-    var params = new URLSearchParams()
-    params.append('name', infos.name)
-    params.append('description', infos.description)    
+    let params = {        
+        'name': infos.name,
+        'description': infos.description,
+        'status': infos.status ? 1 : 0,        
+    }  
 
-    const { data } = await axios.post(`${api.url}/course/add`, params)
+    const { data } = await axios.post(`${api.url}/course/add`, params, {
+        headers: api.authBearer
+    })
 
     return data
 }
 
 export async function courseEdit(infos) {
-    var params = new URLSearchParams()
-    params.append('id', infos.id)
-    params.append('name', infos.name)
-    params.append('description', infos.description)    
+    let params = {
+        'id': infos.id,
+        'name': infos.name,
+        'description': infos.description,
+        'status': infos.status ? 1 : 0,        
+    } 
 
-    const { data } = await axios.post(`${api.url}/course/edit`, params)
+    const { data } = await axios.post(`${api.url}/course/edit`, params, {
+        headers: api.authBearer
+    })
 
     return data
 }
