@@ -127,7 +127,7 @@
                 </div>                    
                 <div class="... bg-white border-2 rounded-xl border-gray px-5 pb-5 pt-3 mt-2">                      
                     <label class="block">
-                        <span class="text-sm text-gray-700">Resumo <span class="text-red-500 font-semibold">*</span> <br> {{ allowedChars }} - {{ summary.split('').length }} preenchidos</span>
+                        <span class="text-sm text-gray-700">Resumo <span class="text-red-500 font-semibold">*</span> <br> Número de caracteres permitidos: {{ allowedChars }} - {{ summary.split('').length }} preenchidos</span>
                         <textarea name="" id="" cols="30" rows="5" v-model="summary" :disabled="!infoLoaded || !editMode"
                             class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"></textarea>
                     </label>
@@ -143,6 +143,9 @@
                                 <span v-if="!keywordLoaded">
                                     <Spinner />
                                 </span>
+                            </div>
+                            <div v-if="isEmpty(keywords)">
+                                <p class="text-sm">Nenhuma palavra inserida.</p>
                             </div>
                             <div v-if="editMode && infoLoaded" class="flex">
                                 <input type="text" :disabled="!infoLoaded"
@@ -160,7 +163,7 @@
                         <span class="text-sm text-gray-700">Referências bibliográficas <span class="text-red-500 font-semibold">*</span></span>
                         <span v-if="!referenceLoaded">
                             <Spinner />
-                        </span>
+                        </span>                        
                         <div class="flex mb-1" v-for="(ref, index) in references" :key="index">
                             <input type="text" :value="ref.reference" :ref="'inputRef' + index" :disabled="!infoLoaded || !editMode"
                                 class="block w-full max-h-10 mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"/>
@@ -172,7 +175,10 @@
                             </a> 
                         </div>
                     </label>
-                    <div v-if="editMode && infoLoaded" class="mt-4 w-full flex justify-center">
+                    <div v-if="isEmpty(references)" class="mt-2">
+                        <p class="text-sm">Nenhuma referência inserida.</p>
+                    </div>
+                    <div v-if="editMode && infoLoaded" class="mt-2 w-full flex justify-center">
                         <button type="button" v-on:click="showReferenceModal" class="bg-blue-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                             Adicionar referência <font-awesome-icon :icon="['fas', 'circle-plus']" />
                         </button> 
@@ -217,7 +223,7 @@
             </div>      
             <div v-if="activeBtnByRole('admin') && status == 'approved'" class="flex justify-end">
                 <div class="absolute bottom-6 right-6">
-                    <button type="button" class="px-12 py-2 mr-2 text-sm text-center text-white bg-blue-800 rounded-md focus:outline-none font-bold">                                    
+                    <button v-on:click="exportArticle()" type="button" class="px-12 py-2 mr-2 text-sm text-center text-white bg-blue-800 rounded-md focus:outline-none font-bold">                                    
                         <font-awesome-icon :icon="['fas', 'file-word']" /> &nbsp; Exportar                                     
                     </button>
 
@@ -401,7 +407,8 @@ import {
     articleEditKeywords, 
     articleAddReference, 
     articleDelReference,
-    articleSubmit 
+    articleSubmit, 
+    articleExport
 } from '../../hooks/useArticle';
 import { eventDetails } from '../../hooks/useEvent';
 import { userList } from '../../hooks/useUser';
@@ -443,7 +450,7 @@ export default defineComponent({
         const authorLoaded = ref(false)
         const advisorLoaded = ref(false)
         const eventName = ref("")
-        const allowedChars = ref("")
+        const allowedChars = ref()
         const isModalAuthorVisible = ref(false)
         const isModalAdvisorVisible = ref(false)
         const isModalReferenceVisible = ref(false)
@@ -552,7 +559,7 @@ export default defineComponent({
             this.references = resultArticle.value['references']
             this.comments = resultArticle.value['comments'][0] != undefined ? resultArticle.value['comments'] : ''
             this.eventName = ' - ' + resultEvent.value['name']
-            this.allowedChars = ' Número de caracteres permitidos: ' + resultEvent.value['number_characters']
+            this.allowedChars = resultEvent.value['number_characters']
             this.infoLoaded = true   
             this.authorLoaded = true
             this.advisorLoaded = true
@@ -809,11 +816,27 @@ export default defineComponent({
         },  
         async submitArticle() {
             if (this.title == '') {
-                Toast().fire({icon: 'warning', title: 'Informe o título'})
+                Toast().fire({icon: 'warning', title: 'Informe o título!'})
                 return
             }
             if (this.summary == '') {
-                Toast().fire({icon: 'warning', title: 'Informe o resumo'})
+                Toast().fire({icon: 'warning', title: 'Informe o resumo!'})
+                return
+            }
+            if (this.summary.length > parseInt(this.allowedChars)) {
+                Toast().fire({icon: 'warning', title: 'Resumo excede a quantidade de caracteres!'})
+                return
+            }
+            if (this.isEmpty(this.advisors)) {
+                Toast().fire({icon: 'warning', title: 'Informe um orientador!'})
+                return
+            }
+            if (this.isEmpty(this.keywords)) {
+                Toast().fire({icon: 'warning', title: 'Informe as palavras chaves!'})
+                return
+            }
+            if (this.isEmpty(this.references)) {
+                Toast().fire({icon: 'warning', title: 'Informe as referências bibliográficas!'})
                 return
             }
             this.isLoading = true                     
@@ -1010,7 +1033,15 @@ export default defineComponent({
                     }                        
                 }
             });            
-        },                 
+        },          
+        async exportArticle() {
+            const result = await articleExport(this.getArticleID())
+            if (result) {
+                Toast().fire({icon: 'success', title: 'Artigo exportado'})
+            } else {
+                Toast().fire({icon: 'error', title: 'Erro ao exportar artigo'})
+            }
+        },    
         activeBtnByRole(role) {
             return this.infoLoaded && getUserRole(true).toLowerCase() == role
         },
@@ -1041,7 +1072,14 @@ export default defineComponent({
                 }             
             }            
             return false
-        },       
+        },
+        isEmpty(array) {
+            try {
+                return Object.keys(array).length == 0
+            } catch {
+                return false        
+            }            
+        },
         checkRole() {
             let roles = ['author', 'advisor', 'admin']
 

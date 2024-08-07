@@ -196,4 +196,22 @@ export async function articleEditReference(article, ref, value) {
     return data
 }
 
+export async function articleExport(article) {
+    let params = {
+        'article': article,
+        'type': 'docx',        
+    }
+
+    try {
+        const { data } = await axios.post(`${api.url}/article/export`, params, {
+            headers: api.authBearer
+        })
+    
+        if (data.status != 'error') {
+            window.open(`${api.url}/${data.file}`)
+            return true
+        }            
+    } catch {}
+    return false
+}
 

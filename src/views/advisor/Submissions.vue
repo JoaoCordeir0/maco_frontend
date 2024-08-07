@@ -46,7 +46,7 @@
                                 </td>                                
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200 min-w-72">
                                     <div class="sm:inline-block">                                          
-                                        <a v-if="getRole() == 'admin'" href="#" v-on:click="" class="sm:px-5 sm:py-2 px-5 bg-blue-800 m-2 mt-2 text-white rounded"><font-awesome-icon :icon="['fas', 'file-word']" /> &nbsp; <span class="hidden lg:inline">Exportar</span></a>
+                                        <a v-if="getRole() == 'admin'" href="#" v-on:click="exportArticle(item.id)" class="sm:px-5 sm:py-2 px-5 bg-blue-800 m-2 mt-2 text-white rounded"><font-awesome-icon :icon="['fas', 'file-word']" /> &nbsp; <span class="hidden lg:inline">Exportar</span></a>
                                         <a href="#" v-on:click="viewSubmission(item.id, item.event)" class="sm:px-5 sm:py-2 px-5 bg-gray-900 m-2 mt-2 text-white rounded"><font-awesome-icon :icon="['fas', 'eye']" /> &nbsp; <span class="hidden lg:inline">Visualizar</span></a>
                                     </div>                                    
                                 </td>
@@ -64,7 +64,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue';
-import { IArticleState, articleList } from '../../hooks/useArticle';
+import { IArticleState, articleExport, articleList } from '../../hooks/useArticle';
 import Spinner from "../../components/Spinner.vue"
 import { Toast } from '../../hooks/useToast';
 import router from '../../router';
@@ -112,6 +112,14 @@ export default defineComponent({
                 Toast().fire({icon: 'warning', title: 'Nenhum artigo encontrado'})
             }        
             this.infoLoaded = true      
+        },
+        async exportArticle(articleID) {
+            const result = await articleExport(articleID)
+            if (result) {
+                Toast().fire({icon: 'success', title: 'Artigo exportado'})
+            } else {
+                Toast().fire({icon: 'error', title: 'Erro ao exportar artigo'})
+            }
         },              
         formatCourseAndAuthors(data, key) {
             let _array : string[] = [];            
