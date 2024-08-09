@@ -2,27 +2,31 @@
     <div class="mt-2">
         <div class="bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2">
             <div class="flex flex-wrap">
-                <p class="text-gray-500 font-semibold text-xl border-b-2">Meus artigos</p>    
+                <p class="text-gray-500 font-semibold text-xl border-b-2">{{ pageTitle }}</p>    
                 <span v-if="!infoLoaded">
                     <Spinner />
                 </span>                      
-                <div v-if="!infoNull" class="w-full mt-5"> 
-                    <div v-for="item in articles">
-                        <div class="border-2 rounded p-2 mb-3" v-if="item.status != 'in_submission' && item.status != 'in_correction'">                        
-                            <div class="w-full grid grid-cols-6 gap-4">                    
-                                <div class="col-start-1 col-end-8 ...">
-                                    <div class="items-center">
-                                        <span>{{ item.id }}</span> - {{ item.title }} <span :class="getColorArticleStatus(item.status)" class="rounded pt-1 pb-1 pr-3 pl-3 text-white">{{ formatArticleStatus(item.status) }}</span>
-                                    </div>
-                                </div>
-                                <div class="col-end-10 col-span-2 ...">
-                                    <a href="#" v-on:click="viewArticle(item.id, item.event)" class="bg-blue-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
-                                        <font-awesome-icon :icon="['fas', 'newspaper']" /> Visualizar
-                                    </a>                                                                  
-                                </div>                
-                            </div>
+                <div v-if="!infoNull" class="flex mt-5">                     
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">                                    
+                        <div class="col max-w-sm rounded overflow-hidden shadow-lg" v-for="item in articles">
+                            <div class="px-6 py-4">
+                                <div class="items-center">
+                                    <p><b>Título:</b> {{ item.title }}</p>
+                                    <p><b>Status:</b> <span :class="getColorArticleStatus(item.status)" class="rounded pr-3 pl-3 text-white">{{ formatArticleStatus(item.status) }}</span></p>
+                                    <p><b>Autores:</b> {{ formatAuthors(item.authors, 'name') }}</p>
+                                    <p><b>Evento:</b> <i>{{ item.event_name }}</i></p>
+                                </div>     
+                                <div class="mt-2">
+                                    <a href="#" v-on:click="viewArticle(item.id, item.event)" class="bg-gray-900 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                        <font-awesome-icon :icon="['fas', 'eye']" /> Visualizar
+                                    </a>                                    
+                                    <a v-if="item.status == 'finished' ||  item.status == 'approved'" href="#" v-on:click="exportArticle(item.id)" class="ml-2 bg-blue-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                        <font-awesome-icon :icon="['fas', 'file-word']" /> Exportar
+                                    </a>                                    
+                                </div>                                                               
+                            </div>     
                         </div>  
-                    </div>                                                               
+                    </div>                                                                                                                                                                                                         
                 </div>   
                 <div v-else class="w-full mt-5"> 
                     <div class="border-2 rounded p-2 mb-3">                        
@@ -38,10 +42,9 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue';
-import { IEventState, eventActiveList } from '../../hooks/useEvent';
-import { submissionsList, submissionDelete } from '../../hooks/useArticle';
+import { IEventState } from '../../hooks/useEvent';
+import { submissionsList, articleExport } from '../../hooks/useArticle';
 import Spinner from "../../components/Spinner.vue"
-import Swal from "sweetalert2"
 import { format } from 'date-fns';
 import router from '../../router';
 import { Toast } from '../../hooks/useToast';
@@ -53,6 +56,7 @@ export default defineComponent({
             message: ''
         })
 
+        const pageTitle = ref("")
         const infoLoaded = ref(false)     
         const infoNull = ref(true)           
         const events = ref()
@@ -60,6 +64,7 @@ export default defineComponent({
 
         return {
             ...toRefs(state),         
+            pageTitle,
             events, 
             infoLoaded,
             infoNull,            
@@ -74,19 +79,35 @@ export default defineComponent({
         },       
         async loadUserHistoric() {
             let userid = this.$route.params.userid
-            if (userid != undefined) {
-                console.log("mexer")
-            } else {
-                
-            }
+            let result
+            let articles = []
             
-            const result = (await submissionsList('author', 'historic=1')).value
-
-            if(result[0] != undefined) {      
-                this.infoNull = false          
-                this.articles = result                
-            }   
-            this.infoLoaded = true                 
+            if (userid != undefined && userid != "") {
+                this.pageTitle = "Histórico de submissões do usuário"
+                result = (await submissionsList('admin', '')).value
+                for(let c = 0; c < Object.keys(result).length; c++) {
+                    for(let j = 0; j < Object.keys(result[c].authors).length; j++) {
+                        if (result[c].authors[j].id == userid) {
+                            try {
+                                articles.push(result[c])
+                                break
+                            } catch {}                        
+                        }                    
+                    }
+                }  
+                if(articles.length > 0) {      
+                    this.infoNull = false          
+                    this.articles = articles                
+                }   
+            } else {
+                this.pageTitle = "Meus artigos"
+                result = (await submissionsList('author', '')).value    
+                if(result[0] != undefined) {      
+                    this.infoNull = false          
+                    this.articles = result                
+                }   
+            }                                                    
+            this.infoLoaded = true 
         },               
         formatDate(date) {
             return format(new Date(date), 'dd/MM/yyyy')
@@ -133,6 +154,29 @@ export default defineComponent({
             }
             return color;
         },
+        formatAuthors(data, key) {
+            let _array : string[] = [];            
+            let _str = ''
+            for(let c = 0; c < Object.keys(data).length; c++) {
+                try {
+                    if (! _array.includes(data[c][key])){
+                        _array.push(data[c][key])
+                    }                                        
+                } catch(e) {}                
+            }
+            _array.forEach(item => {
+                _str += item + ' / '
+            });
+            return _str.slice(0, -3)         
+        },
+        async exportArticle(articleID) {
+            const result = await articleExport(articleID)
+            if (result) {
+                Toast().fire({icon: 'success', title: 'Artigo exportado'})
+            } else {
+                Toast().fire({icon: 'error', title: 'Erro ao exportar artigo'})
+            }
+        },     
     },  
     beforeMount() {        
         this.loadUserHistoric()        

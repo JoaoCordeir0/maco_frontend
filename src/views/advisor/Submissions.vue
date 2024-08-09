@@ -46,7 +46,7 @@
                                 </td>                                
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200 min-w-72">
                                     <div class="sm:inline-block">                                          
-                                        <a v-if="getRole() == 'admin'" href="#" v-on:click="exportArticle(item.id)" class="sm:px-5 sm:py-2 px-5 bg-blue-800 m-2 mt-2 text-white rounded"><font-awesome-icon :icon="['fas', 'file-word']" /> &nbsp; <span class="hidden lg:inline">Exportar</span></a>
+                                        <a href="#" v-on:click="exportArticle(item.id)" class="sm:px-5 sm:py-2 px-5 bg-blue-800 m-2 mt-2 text-white rounded"><font-awesome-icon :icon="['fas', 'file-word']" /> &nbsp; <span class="hidden lg:inline">Exportar</span></a>
                                         <a href="#" v-on:click="viewSubmission(item.id, item.event)" class="sm:px-5 sm:py-2 px-5 bg-gray-900 m-2 mt-2 text-white rounded"><font-awesome-icon :icon="['fas', 'eye']" /> &nbsp; <span class="hidden lg:inline">Visualizar</span></a>
                                     </div>                                    
                                 </td>

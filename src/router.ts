@@ -3,7 +3,6 @@ import { authBasic, authAdmin, authAdvisor, authAuthor } from './hooks/useAuth'
 
 import Login from './views/auth/Login.vue'
 import ForgotPassword from './views/auth/ForgotPassword.vue'
-import ChangePassword from './views/auth/ChangePassword.vue'
 import Dashboard from './views/Dashboard.vue'
 import Courses from './views/admin/Courses.vue'
 import Course from './views/admin/Course.vue'
@@ -40,12 +39,6 @@ const routes: RouteRecordRaw[] = [
     component: ForgotPassword,
     meta: { layout: 'empty' },
   },
-  {
-    path: '/changepassword/:token',
-    name: 'ChangePassword',
-    component: ChangePassword,
-    meta: { layout: 'empty' }
-  }, 
   {
     path: '/register',
     name: 'Register',

@@ -55,6 +55,14 @@ export async function userDel(id) {
     return data
 }
 
+export async function userRecoverPassword(params) {    
+    const { data } = await axios.post(`${api.url}/user/recoverpassword`, params, {
+        headers: api.authBearer
+    })
+
+    return data
+}
+
 export function userFormatCPF(cpf) {            
     cpf = cpf.replace(/[^\d]/g, "");                    
     return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");

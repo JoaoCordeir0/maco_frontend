@@ -44,7 +44,8 @@
                                     <p class="text-gray-900 whitespace-nowrap">{{ getRole(item.role) }}</p>
                                 </td>                             
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200 min-w-72">
-                                    <a :href="`/user/${item.id}`" class="sm:px-5 sm:py-2 px-5 bg-gray-900 m-2 mt-2 text-white rounded"><font-awesome-icon :icon="['fas', 'eye']" /> &nbsp; <span class="hidden lg:inline">Visualizar</span></a>                                        
+                                    <a v-if="item.role == 3" :href="`/historic/${item.id}`" class="sm:px-5 sm:py-2 px-5 bg-green-900 m-2 mt-2 text-white rounded"><font-awesome-icon :icon="['fas', 'newspaper']" /> &nbsp; <span class="hidden lg:inline">Submissões</span></a>
+                                    <a :href="`/user/${item.id}`" class="sm:px-5 sm:py-2 px-5 bg-gray-900 m-2 mt-2 text-white rounded"><font-awesome-icon :icon="['fas', 'pen-to-square']" /> &nbsp; <span class="hidden lg:inline">Editar</span></a>                                    
                                 </td>
                             </tr>
                         </tbody>

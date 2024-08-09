@@ -104,10 +104,12 @@ export default defineComponent({
                     description: description.value, 
                     status: status.value                   
                 })
-                if (result.status == 'success')
+                if (result.status == 'success') {
                     Toast().fire({icon: 'success', title: 'Curso gravado!'})
-                else
+                    router.push('/courses')
+                } else {
                     Toast().fire({icon: 'error', title: result.message})
+                }                    
             } else {
                 const result = await courseEdit({
                     id: id.value,
@@ -115,14 +117,13 @@ export default defineComponent({
                     description: description.value,       
                     status: status.value             
                 })
-                if (result.status == 'success')
-                    Toast().fire({icon: 'success', title: 'Curso editado!'})
-                else
+                if (result.status == 'success') {
+                    Toast().fire({icon: 'success', title: 'Curso editado!'})                    
+                } else {
                     Toast().fire({icon: 'error', title: result.message})
-            }
-            
-            state.isLoading = false
-            router.push('/courses')
+                }                    
+            }            
+            state.isLoading = false            
         }
 
         return {

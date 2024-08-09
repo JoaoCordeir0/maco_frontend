@@ -43,13 +43,13 @@ import { ILoginState, apiLogin } from "../../hooks/useAuth"
 import router from "../../router"
 import Loading from "../../components/Loading.vue"
 import { Toast } from "../../hooks/useToast"
+import { userRecoverPassword } from "../../hooks/useUser"
 
 export default defineComponent({
     setup() {
 
         const email = ref("");
-
-        // Just to not get errors
+        
         const isLoading = false;
 
         function loginPage() {
@@ -61,10 +61,11 @@ export default defineComponent({
                 Toast().fire({
                     icon: 'warning',
                     title: 'Informe o e-mail!'
-                });
-
+                });                
                 return
             }
+            const result = await userRecoverPassword({'email': email.value})
+            console.log(result)
         }
         return {
             email,

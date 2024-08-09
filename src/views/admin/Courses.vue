@@ -2,10 +2,20 @@
     <div class="mt-2">
         <div class="bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2 mb-2">
             <div class="flex flex-wrap">
-                <p class="text-gray-500 font-semibold text-xl border-b-2">Listagem de cursos</p>
-                <span v-if="!infoLoaded">
-                    <Spinner />
-                </span>
+                <div class="w-full grid grid-cols-6 gap-4">                    
+                    <div class="col-start-1 col-end-8 ...">
+                        <p class="text-gray-500 font-semibold text-xl"><span class="border-b-2">Listagem de cursos</span>
+                            <span v-if="!infoLoaded">
+                                <Spinner />
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-end-10 col-span-2 ...">
+                        <a href="/course/add" class="bg-green-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                            <font-awesome-icon :icon="['fas', 'file-circle-plus']" /> Criar novo curso
+                        </a>
+                    </div>                
+                </div>    
                 <div v-if="infonotnull" class="overflow-x-auto inline-block min-w-full rounded-lg">                    
                     <table class="min-w-full leading-normal mt-5">
                         <thead>

@@ -92,6 +92,10 @@
                                 </div>
                                 <div v-else class="border border-red-600 p-3 rounded mt-2">
                                     <p>Nenhum vinculado</p>
+                                </div>                                                                
+                                <div v-if="isAuthor" class="mt-5">
+                                    <h3 class="mb-3 italic">Artigo(s) do usuário</h3>
+                                    <a class="p-2 bg-green-600 mt-2 text-white rounded" :href="'/historic/' + id"><font-awesome-icon :icon="['fas', 'newspaper']" /> &nbsp; Ver histórico de submissões</a>                                    
                                 </div>
                             </div>
                         </div>
@@ -153,6 +157,7 @@ export default defineComponent({
         const courses = ref()
         const isset_courses = false
         const created_at = ref("")
+        const isAuthor = ref(false)
        
         async function saveUser() {
             state.isLoading = true
@@ -201,6 +206,7 @@ export default defineComponent({
             created_at,            
             courses,
             isset_courses,
+            isAuthor,
             saveUser,
         }
     },
@@ -218,6 +224,9 @@ export default defineComponent({
             this.ra = result.value['ra']
             this.email = result.value['email']            
             this.role = result.value['role']  
+            if (this.role == 3) {
+                this.isAuthor = true
+            }
             this.status = result.value['status']  
             this.created_at = result.value['created_at']  
             this.courses = this.getCourses(result)
