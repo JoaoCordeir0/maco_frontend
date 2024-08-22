@@ -47,6 +47,9 @@
                                         <a v-if="userIsLogged(author.id) && editMode" href="#" v-on:click="delAuthor(author.id)" class="ms-2 bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                             <font-awesome-icon class="mt-2" size="lg" :icon="['fas', 'trash-can']" />
                                         </a> 
+                                        <a v-if="isAdminOrAdvisor()" :href="'/user/' + author.id" class="ms-2 bg-gray-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                            <font-awesome-icon class="mt-2" size="lg" :icon="['fas', 'eye']" />
+                                        </a> 
                                     </div>                                
                                 </div>                               
                             </div>                          
@@ -81,6 +84,9 @@
                                             <a v-if="userIsLogged(advisor.id) && editMode" href="#" v-on:click="delAdvisor(advisor.id)" class="ms-2 bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                                 <font-awesome-icon class="mt-2" size="lg" :icon="['fas', 'trash-can']" />
                                             </a> 
+                                            <a v-if="isAdminOrAdvisor()" :href="'/user/' + advisor.id" class="ms-2 bg-gray-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                                <font-awesome-icon class="mt-2" size="lg" :icon="['fas', 'eye']" />
+                                            </a> 
                                         </div>                                
                                     </div>                                                                
                                 </div>                                      
@@ -109,6 +115,9 @@
                                             <input :value="advisor.email" disabled type="text" class="w-full max-h-10 border-gray-300 block mt-1 rounded-md"/>                                
                                             <a v-if="userIsLogged(advisor.id) && editMode" href="#" v-on:click="delAdvisor(advisor.id)" class="ms-2 bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                                 <font-awesome-icon class="mt-2" size="lg" :icon="['fas', 'trash-can']" />
+                                            </a> 
+                                            <a v-if="isAdminOrAdvisor()" :href="'/user/' + advisor.id" class="ms-2 bg-gray-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                                <font-awesome-icon class="mt-2" size="lg" :icon="['fas', 'eye']" />
                                             </a> 
                                         </div>                                
                                     </div>                                                                
@@ -1044,6 +1053,9 @@ export default defineComponent({
         },    
         activeBtnByRole(role) {
             return this.infoLoaded && getUserRole(true).toLowerCase() == role
+        },
+        isAdminOrAdvisor() {
+            return this.infoLoaded && (getUserRole(true).toLowerCase() == 'admin' || getUserRole(true).toLowerCase() == 'advisor')
         },
         formatDateComments(date) {
             return format(new Date(date), 'dd/MM HH:mm')

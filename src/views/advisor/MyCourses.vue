@@ -29,10 +29,8 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue';
-import router from "../../router"
 import { ICourseState, courseListByUser } from '../../hooks/useCourse';
 import Spinner from "../../components/Spinner.vue"
-import Swal from "sweetalert2"
 import { Toast } from '../../hooks/useToast';
 
 export default defineComponent({
