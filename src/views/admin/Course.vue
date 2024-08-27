@@ -142,9 +142,9 @@ export default defineComponent({
         async loadCourse() {
             const result = await courseDetails(this.$route.params.action)                                
 
-            if (result.value['name'] == undefined) 
+            if (result.value['name'] == undefined) {
                 Toast().fire({icon: 'error', title: 'Curso não encontrado!'})
-            
+            }                            
             this.id = result.value['id']
             this.name = result.value['name']
             this.description = result.value['description']            

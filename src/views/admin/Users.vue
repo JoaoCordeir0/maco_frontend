@@ -23,29 +23,29 @@
                                 <th class="px-5 text-start border-b-2">CPF</th>                                
                                 <th class="px-5 text-start border-b-2">Curso</th>
                                 <th class="px-5 text-start border-b-2">Papel</th>
-                                <th class="px-5 text-start border-b-2">Ações</th>
+                                <th class="px-5 text-center border-b-2">Ações</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="item in users">
-                                <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                                <td class="px-5 py-4 text-sm bg-white border-b border-gray-200">
                                     <p class="text-gray-900 whitespace-nowrap">{{ item.id }}</p>
                                 </td>
-                                <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                                <td class="px-5 py-4 text-sm bg-white border-b border-gray-200">
                                     <p class="text-gray-900 whitespace-nowrap">{{ item.name }}</p>
                                 </td>                                
-                                <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                                <td class="px-5 py-4 text-sm bg-white border-b border-gray-200">
                                     <p class="text-gray-900 whitespace-nowrap">{{ formatCPF(item.cpf) }}</p>
                                 </td>                                  
-                                <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                                <td class="px-5 py-4 text-sm bg-white border-b border-gray-200">
                                     <p class="text-gray-900 whitespace-nowrap">{{ formatCourse(item.courses) }}</p>
                                 </td>  
-                                <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                                <td class="px-5 py-4 text-sm bg-white border-b border-gray-200">
                                     <p class="text-gray-900 whitespace-nowrap">{{ getRole(item.role) }}</p>
                                 </td>                             
-                                <td class="px-5 py-5 text-sm bg-white border-b border-gray-200 min-w-72">
-                                    <a v-if="item.role == 3" :href="`/historic/${item.id}`" class="sm:px-5 sm:py-2 px-5 bg-green-900 m-2 mt-2 text-white rounded"><font-awesome-icon :icon="['fas', 'newspaper']" /> &nbsp; <span class="hidden lg:inline">Submissões</span></a>
-                                    <a :href="`/user/${item.id}`" class="sm:px-5 sm:py-2 px-5 bg-gray-900 m-2 mt-2 text-white rounded"><font-awesome-icon :icon="['fas', 'pen-to-square']" /> &nbsp; <span class="hidden lg:inline">Editar</span></a>                                    
+                                <td class="px-5 py-4 text-sm bg-white border-b border-gray-200 text-center">
+                                    <a title="Ver submissões do aluno" v-if="item.role == 3" :href="`/historic/${item.id}`" class="bg-green-900 text-white rounded p-2 ps-3 pe-3 me-2 w-10"><font-awesome-icon :icon="['fas', 'newspaper']" /></a>
+                                    <a title="Editar aluno" :href="`/user/${item.id}`" class="bg-gray-900 text-white rounded p-2 ps-3 pe-3 me-2 w-10"><font-awesome-icon :icon="['fas', 'pen-to-square']" /></a>                                    
                                 </td>
                             </tr>
                         </tbody>

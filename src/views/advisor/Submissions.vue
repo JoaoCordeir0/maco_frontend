@@ -24,30 +24,31 @@
                                 <th class="px-5 text-start border-b-2">Curso(s)</th> 
                                 <th class="px-5 text-start border-b-2">Autores(s)</th>        
                                 <th class="px-5 text-start border-b-2">Status</th>
-                                <th class="px-5 text-start border-b-2">Ações</th>
+                                <th class="px-5 text-center border-b-2">Ações</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="item in articles">
-                                <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                                <td class="px-5 py-2 text-sm bg-white border-b border-gray-200">
                                     <p class="text-gray-900 whitespace-nowrap">{{ item.id }}</p>
                                 </td>
-                                <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                                <td class="px-5 py-2 text-sm bg-white border-b border-gray-200">
                                     <p class="text-gray-900 whitespace-nowrap">{{ item.title == ' ' ? 'Título não informado' : item.title }}</p>
                                 </td>                                
-                                <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                                <td class="px-5 py-2 text-sm bg-white border-b border-gray-200">
                                     <p class="text-gray-900 whitespace-nowrap">{{ formatCourseAndAuthors(item.authors, 'course_name') }}</p>
                                 </td>  
-                                <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                                <td class="px-5 py-2 text-sm bg-white border-b border-gray-200">
                                     <p class="text-gray-900 whitespace-nowrap">{{ formatCourseAndAuthors(item.authors, 'name') }}</p>
                                 </td>  
-                                <td class="px-5 py-5 text-sm border-b border-gray-200">
+                                <td class="px-5 py-2 text-sm border-b border-gray-200">
                                     <p class="text-gray-900 whitespace-nowrap"><span :class="getColorArticleStatus(item.status)" class="rounded pt-1 pb-1 pr-3 pl-3 text-white">{{ formatArticleStatus(item.status) }}</span></p>
                                 </td>                                
-                                <td class="px-5 py-5 text-sm bg-white border-b border-gray-200 min-w-72">
+                                <td class="px-5 py-2 text-sm bg-white border-b border-gray-200 min-w-60 text-center">
                                     <div class="sm:inline-block">                                          
-                                        <a href="#" v-on:click="exportArticle(item.id)" class="sm:px-5 sm:py-2 px-5 bg-blue-800 m-2 mt-2 text-white rounded"><font-awesome-icon :icon="['fas', 'file-word']" /> &nbsp; <span class="hidden lg:inline">Exportar</span></a>
-                                        <a href="#" v-on:click="viewSubmission(item.id, item.event)" class="sm:px-5 sm:py-2 px-5 bg-gray-900 m-2 mt-2 text-white rounded"><font-awesome-icon :icon="['fas', 'eye']" /> &nbsp; <span class="hidden lg:inline">Visualizar</span></a>
+                                        <button title="Exportar artigo" v-on:click="exportArticle(item.id)" class="bg-blue-800 text-white rounded p-2 ps-3 pe-3 me-2 w-10"><font-awesome-icon :icon="['fas', 'file-word']" /></button>
+                                        <Certificate v-if="item.status == 'finished'" :article="item"/>                                        
+                                        <button title="Visualizar o artigo" v-on:click="viewSubmission(item.id, item.event)" class="bg-gray-900 text-white rounded p-2 ps-3 pe-3 w-10"><font-awesome-icon :icon="['fas', 'eye']" /></button>
                                     </div>                                    
                                 </td>
                             </tr>
@@ -71,6 +72,7 @@ import router from '../../router';
 import ArticleAdminFilter from '../../components/filters/ArticleAdminFilter.vue';
 import { getUserRole } from '../../hooks/useAuth';
 import ArticleAdvisorFilter from '../../components/filters/ArticleAdvisorFilter.vue';
+import Certificate from '../../components/Certificate.vue';
 
 export default defineComponent({
     async setup(){
@@ -109,7 +111,7 @@ export default defineComponent({
                 this.articles = result
                 this.infonotnull = true
             } else {
-                Toast().fire({icon: 'warning', title: 'Nenhum artigo encontrado'})
+                Toast().fire({icon: 'warning', title: 'Nenhum artigo encontrado com os filtros utilizados'})
             }        
             this.infoLoaded = true      
         },
@@ -190,7 +192,7 @@ export default defineComponent({
             router.push('/events')
         }
     },
-    components: { Spinner, ArticleAdminFilter, ArticleAdvisorFilter }
+    components: { Spinner, ArticleAdminFilter, ArticleAdvisorFilter, Certificate }
 })
 
 </script>

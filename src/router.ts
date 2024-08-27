@@ -17,6 +17,7 @@ import Events from './views/author/Events.vue'
 import Corrections from './views/author/Corrections.vue'
 import Historic from './views/author/Historic.vue'
 import Register from './views/auth/Register.vue'
+import MyCertificates from './views/author/MyCertificates.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -109,6 +110,12 @@ const routes: RouteRecordRaw[] = [
     path: '/historic/:userid?',
     name: 'Historic',
     component: Historic,
+    beforeEnter: authBasic
+  },
+  {
+    path: '/mycertificates',
+    name: 'MyCertificates',
+    component: MyCertificates,
     beforeEnter: authBasic
   },
 

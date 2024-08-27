@@ -73,6 +73,11 @@
                         <font-awesome-icon :icon="['fas', 'newspaper']" />
                         <span class="mx-4 font-semibold">Meus artigos</span>
                     </router-link>
+                    <router-link class="flex items-center px-4 py-2 mt-2 duration-200"
+                        :class="[$route.name === 'MyCertificates' ? activeClass : inactiveClass]" to="/mycertificates">
+                        <font-awesome-icon :icon="['fas', 'certificate']" />
+                        <span class="mx-4 font-semibold">Meus certificados</span>
+                    </router-link>
                 </div>
             </nav>
 

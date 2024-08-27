@@ -63,7 +63,16 @@ export async function userRecoverPassword(params) {
     return data
 }
 
+export async function generateCertificate(params) {
+    const { data } = await axios.post(`${api.url}/user/certificate/export`, params, {
+        headers: api.authBearer
+    })
+
+    return data
+}
+
 export function userFormatCPF(cpf) {            
     cpf = cpf.replace(/[^\d]/g, "");                    
     return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
 }
+

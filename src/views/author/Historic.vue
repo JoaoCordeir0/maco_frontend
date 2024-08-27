@@ -6,9 +6,9 @@
                 <span v-if="!infoLoaded">
                     <Spinner />
                 </span>                      
-                <div v-if="!infoNull" class="flex mt-5">                     
-                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">                                    
-                        <div class="col max-w-sm rounded overflow-hidden shadow-lg" v-for="item in articles">
+                <div v-if="!infoNull" class="mt-5 w-full">                     
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">                                    
+                        <div class="col w-full rounded overflow-hidden shadow-lg" v-for="item in articles">
                             <div class="px-6 py-4">
                                 <div class="items-center">
                                     <p><b>Título:</b> {{ item.title }}</p>
@@ -16,13 +16,14 @@
                                     <p><b>Autores:</b> {{ formatAuthors(item.authors, 'name') }}</p>
                                     <p><b>Evento:</b> <i>{{ item.event_name }}</i></p>
                                 </div>     
-                                <div class="mt-2">
-                                    <a href="#" v-on:click="viewArticle(item.id, item.event)" class="bg-gray-900 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
-                                        <font-awesome-icon :icon="['fas', 'eye']" /> Visualizar
-                                    </a>                                    
-                                    <a v-if="item.status == 'finished' ||  item.status == 'approved'" href="#" v-on:click="exportArticle(item.id)" class="ml-2 bg-blue-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
-                                        <font-awesome-icon :icon="['fas', 'file-word']" /> Exportar
-                                    </a>                                    
+                                <div class="mt-2 text-center">
+                                    <button title="Visualizar o artigo" href="#" v-on:click="viewArticle(item.id, item.event)" class="bg-gray-900 text-white rounded p-2 ps-3 pe-3 me-2 w-10"> 
+                                        <font-awesome-icon :icon="['fas', 'eye']" />
+                                    </button>                                    
+                                    <button title="Exportar o artigo" v-if="item.status == 'finished' ||  item.status == 'approved'" href="#" v-on:click="exportArticle(item.id)" class="bg-blue-700 text-white rounded p-2 ps-3 pe-3 me-2 w-10"> 
+                                        <font-awesome-icon :icon="['fas', 'file-word']" />
+                                    </button>    
+                                    <Certificate v-if="item.status == 'finished'" :article="item"/>                          
                                 </div>                                                               
                             </div>     
                         </div>  
@@ -45,6 +46,7 @@ import { defineComponent, ref, reactive, toRefs } from 'vue';
 import { IEventState } from '../../hooks/useEvent';
 import { submissionsList, articleExport } from '../../hooks/useArticle';
 import Spinner from "../../components/Spinner.vue"
+import Certificate from "../../components/Certificate.vue"
 import { format } from 'date-fns';
 import router from '../../router';
 import { Toast } from '../../hooks/useToast';
@@ -181,6 +183,6 @@ export default defineComponent({
     beforeMount() {        
         this.loadUserHistoric()        
     },
-    components: { Spinner }
+    components: { Spinner, Certificate }
 })
 </script>

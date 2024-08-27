@@ -44,11 +44,11 @@
                                     <span class="text-sm text-gray-700">E-mail</span>                                    
                                     <div class="flex">
                                         <input :value="author.email" disabled type="text" class="w-full max-h-10 block mt-1 border-gray-300 rounded-md"/>                                
-                                        <a v-if="userIsLogged(author.id) && editMode" href="#" v-on:click="delAuthor(author.id)" class="ms-2 bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
-                                            <font-awesome-icon class="mt-2" size="lg" :icon="['fas', 'trash-can']" />
+                                        <a v-if="userIsLogged(author.id) && editMode" href="#" v-on:click="delAuthor(author.id)" class="ms-2 bg-red-600 mt-1 text-white text-center ps-2 pe-2 pt-1 pb-1 w-10 rounded-md"> 
+                                            <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'trash-can']" />
                                         </a> 
-                                        <a v-if="isAdminOrAdvisor()" :href="'/user/' + author.id" class="ms-2 bg-gray-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
-                                            <font-awesome-icon class="mt-2" size="lg" :icon="['fas', 'eye']" />
+                                        <a v-if="isAdminOrAdvisor()" :href="'/user/' + author.id" class="ms-2 mt-1 bg-gray-700 text-white ps-2 pe-2 pt-1 pb-1 w-10 rounded-md"> 
+                                            <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'eye']" />
                                         </a> 
                                     </div>                                
                                 </div>                               
@@ -81,11 +81,11 @@
                                         <span class="text-sm text-gray-700">E-mail</span>                                 
                                         <div class="flex">
                                             <input :value="advisor.email" disabled type="text" class="w-full max-h-10 border-gray-300 block mt-1 rounded-md"/>                                
-                                            <a v-if="userIsLogged(advisor.id) && editMode" href="#" v-on:click="delAdvisor(advisor.id)" class="ms-2 bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
-                                                <font-awesome-icon class="mt-2" size="lg" :icon="['fas', 'trash-can']" />
+                                            <a v-if="userIsLogged(advisor.id) && editMode" href="#" v-on:click="delAdvisor(advisor.id)" class="ms-2 mt-1 bg-red-600 w-10 text-center text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                                <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'trash-can']" />
                                             </a> 
-                                            <a v-if="isAdminOrAdvisor()" :href="'/user/' + advisor.id" class="ms-2 bg-gray-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
-                                                <font-awesome-icon class="mt-2" size="lg" :icon="['fas', 'eye']" />
+                                            <a v-if="isAdminOrAdvisor()" :href="'/user/' + advisor.id" class="ms-2 mt-1 bg-gray-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                                <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'eye']" />
                                             </a> 
                                         </div>                                
                                     </div>                                                                
@@ -113,11 +113,11 @@
                                         <span class="text-sm text-gray-700">E-mail</span>                                 
                                         <div class="flex">
                                             <input :value="advisor.email" disabled type="text" class="w-full max-h-10 border-gray-300 block mt-1 rounded-md"/>                                
-                                            <a v-if="userIsLogged(advisor.id) && editMode" href="#" v-on:click="delAdvisor(advisor.id)" class="ms-2 bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
-                                                <font-awesome-icon class="mt-2" size="lg" :icon="['fas', 'trash-can']" />
+                                            <a v-if="userIsLogged(advisor.id) && editMode" href="#" v-on:click="delAdvisor(advisor.id)" class="ms-2 mt-1 bg-red-600 w-10 text-center text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                                <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'trash-can']" />
                                             </a> 
-                                            <a v-if="isAdminOrAdvisor()" :href="'/user/' + advisor.id" class="ms-2 bg-gray-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
-                                                <font-awesome-icon class="mt-2" size="lg" :icon="['fas', 'eye']" />
+                                            <a v-if="isAdminOrAdvisor()" :href="'/user/' + advisor.id" class="ms-2 mt-1 bg-gray-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                                <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'eye']" />
                                             </a> 
                                         </div>                                
                                     </div>                                                                
@@ -146,7 +146,7 @@
                         <label class="block">
                             <span class="text-sm text-gray-700">Palavras chaves <span class="text-red-500 font-semibold">*</span></span>
                             <div class="my-2">
-                                <span v-for="key in keywords" v-on:click="delKeyword(key)" class="bg-gray-700 rounded-lg text-white rounded border-2 border-gray-700 px-3 mr-2 hover:border-red-800 hover:text-red-800 hover:bg-red-400">
+                                <span v-for="key in keywords" v-on:click="delKeyword(key)" class="bg-gray-700 rounded text-white border-2 border-gray-700 px-3 mr-2 hover:border-red-800 hover:text-red-800 hover:bg-red-400">
                                     <font-awesome-icon :icon="['fas', 'xmark']" class="mr-2" /> {{ key }}
                                 </span>
                                 <span v-if="!keywordLoaded">
@@ -176,10 +176,10 @@
                         <div class="flex mb-1" v-for="(ref, index) in references" :key="index">
                             <input type="text" :value="ref.reference" :ref="'inputRef' + index" :disabled="!infoLoaded || !editMode"
                                 class="block w-full max-h-10 mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"/>
-                            <a v-if="editMode" href="#" v-on:click="editReference(ref.id, index)" title="Salvar alterações na referência" class="ms-2 mt-1 bg-gray-900 text-white ps-2 pe-2 pt-1 pb-1 rounded-md">                                 
+                            <a v-if="editMode" href="#" v-on:click="editReference(ref.id, index)" title="Salvar alterações na referência" class="ms-2 mt-1 bg-gray-900 w-10 text-center text-white ps-2 pe-2 pt-1 pb-1 rounded-md">                                 
                                 <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'floppy-disk']" />
                             </a> 
-                            <a v-if="editMode" href="#" v-on:click="delReference(ref.id)" title="Excluir referência" class="ms-2 mt-1 bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                            <a v-if="editMode" href="#" v-on:click="delReference(ref.id)" title="Excluir referência" class="ms-2 mt-1 bg-red-600 w-10 text-center text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                 <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'trash-can']" />
                             </a> 
                         </div>

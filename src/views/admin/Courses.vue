@@ -23,23 +23,23 @@
                                 <th class="px-5 text-start border-b-2">ID</th>
                                 <th class="px-5 text-start border-b-2">Nome</th>        
                                 <th class="px-5 text-start border-b-2">Descrição</th>                                
-                                <th class="px-5 text-start border-b-2">Ações</th>
+                                <th class="px-5 text-center border-b-2">Ações</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="item in courses">
-                                <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                                <td class="px-5 py-4 text-sm bg-white border-b border-gray-200">
                                     <p :class="!item.status ? 'text-red-500' : ''" class="text-gray-900 whitespace-nowrap">{{ item.id }}</p>
                                 </td>
-                                <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                                <td class="px-5 py-4 text-sm bg-white border-b border-gray-200">
                                     <p :class="!item.status ? 'text-red-500' : ''" class="text-gray-900 whitespace-nowrap">{{ item.name }}</p>
                                 </td>                                
-                                <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                                <td class="px-5 py-4 text-sm bg-white border-b border-gray-200">
                                     <p :class="!item.status ? 'text-red-500' : ''" class="text-gray-900 whitespace-nowrap">{{ item.description }}</p>
                                 </td>                                
-                                <td class="px-5 py-5 text-sm bg-white border-b border-gray-200 min-w-72">
+                                <td class="px-5 py-4 text-sm bg-white border-b border-gray-200 text-center">
                                     <div class="sm:inline-block">                                        
-                                        <a :href="`/course/${item.id}`" class="sm:px-5 sm:py-2 px-5 bg-gray-900 m-2 mt-2 text-white rounded"><font-awesome-icon :icon="['fas', 'pen-to-square']" /> <span class="hidden lg:inline">Editar</span></a>                                        
+                                        <a title="Editar curso" :href="`/course/${item.id}`" class="bg-gray-900 text-white rounded p-2 ps-3 pe-3 me-2 w-10"><font-awesome-icon :icon="['fas', 'pen-to-square']" /></a>                                        
                                     </div>                                    
                                 </td>
                             </tr>
