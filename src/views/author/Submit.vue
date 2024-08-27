@@ -44,10 +44,10 @@
                                     <span class="text-sm text-gray-700">E-mail</span>                                    
                                     <div class="flex">
                                         <input :value="author.email" disabled type="text" class="w-full max-h-10 block mt-1 border-gray-300 rounded-md"/>                                
-                                        <a v-if="userIsLogged(author.id) && editMode" href="#" v-on:click="delAuthor(author.id)" class="ms-2 bg-red-600 mt-1 text-white text-center ps-2 pe-2 pt-1 pb-1 w-10 rounded-md"> 
+                                        <a title="Deletar Autor do artigo" v-if="userIsLogged(author.id) && editMode" href="#" v-on:click="delAuthor(author.id)" class="ms-2 bg-red-600 mt-1 text-white text-center ps-2 pe-2 pt-1 pb-1 w-10 rounded-md"> 
                                             <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'trash-can']" />
                                         </a> 
-                                        <a v-if="isAdminOrAdvisor()" :href="'/user/' + author.id" class="ms-2 mt-1 bg-gray-700 text-white ps-2 pe-2 pt-1 pb-1 w-10 rounded-md"> 
+                                        <a title="Visualizar perfil do Autor" v-if="isAdminOrAdvisor()" :href="'/user/' + author.id" class="ms-2 mt-1 bg-gray-700 text-white ps-2 pe-2 pt-1 pb-1 w-10 rounded-md"> 
                                             <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'eye']" />
                                         </a> 
                                     </div>                                
@@ -81,10 +81,10 @@
                                         <span class="text-sm text-gray-700">E-mail</span>                                 
                                         <div class="flex">
                                             <input :value="advisor.email" disabled type="text" class="w-full max-h-10 border-gray-300 block mt-1 rounded-md"/>                                
-                                            <a v-if="userIsLogged(advisor.id) && editMode" href="#" v-on:click="delAdvisor(advisor.id)" class="ms-2 mt-1 bg-red-600 w-10 text-center text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                            <a title="Deletar Co-orientador do artigo" v-if="userIsLogged(advisor.id) && editMode" href="#" v-on:click="delAdvisor(advisor.id)" class="ms-2 mt-1 bg-red-600 w-10 text-center text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                                 <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'trash-can']" />
                                             </a> 
-                                            <a v-if="isAdminOrAdvisor()" :href="'/user/' + advisor.id" class="ms-2 mt-1 bg-gray-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                            <a title="Visualizar perfil do Co-orientador" v-if="isAdminOrAdvisor()" :href="'/user/' + advisor.id" class="ms-2 mt-1 bg-gray-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                                 <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'eye']" />
                                             </a> 
                                         </div>                                
@@ -113,10 +113,10 @@
                                         <span class="text-sm text-gray-700">E-mail</span>                                 
                                         <div class="flex">
                                             <input :value="advisor.email" disabled type="text" class="w-full max-h-10 border-gray-300 block mt-1 rounded-md"/>                                
-                                            <a v-if="userIsLogged(advisor.id) && editMode" href="#" v-on:click="delAdvisor(advisor.id)" class="ms-2 mt-1 bg-red-600 w-10 text-center text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                            <a title="Deletar Orientador do artigo" v-if="userIsLogged(advisor.id) && editMode" href="#" v-on:click="delAdvisor(advisor.id)" class="ms-2 mt-1 bg-red-600 w-10 text-center text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                                 <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'trash-can']" />
                                             </a> 
-                                            <a v-if="isAdminOrAdvisor()" :href="'/user/' + advisor.id" class="ms-2 mt-1 bg-gray-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                            <a title="Visualizar perfil do Orientador" v-if="isAdminOrAdvisor()" :href="'/user/' + advisor.id" class="ms-2 mt-1 bg-gray-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                                 <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'eye']" />
                                             </a> 
                                         </div>                                
@@ -146,7 +146,7 @@
                         <label class="block">
                             <span class="text-sm text-gray-700">Palavras chaves <span class="text-red-500 font-semibold">*</span></span>
                             <div class="my-2">
-                                <span v-for="key in keywords" v-on:click="delKeyword(key)" class="bg-gray-700 rounded text-white border-2 border-gray-700 px-3 mr-2 hover:border-red-800 hover:text-red-800 hover:bg-red-400">
+                                <span title="Clique para excluir a palavra chave" v-for="key in keywords" v-on:click="delKeyword(key)" class="bg-gray-700 rounded text-white border-2 border-gray-700 px-3 mr-2 hover:border-red-800 hover:text-red-800 hover:bg-red-400">
                                     <font-awesome-icon :icon="['fas', 'xmark']" class="mr-2" /> {{ key }}
                                 </span>
                                 <span v-if="!keywordLoaded">
@@ -179,7 +179,7 @@
                             <a v-if="editMode" href="#" v-on:click="editReference(ref.id, index)" title="Salvar alterações na referência" class="ms-2 mt-1 bg-gray-900 w-10 text-center text-white ps-2 pe-2 pt-1 pb-1 rounded-md">                                 
                                 <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'floppy-disk']" />
                             </a> 
-                            <a v-if="editMode" href="#" v-on:click="delReference(ref.id)" title="Excluir referência" class="ms-2 mt-1 bg-red-600 w-10 text-center text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                            <a v-if="editMode" href="#" v-on:click="delReference(ref.id)" title="Excluir referência do artigo" class="ms-2 mt-1 bg-red-600 w-10 text-center text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                 <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'trash-can']" />
                             </a> 
                         </div>
@@ -249,6 +249,11 @@
                             <Loading />
                         </span>
                     </button>
+                </div>
+            </div>
+            <div v-if="status == 'finished'" class="flex justify-end">
+                <div class="absolute bottom-6 right-6">
+                    <Certificate :article="article" :btnText="true"/>                    
                 </div>
             </div>         
         </form>        
@@ -428,6 +433,7 @@ import Modal from '../../components/Modal.vue';
 import Loading from '../../components/Loading.vue';
 import { format } from 'date-fns';
 import { getUserRole } from '../../hooks/useAuth';
+import Certificate from '../../components/Certificate.vue';
 
 export default defineComponent({
     setup(){
@@ -440,6 +446,7 @@ export default defineComponent({
         const eventID = ref()
         const articleID = ref()
         const pageTitle = ref("")
+        const article = ref()
         const id = ref("")
         const title = ref("")
         const authors = ref("")
@@ -472,7 +479,8 @@ export default defineComponent({
         const search_advisor_loaded = ref(true)
 
         return {
-            ...toRefs(state),            
+            ...toRefs(state),   
+            article,         
             editMode,
             eventID,
             articleID,
@@ -559,6 +567,7 @@ export default defineComponent({
             this.eventID = resultArticle.value['event']                
             const resultEvent = await eventDetails(this.eventID)               
             
+            this.article = resultArticle.value
             this.title = resultArticle.value['title'] != ' ' ? resultArticle.value['title'] : ''
             this.authors = resultArticle.value['authors']
             this.status = resultArticle.value['status']
@@ -1105,6 +1114,6 @@ export default defineComponent({
         this.loadPage()             
         this.pageTitle = 'Submissão'                  
     },    
-    components: { Spinner, Loading, Modal }
+    components: { Spinner, Loading, Modal, Certificate }
 })
 </script>

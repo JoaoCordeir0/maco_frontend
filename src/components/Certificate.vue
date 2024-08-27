@@ -1,5 +1,5 @@
 <template>
-    <button title="Emitir certificado" v-on:click="getCertificate" class="bg-green-800 text-white rounded p-2 ps-3 pe-3 me-2" :class="!$props.btnText ? 'w-10' : ''">
+    <button type="button" title="Emitir certificado" v-on:click="getCertificate" class="bg-green-800 text-white rounded p-2 ps-3 pe-3 me-2" :class="!$props.btnText ? 'w-10' : ''">
         <font-awesome-icon :icon="['fas', 'file-pdf']" /> <span v-if="$props.btnText"> Emitir certificado</span>
     </button>
 
@@ -78,7 +78,7 @@ export default defineComponent({
                         preConfirm: () => {
                             const selectedValue = document.getElementById('selectOption')?.value
                             if (!selectedValue) {
-                            Swal.showValidationMessage('Por favor, selecione uma opção');
+                            Swal.showValidationMessage('Por favor, selecione um(a) autor(a)');
                             }
                             return selectedValue;
                         },

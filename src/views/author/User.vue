@@ -179,7 +179,7 @@ export default defineComponent({
                     email: email.value,
                     password: pass.value,
                     role: role.value,
-                    status: status.value,
+                    status: status.value ? 1 : 0,
                 })
                 if (result.status == 'success') {
                     Toast().fire({icon: 'success', title: 'Usuário editado!'})

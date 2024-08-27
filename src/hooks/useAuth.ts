@@ -61,7 +61,7 @@ export function authAuthor(to, from, next) {
 }
 
 export async function isValidToken() {
-    const { data } = await axios.post(`${endpointUrl}/token`, {
+    const { data } = await axios.post(`${endpointUrl}/public/token`, {
         'token': localStorage.getItem('user-token')
     })
 

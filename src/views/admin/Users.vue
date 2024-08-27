@@ -29,19 +29,19 @@
                         <tbody>
                             <tr v-for="item in users">
                                 <td class="px-5 py-4 text-sm bg-white border-b border-gray-200">
-                                    <p class="text-gray-900 whitespace-nowrap">{{ item.id }}</p>
+                                    <p :class="item.status ? 'text-gray-900' : 'text-red-600'" class="whitespace-nowrap">{{ item.id }}</p>
                                 </td>
                                 <td class="px-5 py-4 text-sm bg-white border-b border-gray-200">
-                                    <p class="text-gray-900 whitespace-nowrap">{{ item.name }}</p>
+                                    <p :class="item.status ? 'text-gray-900' : 'text-red-600'" class="whitespace-nowrap">{{ item.name }}</p>
                                 </td>                                
                                 <td class="px-5 py-4 text-sm bg-white border-b border-gray-200">
-                                    <p class="text-gray-900 whitespace-nowrap">{{ formatCPF(item.cpf) }}</p>
+                                    <p :class="item.status ? 'text-gray-900' : 'text-red-600'" class="whitespace-nowrap">{{ formatCPF(item.cpf) }}</p>
                                 </td>                                  
                                 <td class="px-5 py-4 text-sm bg-white border-b border-gray-200">
-                                    <p class="text-gray-900 whitespace-nowrap">{{ formatCourse(item.courses) }}</p>
+                                    <p :class="item.status ? 'text-gray-900' : 'text-red-600'" class="whitespace-nowrap">{{ formatCourse(item.courses) }}</p>
                                 </td>  
                                 <td class="px-5 py-4 text-sm bg-white border-b border-gray-200">
-                                    <p class="text-gray-900 whitespace-nowrap">{{ getRole(item.role) }}</p>
+                                    <p :class="item.status ? 'text-gray-900' : 'text-red-600'" class="whitespace-nowrap">{{ getRole(item.role) }}</p>
                                 </td>                             
                                 <td class="px-5 py-4 text-sm bg-white border-b border-gray-200 text-center">
                                     <a title="Ver submissões do aluno" v-if="item.role == 3" :href="`/historic/${item.id}`" class="bg-green-900 text-white rounded p-2 ps-3 pe-3 me-2 w-10"><font-awesome-icon :icon="['fas', 'newspaper']" /></a>
