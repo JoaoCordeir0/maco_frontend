@@ -15,7 +15,7 @@
                                 </div>
                             </div>
                             <div class="col-end-10 col-span-2 ...">
-                                <a href="#" v-on:click="newSubmission(item.id)" class="bg-green-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                <a href="#" v-on:click="newSubmission(item)" class="bg-green-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                     <font-awesome-icon :icon="['fas', 'newspaper']" /> Iniciar nova submissão
                                 </a>                                
                             </div>                
@@ -91,10 +91,24 @@ export default defineComponent({
         }
     }, 
     methods: {
-        newSubmission(eventID) {            
-            sessionStorage.setItem('article-added', 'n')    
-            sessionStorage.setItem('event-id-selected', eventID)
-            router.push('submit')
+        newSubmission(event) {  
+            Swal.fire({
+                title: 'Instruções para o evento',
+                html: `<div class="text-justify">${event.instructions.replaceAll('\n', '<br>')}</div>`,
+                focusConfirm: false,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",                
+                showCancelButton: true,
+                confirmButtonText: 'Estou ciente! Continuar',
+                cancelButtonText: 'Cancelar',
+                customClass: 'swal-wide'
+            }).then(async (result) => {              
+                if (result.isConfirmed) {      
+                    sessionStorage.setItem('article-added', 'n')    
+                    sessionStorage.setItem('event-id-selected', event.id)
+                    router.push('submit')
+                }
+            })                      
         },
         continueSubmission(articleID, eventID) {            
             sessionStorage.setItem('article-added', 'y')    

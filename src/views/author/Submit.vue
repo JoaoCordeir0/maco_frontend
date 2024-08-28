@@ -144,7 +144,7 @@
                 <div class="... bg-white border-2 rounded-xl border-gray px-5 pb-5 pt-3 mt-2">
                     <form @submit.prevent="addKeyword()">
                         <label class="block">
-                            <span class="text-sm text-gray-700">Palavras chaves <span class="text-red-500 font-semibold">*</span></span>
+                            <span class="text-sm text-gray-700">Palavras chaves <span class="text-red-500 font-semibold">*</span> <br> Mínimo: 3 Máximo: {{ allowedKeywords }}</span>
                             <div class="my-2">
                                 <span title="Clique para excluir a palavra chave" v-for="key in keywords" v-on:click="delKeyword(key)" class="bg-gray-700 rounded text-white border-2 border-gray-700 px-3 mr-2 hover:border-red-800 hover:text-red-800 hover:bg-red-400">
                                     <font-awesome-icon :icon="['fas', 'xmark']" class="mr-2" /> {{ key }}
@@ -467,6 +467,7 @@ export default defineComponent({
         const advisorLoaded = ref(false)
         const eventName = ref("")
         const allowedChars = ref()
+        const allowedKeywords = ref()
         const isModalAuthorVisible = ref(false)
         const isModalAdvisorVisible = ref(false)
         const isModalReferenceVisible = ref(false)
@@ -505,6 +506,7 @@ export default defineComponent({
             advisorLoaded,
             eventName,      
             allowedChars,   
+            allowedKeywords,
             isModalAuthorVisible,
             isModalAdvisorVisible,
             isModalReferenceVisible,
@@ -578,6 +580,7 @@ export default defineComponent({
             this.comments = resultArticle.value['comments'][0] != undefined ? resultArticle.value['comments'] : ''
             this.eventName = ' - ' + resultEvent.value['name']
             this.allowedChars = resultEvent.value['number_characters']
+            this.allowedKeywords = resultEvent.value['number_keywords']
             this.infoLoaded = true   
             this.authorLoaded = true
             this.advisorLoaded = true
@@ -853,10 +856,18 @@ export default defineComponent({
                 Toast().fire({icon: 'warning', title: 'Informe as palavras chaves!'})
                 return
             }
+            if (this.keywords.length < 3) {
+                Toast().fire({icon: 'warning', title: `Informe pelo menos 3 palavras chaves!`})
+                return
+            }
+            if (this.keywords.length > this.allowedKeywords) {
+                Toast().fire({icon: 'warning', title: `No máximo ${this.allowedKeywords} palavras chaves devem ser informadas!`})
+                return
+            }
             if (this.isEmpty(this.references)) {
                 Toast().fire({icon: 'warning', title: 'Informe as referências bibliográficas!'})
                 return
-            }
+            }                        
             this.isLoading = true                     
             
             const result = await articleSubmit(this.getArticleID(), this.title, this.summary)

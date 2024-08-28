@@ -33,15 +33,7 @@ export async function eventDetails(id) {
     return ref<IEventState[]>(data[0])
 }
 
-export async function eventAdd(infos) {    
-    let params = {        
-        'name': infos.name,
-        'start': infos.start, 
-        'end': infos.end,
-        'number_characters': infos.chars,
-        'status': infos.status
-    }   
-
+export async function eventAdd(params) {    
     const { data } = await axios.post(`${api.url}/event/add`, params, {
         headers: api.authBearer
     })
@@ -49,16 +41,7 @@ export async function eventAdd(infos) {
     return data
 }
 
-export async function eventEdit(infos) {
-    let params = {
-        'id': infos.id,
-        'name': infos.name,
-        'start': infos.start, 
-        'end': infos.end,
-        'number_characters': infos.chars,
-        'status': infos.status
-    }
-
+export async function eventEdit(params) {   
     const { data } = await axios.post(`${api.url}/event/edit`, params, {
         headers: api.authBearer
     })

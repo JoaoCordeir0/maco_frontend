@@ -65,6 +65,17 @@
                             v-model="event_chars" />
                     </label>   
                     <label class="block mt-2">
+                        <span class="text-sm text-gray-700">Quantidade máxima de palavras chaves <span class="text-red-500 font-semibold">*</span></span>
+                        <input type="number"
+                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                            v-model="event_keywords" />
+                    </label>  
+                    <label class="block mt-2">
+                        <span class="text-sm text-gray-700">Instruções para o evento <span class="text-red-500 font-semibold">*</span></span>                        
+                        <textarea name="" id="" cols="30" rows="5" v-model="event_instructions"
+                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"></textarea>
+                    </label>  
+                    <label class="block mt-2">
                         <span class="text-sm text-gray-700">Status <span class="text-red-500 font-semibold">*</span></span>
                     </label>                                            
                     <label class="relative inline-flex cursor-pointer items-center mt-4">                        
@@ -110,7 +121,9 @@ export default defineComponent({
         const event_name = ref()
         const event_start = ref()
         const event_end = ref()
-        const event_chars = ref()        
+        const event_chars = ref() 
+        const event_keywords = ref()        
+        const event_instructions = ref()        
         const event_status = ref()     
 
         return {
@@ -124,7 +137,9 @@ export default defineComponent({
             event_name,
             event_start,
             event_end,
-            event_chars,        
+            event_chars, 
+            event_keywords,
+            event_instructions,
             event_status,                
         }
     }, 
@@ -149,6 +164,8 @@ export default defineComponent({
                 this.event_start = this.formatDate(result.value['start'])
                 this.event_end = this.formatDate(result.value['end'])
                 this.event_chars = result.value['number_characters']
+                this.event_keywords = result.value['number_keywords']
+                this.event_instructions = result.value['instructions']
                 this.event_status = result.value['status']
                 this.eventLoaded = true
             } else {
@@ -156,13 +173,40 @@ export default defineComponent({
             }
         },
         async saveEvent() {
+            if (this.event_name == '' || this.event_name == undefined || this.event_name == null) {
+                Toast().fire({icon: 'warning', title:'Informe o nome do evento'})
+                return
+            }
+            if (this.event_start == '' || this.event_start == undefined || this.event_start == null) {
+                Toast().fire({icon: 'warning', title:'Informe a data inicial do evento'})
+                return
+            }
+            if (this.event_end == '' || this.event_end == undefined || this.event_end == null) {
+                Toast().fire({icon: 'warning', title:'Informe o data final do evento'})
+                return
+            }
+            if (this.event_chars == '' || this.event_chars == undefined || this.event_chars == null) {
+                Toast().fire({icon: 'warning', title:'Informe a quantidade de caracteres'})
+                return
+            }
+            if (this.event_keywords == '' || this.event_keywords == undefined || this.event_keywords == null) {
+                Toast().fire({icon: 'warning', title:'Informe o quantidade de palavras chaves'})
+                return
+            }
+            if (this.event_instructions == '' || this.event_instructions == undefined || this.event_instructions == null) {
+                Toast().fire({icon: 'warning', title:'Informe as instruções do evento'})
+                return
+            }
+
             if (this.event_id != undefined) {
                 const result = await eventEdit({
                     'id': this.event_id,
                     'name': this.event_name,
                     'start': this.event_start,
                     'end': this.event_end,
-                    'chars': this.event_chars,
+                    'number_characters': this.event_chars,
+                    'number_keywords': this.event_keywords,
+                    'instructions': this.event_instructions,
                     'status': this.event_status ? 1 : 0,
                 })
                 if (result.status == 'success') {
@@ -177,7 +221,9 @@ export default defineComponent({
                     'name': this.event_name,
                     'start': this.event_start,
                     'end': this.event_end,
-                    'chars': this.event_chars,
+                    'number_characters': this.event_chars,
+                    'number_keywords': this.event_keywords,
+                    'instructions': this.event_instructions,
                     'status': this.event_status ? 1 : 0,
                 })
                 if (result.status == 'success') {
@@ -195,6 +241,8 @@ export default defineComponent({
             this.event_start = ref()
             this.event_end = ref()
             this.event_chars = ref()
+            this.event_keywords = ref()        
+            this.event_instructions = ref()     
             this.event_status = 1
             this.eventLoaded = true
         },

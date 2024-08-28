@@ -73,8 +73,9 @@ export default defineComponent({
                             </form>
                         `,
                         focusConfirm: false,
-                        confirmButtonColor: "#3085d6",
-                        cancelButtonColor: "#d33",
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        cancelButtonText: 'Cancelar',
                         preConfirm: () => {
                             const selectedValue = document.getElementById('selectOption')?.value
                             if (!selectedValue) {

@@ -33,3 +33,7 @@
 ::-webkit-scrollbar-thumb:hover {
    background: gray;
 }
+
+.swal-wide{
+   width:850px !important;
+}

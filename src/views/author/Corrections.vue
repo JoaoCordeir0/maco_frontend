@@ -28,7 +28,7 @@
                 </div>   
                 <div v-else class="w-full mt-5"> 
                     <div class="border-2 rounded p-2 mb-3">                        
-                        <div class="w-full grid grid-cols-6 gap-4">                    
+                        <div class="w-full">                    
                             Nenhum artigo em correção                                         
                         </div>
                     </div>   
@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue';
-import { IEventState, eventActiveList } from '../../hooks/useEvent';
+import { IEventState } from '../../hooks/useEvent';
 import { submissionsList, submissionDelete } from '../../hooks/useArticle';
 import Spinner from "../../components/Spinner.vue"
 import Swal from "sweetalert2"
