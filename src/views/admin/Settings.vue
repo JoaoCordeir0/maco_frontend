@@ -163,7 +163,7 @@ export default defineComponent({
                     'start': this.event_start,
                     'end': this.event_end,
                     'chars': this.event_chars,
-                    'status': this.event_status,
+                    'status': this.event_status ? 1 : 0,
                 })
                 if (result.status == 'success') {
                     Toast().fire({icon: 'success', title: 'Evento atualizado!'})
@@ -178,7 +178,7 @@ export default defineComponent({
                     'start': this.event_start,
                     'end': this.event_end,
                     'chars': this.event_chars,
-                    'status': this.event_status,
+                    'status': this.event_status ? 1 : 0,
                 })
                 if (result.status == 'success') {
                     Toast().fire({icon: 'success', title: 'Evento gravado!'})
