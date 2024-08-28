@@ -194,7 +194,8 @@
                         </button> 
                     </div>  
                 </div>                          
-            </div>            
+            </div>    
+                    
             <div v-if="activeBtnByRole('author') && editMode" class="flex justify-end">
                 <button type="button" :disabled="isLoading" v-on:click="submitArticle()"
                     class="absolute bottom-6 right-6 px-12 py-2 text-sm text-center text-white bg-gray-900 rounded-md focus:outline-none font-bold">
@@ -525,7 +526,7 @@ export default defineComponent({
             return this.$route.params.articleid
         },
         async loadPage() {
-            this.eventID = sessionStorage.getItem('event-id-selected')
+            this.eventID = sessionStorage.getItem('event-id-selected')            
             this.articleID = this.getArticleID()            
 
             if (this.eventID == undefined && this.articleID == '') {        
@@ -559,7 +560,7 @@ export default defineComponent({
             this.loadArticle(article.returnid)            
             Toast().fire({icon: 'success', title: 'Artigo configurado! Preencha os campos'})         
             router.push(`/submit/${article.returnid}`)    
-        },  
+        },         
         async loadArticle(articleID) {      
             this.infoLoaded = false              
             const resultArticle = await submissionDetails(getUserRole(true).toLowerCase(), articleID)                            
@@ -569,7 +570,7 @@ export default defineComponent({
 
             this.eventID = resultArticle.value['event']                
             const resultEvent = await eventDetails(this.eventID)               
-            
+                        
             this.article = resultArticle.value
             this.title = resultArticle.value['title'] != ' ' ? resultArticle.value['title'] : ''
             this.authors = resultArticle.value['authors']
@@ -590,6 +591,18 @@ export default defineComponent({
                         
             if (getUserRole(true) == 'AUTHOR' && ! ['in_submission', 'in_correction'].includes(this.status)) {
                 this.editMode = false
+            }
+
+            await this.checkEventAvailabe(resultEvent)
+        },
+        async checkEventAvailabe(event) {            
+            const dateStart = new Date(event.value['start'])
+            const dateEnd = new Date(event.value['end'])
+            const today = new Date();
+
+            if (!(today >= dateStart && today <= dateEnd)) {
+                this.editMode = false
+                Toast().fire({icon: 'warning', title: 'Esse evento não suporta mais submissões!'})
             }
         },
         async searchAuthors(){                  
