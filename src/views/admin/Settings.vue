@@ -59,10 +59,10 @@
                             v-model="event_end" />
                     </label>    
                     <label class="block mt-2">
-                        <span class="text-sm text-gray-700">Quantidade de caracteres permitidos no resumo <span class="text-red-500 font-semibold">*</span></span>
+                        <span class="text-sm text-gray-700">Quantidade de palavras permitidas no resumo <span class="text-red-500 font-semibold">*</span></span>
                         <input type="number"
                             class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
-                            v-model="event_chars" />
+                            v-model="event_words" />
                     </label>   
                     <label class="block mt-2">
                         <span class="text-sm text-gray-700">Quantidade máxima de palavras chaves <span class="text-red-500 font-semibold">*</span></span>
@@ -121,7 +121,7 @@ export default defineComponent({
         const event_name = ref()
         const event_start = ref()
         const event_end = ref()
-        const event_chars = ref() 
+        const event_words = ref() 
         const event_keywords = ref()        
         const event_instructions = ref()        
         const event_status = ref()     
@@ -137,7 +137,7 @@ export default defineComponent({
             event_name,
             event_start,
             event_end,
-            event_chars, 
+            event_words, 
             event_keywords,
             event_instructions,
             event_status,                
@@ -163,7 +163,7 @@ export default defineComponent({
                 this.event_name = result.value['name']
                 this.event_start = this.formatDate(result.value['start'])
                 this.event_end = this.formatDate(result.value['end'])
-                this.event_chars = result.value['number_characters']
+                this.event_words = result.value['number_words']
                 this.event_keywords = result.value['number_keywords']
                 this.event_instructions = result.value['instructions']
                 this.event_status = result.value['status']
@@ -185,7 +185,7 @@ export default defineComponent({
                 Toast().fire({icon: 'warning', title:'Informe o data final do evento'})
                 return
             }
-            if (this.event_chars == '' || this.event_chars == undefined || this.event_chars == null) {
+            if (this.event_words == '' || this.event_words == undefined || this.event_words == null) {
                 Toast().fire({icon: 'warning', title:'Informe a quantidade de caracteres'})
                 return
             }
@@ -204,7 +204,7 @@ export default defineComponent({
                     'name': this.event_name,
                     'start': this.event_start,
                     'end': this.event_end,
-                    'number_characters': this.event_chars,
+                    'number_words': this.event_words,
                     'number_keywords': this.event_keywords,
                     'instructions': this.event_instructions,
                     'status': this.event_status ? 1 : 0,
@@ -221,7 +221,7 @@ export default defineComponent({
                     'name': this.event_name,
                     'start': this.event_start,
                     'end': this.event_end,
-                    'number_characters': this.event_chars,
+                    'number_words': this.event_words,
                     'number_keywords': this.event_keywords,
                     'instructions': this.event_instructions,
                     'status': this.event_status ? 1 : 0,
@@ -240,7 +240,7 @@ export default defineComponent({
             this.event_name = ref()
             this.event_start = ref()
             this.event_end = ref()
-            this.event_chars = ref()
+            this.event_words = ref()
             this.event_keywords = ref()        
             this.event_instructions = ref()     
             this.event_status = 1

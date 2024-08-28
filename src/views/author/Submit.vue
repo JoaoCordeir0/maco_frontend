@@ -136,7 +136,8 @@
                 </div>                    
                 <div class="... bg-white border-2 rounded-xl border-gray px-5 pb-5 pt-3 mt-2">                      
                     <label class="block">
-                        <span class="text-sm text-gray-700">Resumo <span class="text-red-500 font-semibold">*</span> <br> Número de caracteres permitidos: {{ allowedChars }} - {{ summary.split('').length }} preenchidos</span>
+                        <span class="text-sm text-gray-700">Resumo <span class="text-red-500 font-semibold">*</span> 
+                        <br> Quantidade de palavras permitidas: {{ allowedWords }} - {{ summary.split('').length == 0 ? 0 : summary.split(' ').length }} preenchidos</span>
                         <textarea name="" id="" cols="30" rows="5" v-model="summary" :disabled="!infoLoaded || !editMode"
                             class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"></textarea>
                     </label>
@@ -466,7 +467,7 @@ export default defineComponent({
         const authorLoaded = ref(false)
         const advisorLoaded = ref(false)
         const eventName = ref("")
-        const allowedChars = ref()
+        const allowedWords = ref()
         const allowedKeywords = ref()
         const isModalAuthorVisible = ref(false)
         const isModalAdvisorVisible = ref(false)
@@ -505,7 +506,7 @@ export default defineComponent({
             authorLoaded,
             advisorLoaded,
             eventName,      
-            allowedChars,   
+            allowedWords,   
             allowedKeywords,
             isModalAuthorVisible,
             isModalAdvisorVisible,
@@ -579,7 +580,7 @@ export default defineComponent({
             this.references = resultArticle.value['references']
             this.comments = resultArticle.value['comments'][0] != undefined ? resultArticle.value['comments'] : ''
             this.eventName = ' - ' + resultEvent.value['name']
-            this.allowedChars = resultEvent.value['number_characters']
+            this.allowedWords = resultEvent.value['number_words']
             this.allowedKeywords = resultEvent.value['number_keywords']
             this.infoLoaded = true   
             this.authorLoaded = true
@@ -844,8 +845,8 @@ export default defineComponent({
                 Toast().fire({icon: 'warning', title: 'Informe o resumo!'})
                 return
             }
-            if (this.summary.length > parseInt(this.allowedChars)) {
-                Toast().fire({icon: 'warning', title: 'Resumo excede a quantidade de caracteres!'})
+            if (this.summary.split(' ').length > parseInt(this.allowedWords)) {
+                Toast().fire({icon: 'warning', title: 'Resumo excede a quantidade de palavras!'})
                 return
             }
             if (this.isEmpty(this.advisors)) {
@@ -860,7 +861,7 @@ export default defineComponent({
                 Toast().fire({icon: 'warning', title: `Informe pelo menos 3 palavras chaves!`})
                 return
             }
-            if (this.keywords.length > this.allowedKeywords) {
+            if (this.keywords.length > parseInt(this.allowedKeywords)) {
                 Toast().fire({icon: 'warning', title: `No máximo ${this.allowedKeywords} palavras chaves devem ser informadas!`})
                 return
             }
