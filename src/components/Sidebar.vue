@@ -10,7 +10,7 @@
             <div class="flex items-center justify-center mt-8">
                 <div class="flex items-center">
                     <!-- Logo -->
-                    <img src="/logo_maco.png" alt="Logo Maco" width="80">                    
+                    <img src="/logo_maco.png" alt="Logo Maco" width="150" class="rounded-full">                    
                 </div>
             </div>
 
