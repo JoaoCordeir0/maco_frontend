@@ -1,5 +1,5 @@
 <template>               
-    <div class="mt-2">
+    <div class="mt-2 mb-2">
         <div class="bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2">
             <div class="flex flex-wrap">
                 <p class="text-gray-500 font-semibold text-xl border-b-2"> {{ pageTitle }} </p>
@@ -8,8 +8,8 @@
                 </span>
                 <div class="w-full">                    
                     <form class="mt-4" @submit.prevent="saveCourse">
-                        <div class="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-3">
-                            <div class="...">
+                        <div class="grid grid-cols-1 md:gap-4 md:grid-cols-3 xl:grid-cols-3">
+                            <div class="">
                                 <label class="block">
                                     <span class="text-sm text-gray-700">Nome do curso <span class="text-red-500 font-semibold">*</span></span>
                                     <input type="text"
@@ -17,7 +17,7 @@
                                         v-model="name" />
                                 </label>
                             </div>
-                            <div class="col-span-2  ...">
+                            <div class="col-span-2 mt-2 md:mt-0">
                                 <label class="block">
                                     <span class="text-sm text-gray-700">Descrição do curso</span>
                                     <input type="text"

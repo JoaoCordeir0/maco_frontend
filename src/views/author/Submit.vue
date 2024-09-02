@@ -2,18 +2,18 @@
     <div class="mt-2">
         <div class="bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2">
             <div class="flex flex-wrap">                                                
-                <div class="w-full grid grid-cols-6 gap-4">                    
-                    <div class="col-start-1 col-end-8 ...">
+                <div class="w-full grid grid-cols-2 gap-4">                    
+                    <div class="col-start-1 col-end-12 md:col-start-1 md:col-end-8">
                         <p class="text-gray-500 font-semibold text-xl"> <span class="border-b-2">{{ pageTitle }} <span>{{ eventName }}</span></span>
                             <span v-if="!infoLoaded">
                                 <Spinner />
                             </span>
                         </p>
                     </div>
-                    <div class="col-end-10 col-span-2 ...">
-                        <a v-if="activeBtnByRole('admin') && status == 'approved'" href="#" v-on:click="editMode = !editMode" class="mr-4 bg-gray-900 text-white rounded-md py-1 px-3">{{ editMode ? 'Desabilitar' : 'Habilitar' }} edição <font-awesome-icon size="lg" :icon="['fas', 'pen-to-square']" /> </a>
-                        <a v-if="comments != ''" href="#" v-on:click="showCommentsModal()" class="mr-4 bg-cyan-600 text-white rounded-md py-1 px-3">Comentários <font-awesome-icon size="xl" :icon="['fas', 'comment-dots']" /></a>
-                        <a href="#" class="bg-green-700 text-white rounded-md py-1 px-3">Ajuda <font-awesome-icon :icon="['fas', 'question']" /></a>
+                    <div class="col-start-1 col-end-12 md:col-end-10 md:col-span-2">
+                        <a href="#" class="bg-green-700 text-white rounded-md py-1 px-3 ml-2 mt-1 sm:mt-0 float-end">Ajuda <font-awesome-icon :icon="['fas', 'question']" /></a>                        
+                        <a v-if="comments != ''" href="#" v-on:click="showCommentsModal()" class="ml-2 mt-1 sm:mt-0 bg-cyan-600 text-white rounded-md py-1 px-3 float-end">Comentários <font-awesome-icon size="xl" :icon="['fas', 'comment-dots']" /></a>
+                        <a v-if="activeBtnByRole('admin') && status == 'approved'" href="#" v-on:click="editMode = !editMode" class="ml-2 mt-1 sm:mt-0 bg-gray-900 text-white rounded-md py-1 px-3 float-end">{{ editMode ? 'Desabilitar' : 'Habilitar' }} edição <font-awesome-icon size="lg" :icon="['fas', 'pen-to-square']" /> </a>
                     </div>                
                 </div>
             </div>            
@@ -147,9 +147,11 @@
                         <label class="block">
                             <span class="text-sm text-gray-700">Palavras chaves <span class="text-red-500 font-semibold">*</span> <br> Mínimo: 3 Máximo: {{ allowedKeywords }}</span>
                             <div class="my-2">
-                                <span title="Clique para excluir a palavra chave" v-for="key in keywords" v-on:click="delKeyword(key)" class="bg-gray-700 rounded text-white border-2 border-gray-700 px-3 mr-2 hover:border-red-800 hover:text-red-800 hover:bg-red-400">
-                                    <font-awesome-icon :icon="['fas', 'xmark']" class="mr-2" /> {{ key }}
-                                </span>
+                                <div class="block sm:flex">
+                                    <div title="Clique para excluir a palavra chave" v-for="key in keywords" v-on:click="delKeyword(key)" class="bg-gray-700 w-full sm:max-w-72 rounded text-white border-2 border-gray-700 px-3 mr-2 mb-2 hover:border-red-800 hover:text-red-800 hover:bg-red-400">
+                                        <font-awesome-icon :icon="['fas', 'xmark']" class="mr-2" /> {{ key }}
+                                    </div>
+                                </div>
                                 <span v-if="!keywordLoaded">
                                     <Spinner />
                                 </span>
@@ -157,11 +159,11 @@
                             <div v-if="isEmpty(keywords)">
                                 <p class="text-sm">Nenhuma palavra inserida.</p>
                             </div>
-                            <div v-if="editMode && infoLoaded" class="flex">
+                            <div v-if="editMode && infoLoaded" class="block sm:flex text-center">
                                 <input type="text" :disabled="!infoLoaded"
-                                    class="block w-72 max-h-10 mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                                    class="block w-full sm:max-w-72 max-h-10 mt-1 me-2 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
                                     v-model="keyword" />
-                                <button class="ms-2 mt-2 mb-3 bg-blue-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                <button class="mt-2 mb-3 bg-blue-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md text-center"> 
                                     Adicionar palavra <font-awesome-icon :icon="['fas', 'circle-plus']" />
                                 </button> 
                             </div>                          
@@ -198,7 +200,7 @@
                     
             <div v-if="activeBtnByRole('author') && editMode" class="flex justify-end">
                 <button type="button" :disabled="isLoading" v-on:click="submitArticle()"
-                    class="absolute bottom-6 right-6 px-12 py-2 text-sm text-center text-white bg-gray-900 rounded-md focus:outline-none font-bold">
+                    class="absolute bottom-4 right-5 px-12 py-2 text-sm text-center text-white bg-gray-900 rounded-md focus:outline-none font-bold">
                     <span v-if="!isLoading">
                         <font-awesome-icon :icon="['fas', 'floppy-disk']" /> &nbsp; Enviar
                     </span>
@@ -208,21 +210,21 @@
                 </button>                
             </div>   
             <div v-if="activeBtnByRole('advisor') && editMode" class="flex justify-end">
-                <div class="absolute bottom-6 right-6">
-                    <button v-on:click="exportArticle()" type="button" class="px-12 py-2 mr-2 text-sm text-center text-white bg-blue-800 rounded-md focus:outline-none font-bold">                                    
+                <div class="absolute bottom-4 right-5 bg-opacity-20 bg-gray-600 p-1 rounded">
+                    <button v-on:click="exportArticle()" type="button" class="px-2 sm:px-8 md:px-12 py-2 mr-2 text-sm text-center text-white bg-blue-800 rounded-md focus:outline-none font-bold">                                    
                         <font-awesome-icon :icon="['fas', 'file-word']" /> &nbsp; Exportar                                     
                     </button>
 
-                    <button v-on:click="approveArticle()" type="button" class="px-12 py-2 mr-2 text-sm text-center text-white bg-green-800 rounded-md focus:outline-none font-bold">                                    
+                    <button v-on:click="approveArticle()" type="button" class="px-2 sm:px-8 md:px-12 py-2 mr-2 text-sm text-center text-white bg-green-800 rounded-md focus:outline-none font-bold">                                    
                         <font-awesome-icon :icon="['fas', 'arrow-up-from-bracket']" /> &nbsp; Aprovar                                     
                     </button>
 
-                    <button v-on:click="returnToAuthor()" type="button" class="px-12 py-2 mr-2 text-sm text-center text-white bg-orange-800 rounded-md focus:outline-none font-bold">                                    
-                        <font-awesome-icon :icon="['fas', 'right-left']" /> &nbsp; Devolver para o aluno                                     
+                    <button v-on:click="returnToAuthor()" type="button" class="px-2 sm:px-8 md:px-12 py-2 mr-2 text-sm text-center text-white bg-orange-800 rounded-md focus:outline-none font-bold">                                    
+                        <font-awesome-icon :icon="['fas', 'right-left']" /><span class="hidden md:inline"> &nbsp; Devolver para o aluno</span>
                     </button>
 
                     <button type="button" :disabled="isLoading" v-on:click="saveArticle()"
-                        class="px-12 py-2 text-sm text-center text-white bg-gray-900 rounded-md focus:outline-none font-bold">
+                        class="px-2 sm:px-8 md:px-12 py-2 text-sm text-center text-white bg-gray-900 rounded-md focus:outline-none font-bold">
                         <span v-if="!isLoading">
                             <font-awesome-icon :icon="['fas', 'floppy-disk']" /> &nbsp; Salvar
                         </span>
@@ -233,17 +235,17 @@
                 </div>
             </div>      
             <div v-if="activeBtnByRole('admin') && status == 'approved'" class="flex justify-end">
-                <div class="absolute bottom-6 right-6">
-                    <button v-on:click="exportArticle()" type="button" class="px-12 py-2 mr-2 text-sm text-center text-white bg-blue-800 rounded-md focus:outline-none font-bold">                                    
+                <div class="absolute bottom-4 right-5 bg-opacity-20 bg-gray-600 p-1 rounded">
+                    <button v-on:click="exportArticle()" type="button" class="px-2 sm:px-8 md:px-12 mt-1 mb-1 sm:mt-0 py-2 mr-2 text-sm text-center text-white bg-blue-800 rounded-md focus:outline-none font-bold">                                    
                         <font-awesome-icon :icon="['fas', 'file-word']" /> &nbsp; Exportar                                     
                     </button>
 
-                    <button v-on:click="finalizeArticle()" type="button" class="px-12 py-2 mr-2 text-sm text-center text-white bg-green-800 rounded-md focus:outline-none font-bold">                                    
+                    <button v-on:click="finalizeArticle()" type="button" class="px-2 sm:px-8 md:px-12 mt-1 mb-1 sm:mt-0 py-2 text-sm text-center text-white bg-green-800 rounded-md focus:outline-none font-bold">                                    
                         <font-awesome-icon :icon="['fas', 'arrow-up-from-bracket']" /> &nbsp; Finalizar                                     
                     </button>                   
 
                     <button v-if="editMode" type="button" :disabled="isLoading" v-on:click="saveArticle()"
-                        class="px-12 py-2 text-sm text-center text-white bg-gray-900 rounded-md focus:outline-none font-bold">
+                        class="px-2 sm:px-8 md:px-12 mt-1 mb-1 ms-2 sm:mt-0 py-2 text-sm text-center text-white bg-gray-900 rounded-md focus:outline-none font-bold">
                         <span v-if="!isLoading">
                             <font-awesome-icon :icon="['fas', 'floppy-disk']" /> &nbsp; Salvar
                         </span>
@@ -734,7 +736,11 @@ export default defineComponent({
             if (this.keyword.trim().length === 0) {            
                 Toast().fire({icon: 'warning', title: 'Informe a palavra-chave'})                         
                 return
-            } 
+            }             
+            if ((this.keywords.length + 1) > parseInt(this.allowedKeywords)) {
+                Toast().fire({icon: 'warning', title: `No máximo ${this.allowedKeywords} palavras chaves devem ser informadas!`})
+                return
+            }
 
             Toast().fire({icon: 'info', title: 'Carregando...'})
             this.keywordLoaded = false
@@ -983,7 +989,8 @@ export default defineComponent({
             const { value: comment } = await Swal.fire({
                 input: "textarea",
                 icon: "question",
-                inputLabel: "Informe o que deve ser corrigido no artigo.",               
+                title: "Tem certeza?",
+                text: "Você está prestes a devolver o artigo para o aluno, informe o que deve ser corrigido no artigo.",
                 showCancelButton: true,
                 cancelButtonColor: "#d33",
                 cancelButtonText: "Cancelar",
@@ -1125,7 +1132,7 @@ export default defineComponent({
             } catch {
                 return false        
             }            
-        },
+        },       
         checkRole() {
             let roles = ['author', 'advisor', 'admin']
 

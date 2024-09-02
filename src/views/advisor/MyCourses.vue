@@ -7,18 +7,13 @@
                     <Spinner />
                 </span>         
                 <div v-if="infonotnull" class="w-full mt-5">     
-                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">                        
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">                        
                         <div class="col max-w-sm rounded overflow-hidden shadow-lg" v-for="item in courses">
                             <img class="w-full" :src="'/public/' + item.image" alt="Sunset in the mountains">
                             <div class="px-6 py-4">
                                 <div class="font-bold text-xl mb-2">{{ item.name }}</div>
                                 <p class="text-gray-700 text-base">{{ item.description }}</p>
-                            </div>
-                            <div class="px-6 pb-2">
-                                <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#teste</span>
-                                <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#teste</span>
-                                <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#teste</span>
-                            </div>
+                            </div>                            
                         </div>                                            
                     </div>                                   
                 </div>

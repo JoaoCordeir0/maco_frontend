@@ -1,5 +1,5 @@
 <template>   
-    <div class="mt-2">
+    <div class="mt-2 mb-2">
         <div class="bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2">
             <div class="flex flex-wrap">
                 <p class="text-gray-500 font-semibold text-xl border-b-2">{{ pageTitle }}</p>    

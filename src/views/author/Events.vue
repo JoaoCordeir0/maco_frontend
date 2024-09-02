@@ -8,15 +8,15 @@
                 </span>         
                 <div v-if="infonotnull" class="w-full mt-5">                         
                     <div class="border-2 rounded p-2 mb-3" v-for="item in events">                        
-                        <div class="w-full grid grid-cols-6 gap-4">                    
-                            <div class="col-start-1 col-end-8 ...">
+                        <div class="w-full grid grid-cols-2 gap-4">                    
+                            <div class="col-start-1 col-end-12 md:col-start-1 md:col-end-8">
                                 <div class="items-center">
                                     {{ item.name }} - <b>{{ formatDate(item.start) }}</b> até <b>{{ formatDate(item.end) }}</b>
                                 </div>
                             </div>
-                            <div class="col-end-10 col-span-2 ...">
-                                <a href="#" v-on:click="newSubmission(item)" class="bg-green-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
-                                    <font-awesome-icon :icon="['fas', 'newspaper']" /> Iniciar nova submissão
+                            <div class="col-start-1 col-end-12 md:col-end-10 md:col-span-2">
+                                <a href="#" v-on:click="newSubmission(item)" class="bg-green-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md float-end"> 
+                                    <font-awesome-icon :icon="['fas', 'newspaper']" /> Submeter
                                 </a>                                
                             </div>                
                         </div>
@@ -35,18 +35,18 @@
                 <p class="text-gray-500 font-semibold text-xl border-b-2">Artigos incompletos</p>                     
                 <div class="w-full mt-5">                         
                     <div class="border-2 rounded p-2 mb-3" v-for="item in articles">                        
-                        <div class="w-full grid grid-cols-6 gap-4">                    
-                            <div class="col-start-1 col-end-8 ...">
+                        <div class="w-full grid grid-cols-2 gap-4">                    
+                            <div class="col-start-1 col-end-12 md:col-start-1 md:col-end-8">
                                 <div class="items-center">
                                     <span>{{ item.id }}</span> - {{ item.title == ' ' ? 'Título não informado' : item.title }}
                                 </div>
                             </div>
-                            <div class="col-end-10 col-span-2 ...">
-                                <a href="#" v-on:click="continueSubmission(item.id, item.event)" class="bg-blue-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
-                                    <font-awesome-icon :icon="['fas', 'newspaper']" /> Continuar submissão
+                            <div class="col-start-1 col-end-12 md:col-end-10 md:col-span-2 inline-flex">
+                                <a href="#" v-on:click="continueSubmission(item.id, item.event)" class="bg-blue-700 text-center text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                    <font-awesome-icon :icon="['fas', 'newspaper']" /> Continuar
                                 </a>   
                                 &nbsp;
-                                <a href="#" v-on:click="delArticleIncomplete(item.id)" class="bg-red-600 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                <a href="#" v-on:click="delArticleIncomplete(item.id)" class="bg-red-600 text-center text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                     <font-awesome-icon :icon="['fas', 'trash-can']" /> Excluir
                                 </a>                                
                             </div>                

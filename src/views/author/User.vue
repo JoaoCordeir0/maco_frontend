@@ -1,5 +1,5 @@
 <template>               
-    <div class="mt-2">
+    <div class="mt-2 mb-2">
         <div class="bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2">
             <div class="flex flex-wrap">
                 <p class="text-gray-500 font-semibold text-xl border-b-2"> {{ pageTitle }} </p>
@@ -80,12 +80,12 @@
                                                 <input id="switch-2" type="checkbox" class="peer sr-only" :checked="status" v-on:click="status = !status">
                                                 <div class="peer h-4 w-11 rounded-full border bg-slate-200 after:absolute after:-top-1 after:left-0 after:h-6 after:w-6 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-green-300 peer-checked:after:translate-x-full peer-focus:ring-green-300"></div>
                                             </label>                        
-                                            <span class="absolute ml-3 mt-3">{{ getStatus() }}</span>
+                                            <span class="ml-3 mt-3">{{ getStatus() }}</span>
                                         </label>                                            
                                     </div>                                                             
                                 </div>
                             </div>
-                            <div class="...">
+                            <div class="mt-4 md:mt-0">
                                 <h3 class="mb-3 italic">Curso(s) do usuário</h3>
                                 <div v-if="isset_courses" v-for="(item, index) in courses" class="border border-sky-600 p-3 rounded mt-2">
                                     <p><span class="semibold">{{ parseInt(index) + 1 }}</span> - {{ item.name }} - <span>{{ formatDate(item.created_at) }}</span></p>

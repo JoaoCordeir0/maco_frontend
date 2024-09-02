@@ -2,29 +2,29 @@
     <div class="mt-2">
         <div class="bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2">
             <div class="flex flex-wrap">        
-                <div class="w-full grid grid-cols-6 gap-4">                    
-                    <div class="col-start-1 col-end-8 ...">
+                <div class="w-full grid grid-cols-2 gap-4">                    
+                    <div class="col-start-1 col-end-12 md:col-start-1 md:col-end-8">
                         <p class="text-gray-500 font-semibold text-xl"><span class="border-b-2">Configurações de evento</span>
                             <span v-if="!infoLoaded">
                                 <Spinner />
                             </span>
                         </p>
                     </div>
-                    <div class="col-end-10 col-span-2 ...">
+                    <div class="col-start-1 col-end-12 md:col-end-10 md:col-span-2 text-end">
                         <button @click="showModal(), createEvent()" class="bg-green-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
-                            <font-awesome-icon :icon="['fas', 'file-circle-plus']" /> Criar novo evento
+                            <font-awesome-icon :icon="['fas', 'file-circle-plus']" /> Criar evento
                         </button>
                     </div>                
                 </div>     
                 <div v-if="infonotnull" class="w-full mt-5">                         
                     <div class="border-2 rounded p-2 mb-2" v-for="item in events">                        
-                        <div class="w-full grid grid-cols-6 gap-4">                    
-                            <div class="col-start-1 col-end-8 ...">
+                        <div class="w-full grid grid-cols-2 gap-4">                    
+                            <div class="col-start-1 col-end-12 md:col-start-1 md:col-end-8">
                                 <div class="mt-1">
                                     {{ item.name }} - <span :class="item.status == 1 ? 'bg-green-700' : 'bg-red-700'" class="ps-2 pe-2 rounded-md text-white">{{ item.status == 1 ? 'Ativo' : 'Inativo' }}</span>
                                 </div>
                             </div>
-                            <div class="col-end-10 col-span-2 ...">
+                            <div class="col-start-1 col-end-12 md:col-end-10 md:col-span-2 text-end">
                                 <button @click="showModal(), loadEvent(item.id)" class="bg-blue-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> <font-awesome-icon :icon="['fas', 'pen-to-square']" /> Editar</button>                                
                             </div>                
                         </div>

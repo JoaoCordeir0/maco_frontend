@@ -62,7 +62,7 @@ export default defineComponent({
                     }              
 
                     Swal.fire({
-                        title: 'Escolha um(a) autor(a)',
+                        title: 'Escolha um(a) autor(a) para emitir o certificado',
                         html: `
                             <form class="form" id="selectionForm">
                                 <label for="selectOption">Autores(as):</label>
