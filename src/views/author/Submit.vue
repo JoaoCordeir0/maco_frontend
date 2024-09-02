@@ -550,9 +550,7 @@ export default defineComponent({
             Toast().fire({icon: 'info', title: 'Aguarde, estamos configurando seu artigo'})         
             const article = await articleAdd({
                 'event': this.eventID,
-                'title': ' ',
-                'authors': ' ',
-                'advisors': ' ',
+                'title': ' ',                
                 'keywords': ' ',
                 'summary': ' ',
                 'status': 1
