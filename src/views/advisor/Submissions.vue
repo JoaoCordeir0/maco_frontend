@@ -4,7 +4,7 @@
             <div class="flex flex-wrap">
                 <div class="w-full grid grid-cols-6 gap-4">                    
                     <div class="col-start-1 col-end-8 ...">
-                        <p class="text-gray-500 font-semibold text-xl"><span class="border-b-2"> {{ pageTitle }} </span>
+                        <p class="text-gray-500 font-semibold text-xl"><span class="border-b-2"> {{ pageTitle }} - {{ total }}</span>
                             <span v-if="!infoLoaded">
                                 <Spinner />
                             </span>
@@ -85,6 +85,7 @@ export default defineComponent({
         const articles = ref()
         const infonotnull = ref(false)
         const infoLoaded = ref(false)
+        const total = ref(0)
 
         return {
             ...toRefs(state),
@@ -92,6 +93,7 @@ export default defineComponent({
             articles,
             infonotnull,
             infoLoaded,
+            total,
         }
     },
     methods: {
@@ -109,9 +111,11 @@ export default defineComponent({
                             
             if(result[0] != undefined) {
                 this.articles = result
+                this.total = Object.keys(this.articles).length
                 this.infonotnull = true
             } else {
                 Toast().fire({icon: 'warning', title: 'Nenhum artigo encontrado com os filtros utilizados'})
+                this.total = 0
             }        
             this.infoLoaded = true      
         },

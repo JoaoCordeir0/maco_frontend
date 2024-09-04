@@ -148,7 +148,7 @@
                             <span class="text-sm text-gray-700">Palavras chaves <span class="text-red-500 font-semibold">*</span> <br> Mínimo: 3 Máximo: {{ allowedKeywords }}</span>
                             <div class="my-2">
                                 <div class="block sm:flex">
-                                    <div title="Clique para excluir a palavra chave" v-for="key in keywords" v-on:click="delKeyword(key)" class="bg-gray-700 w-full sm:max-w-72 rounded text-white border-2 border-gray-700 px-3 mr-2 mb-2 hover:border-red-800 hover:text-red-800 hover:bg-red-400">
+                                    <div title="Clique para excluir a palavra chave" v-for="key in keywords" v-on:click="delKeyword(key)" class="bg-gray-700 w-full md:w-auto rounded text-white border-2 border-gray-700 px-3 mr-2 mb-2 hover:border-red-800 hover:text-red-800 hover:bg-red-400">
                                         <font-awesome-icon :icon="['fas', 'xmark']" class="mr-2" /> {{ key }}
                                     </div>
                                 </div>
