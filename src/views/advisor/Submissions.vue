@@ -4,7 +4,7 @@
             <div class="flex flex-wrap">
                 <div class="w-full grid grid-cols-6 gap-4">                    
                     <div class="col-start-1 col-end-8 ...">
-                        <p class="text-gray-500 font-semibold text-xl"><span class="border-b-2"> {{ pageTitle }} - {{ total }}</span>
+                        <p class="text-gray-500 font-semibold text-xl"><span class="border-b-2"> {{ pageTitle }} | {{ total }}</span>
                             <span v-if="!infoLoaded">
                                 <Spinner />
                             </span>

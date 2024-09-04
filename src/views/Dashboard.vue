@@ -1,46 +1,35 @@
 <template>
-    <div class="mt-2">
-        <div class="bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2">
-            <div class="flex flex-wrap">
-                <p class="text-gray-500 font-semibold text-xl border-b-2">Dashboard</p>
-                <span v-if="!infoLoaded">
-                    <Spinner />
-                </span>
-                
-                <div class="w-full">  
-                    <div v-if="roleUser == '1:ADMIN'">
-                        <h1 class="mt-5">Bem vindo adm </h1>
-                    </div>   
-                    <div v-if="roleUser == '2:ADVISOR'">
-                        <h1 class="mt-5">Bem vindo revisor </h1>
-                    </div>   
-                    <div v-if="roleUser == '3:AUTHOR'">
-                        <h1 class="mt-5">Bem vindo author </h1>
-                    </div>   
-                </div>   
-            </div>
-        </div>
+    <div class="mt-2" v-if="roleUser == '1:ADMIN'">
+        <DashboardAdmin />
     </div>
+    <div class="mt-2" v-else-if="roleUser == '2:ADVISOR'">        
+        <DashboardAdvisor />
+    </div>   
+    <div class="mt-2" v-else-if="roleUser == '3:AUTHOR'">
+        <DashboardAuthor />
+    </div>  
 </template>
   
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from "vue"
 import Spinner from "../components/Spinner.vue"
+import DashboardAdmin from "../components/dashboards/DashboardAdmin.vue"
+import DashboardAuthor from "../components/dashboards/DashboardAuthor.vue"
+import DashboardAdvisor from "../components/dashboards/DashboardAdvisor.vue"
 import { getUserRole } from "../hooks/useAuth";
 
 export default defineComponent({
     async setup() {           
         const infoLoaded = ref(false)       
-        const roleUser = ref()
+        const roleUser = ref()        
         roleUser.value = getUserRole()
-
-        infoLoaded.value = true      
+        infoLoaded.value = true          
         return {               
             infoLoaded,   
-            roleUser,   
+            roleUser,     
         }
     },    
-    components: { Spinner }
+    components: { Spinner, DashboardAdmin, DashboardAuthor, DashboardAdvisor }
 })
 </script>
   

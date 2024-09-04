@@ -1,6 +1,11 @@
 <template>
-    <button type="button" title="Emitir certificado" v-on:click="getCertificate" class="bg-green-800 text-white rounded p-2 ps-3 pe-3 me-2" :class="!$props.btnText ? 'w-10' : ''">
-        <font-awesome-icon :icon="['fas', 'file-pdf']" /> <span v-if="$props.btnText"> Emitir certificado</span>
+    <button type="button" :disabled="isLoading" title="Emitir certificado" v-on:click="getCertificate" class="bg-green-800 text-white rounded p-2 ps-3 pe-3 me-2" :class="!$props.btnText ? 'w-10' : ''">
+        <span v-if="!isLoading">
+            <font-awesome-icon :icon="['fas', 'file-pdf']" /> <span v-if="$props.btnText"> Emitir certificado</span>
+        </span>        
+        <span v-else>
+            <Loading />
+        </span>
     </button>
 
     <transition        
@@ -35,6 +40,7 @@ import { generateCertificate } from '../hooks/useUser';
 import { credentials, getUserRole } from '../hooks/useAuth';
 import { Toast } from "../hooks/useToast"
 import Swal from "sweetalert2"
+import Loading from './Loading.vue';
 
 export default defineComponent({
     props: {
@@ -46,8 +52,10 @@ export default defineComponent({
         const visibleCertificate = ref(false)
         const titleCertificate = ref('')
         const iframeHtml = ref()
+        const isLoading = ref(false)
         
-        async function getCertificate() {                           
+        async function getCertificate() {                
+            isLoading.value = true            
             let user: string | number | null
             user = window.localStorage.getItem('user-id')
             
@@ -86,9 +94,11 @@ export default defineComponent({
                         showCancelButton: true,
                         confirmButtonText: 'Confirmar',
                     }).then(async (result) => {              
-                        if (result.isConfirmed) {      
+                        if (result.isConfirmed) {                                 
                             const certificate = await generateCertificate({'article': props.article?.id, 'user': result.value})
                             showCertificate(certificate)                 
+                        } else {
+                            isLoading.value = false
                         }
                     })
                 } else {
@@ -119,6 +129,7 @@ export default defineComponent({
             } else {
                 Toast().fire({icon: 'error', title: 'Erro ao emitir certificado!'})
             }
+            isLoading.value = false
         }
 
         return {
@@ -127,7 +138,11 @@ export default defineComponent({
             iframeHtml,
             getCertificate,
             showCertificate,
+            isLoading,
         }    
+    },
+    components: {
+        Loading
     }
 })
 </script>
