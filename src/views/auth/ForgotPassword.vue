@@ -1,5 +1,5 @@
 <template>
-    <img src="/logo_maco.png" title="Maco: Magnoli & Cordeiro" alt="Logo Maco" width="100" class="fixed top-0 pl-2 pt-2">
+    <img src="/logo_maco.png" title="Maco: Magnoli & Cordeiro" alt="Logo Maco" width="200" class="fixed top-0 pl-2 pt-2 rounded-full">
     <div class="flex items-center justify-center h-screen px-6 bg-zinc-100">
         <div class="w-full max-w-sm bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2">
             <div class="space-y-2 flex">
