@@ -45,8 +45,8 @@
                                     <p class="text-gray-900 whitespace-nowrap"><span :class="getColorArticleStatus(item.status)" class="rounded pt-1 pb-1 pr-3 pl-3 text-white">{{ formatArticleStatus(item.status) }}</span></p>
                                 </td>                                
                                 <td class="px-5 py-2 text-sm bg-white border-b border-gray-200 min-w-60 text-center">
-                                    <div class="sm:inline-block">                                          
-                                        <button title="Exportar artigo" v-on:click="exportArticle(item.id)" class="bg-blue-800 text-white rounded p-2 ps-3 pe-3 me-2 w-10"><font-awesome-icon :icon="['fas', 'file-word']" /></button>
+                                    <div class="sm:inline-block">
+                                        <Export :article="item.id"/>
                                         <Certificate v-if="item.status == 'finished'" :article="item"/>                                        
                                         <button title="Visualizar o artigo" v-on:click="viewSubmission(item.id, item.event)" class="bg-gray-900 text-white rounded p-2 ps-3 pe-3 w-10"><font-awesome-icon :icon="['fas', 'eye']" /></button>
                                     </div>                                    
@@ -65,7 +65,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue';
-import { IArticleState, articleExport, articleList } from '../../hooks/useArticle';
+import { IArticleState, articleList } from '../../hooks/useArticle';
 import Spinner from "../../components/Spinner.vue"
 import { Toast } from '../../hooks/useToast';
 import router from '../../router';
@@ -73,6 +73,7 @@ import ArticleAdminFilter from '../../components/filters/ArticleAdminFilter.vue'
 import { getUserRole } from '../../hooks/useAuth';
 import ArticleAdvisorFilter from '../../components/filters/ArticleAdvisorFilter.vue';
 import Certificate from '../../components/Certificate.vue';
+import Export from '../../components/Export.vue';
 
 export default defineComponent({
     async setup(){
@@ -84,7 +85,7 @@ export default defineComponent({
         const pageTitle = 'Listagem de artigos'
         const articles = ref()
         const infonotnull = ref(false)
-        const infoLoaded = ref(false)
+        const infoLoaded = ref(false)        
         const total = ref(0)
 
         return {
@@ -93,7 +94,7 @@ export default defineComponent({
             articles,
             infonotnull,
             infoLoaded,
-            total,
+            total,            
         }
     },
     methods: {
@@ -118,15 +119,7 @@ export default defineComponent({
                 this.total = 0
             }        
             this.infoLoaded = true      
-        },
-        async exportArticle(articleID) {
-            const result = await articleExport(articleID)
-            if (result) {
-                Toast().fire({icon: 'success', title: 'Artigo exportado'})
-            } else {
-                Toast().fire({icon: 'error', title: 'Erro ao exportar artigo'})
-            }
-        },              
+        },                  
         formatCourseAndAuthors(data, key) {
             let _array : string[] = [];            
             let _str = ''
@@ -196,7 +189,6 @@ export default defineComponent({
             router.push('/events')
         }
     },
-    components: { Spinner, ArticleAdminFilter, ArticleAdvisorFilter, Certificate }
+    components: { Spinner, ArticleAdminFilter, ArticleAdvisorFilter, Certificate, Export }
 })
-
 </script>

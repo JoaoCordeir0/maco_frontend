@@ -211,9 +211,7 @@
             </div>   
             <div v-if="activeBtnByRole('advisor') && editMode" class="flex justify-end">
                 <div class="absolute bottom-4 right-5 bg-opacity-20 bg-gray-600 p-1 rounded">
-                    <button v-on:click="exportArticle()" type="button" class="px-2 sm:px-8 md:px-12 py-2 mr-2 text-sm text-center text-white bg-blue-800 rounded-md focus:outline-none font-bold">                                    
-                        <font-awesome-icon :icon="['fas', 'file-word']" /> &nbsp; Exportar                                     
-                    </button>
+                    <Export :article="Number(getArticleID())" :btn-text="true" />
 
                     <button v-on:click="approveArticle()" type="button" class="px-2 sm:px-8 md:px-12 py-2 mr-2 text-sm text-center text-white bg-green-800 rounded-md focus:outline-none font-bold">                                    
                         <font-awesome-icon :icon="['fas', 'arrow-up-from-bracket']" /> &nbsp; Aprovar                                     
@@ -235,10 +233,8 @@
                 </div>
             </div>      
             <div v-if="activeBtnByRole('admin') && status == 'approved'" class="flex justify-end">
-                <div class="absolute bottom-4 right-5 bg-opacity-20 bg-gray-600 p-1 rounded">
-                    <button v-on:click="exportArticle()" type="button" class="px-2 sm:px-8 md:px-12 mt-1 mb-1 sm:mt-0 py-2 mr-2 text-sm text-center text-white bg-blue-800 rounded-md focus:outline-none font-bold">                                    
-                        <font-awesome-icon :icon="['fas', 'file-word']" /> &nbsp; Exportar                                     
-                    </button>
+                <div class="absolute bottom-4 right-5 bg-opacity-20 bg-gray-600 p-1 rounded">                    
+                    <Export :article="Number(getArticleID())" :btn-text="true" />
 
                     <button v-on:click="finalizeArticle()" type="button" class="px-2 sm:px-8 md:px-12 mt-1 mb-1 sm:mt-0 py-2 text-sm text-center text-white bg-green-800 rounded-md focus:outline-none font-bold">                                    
                         <font-awesome-icon :icon="['fas', 'arrow-up-from-bracket']" /> &nbsp; Finalizar                                     
@@ -257,6 +253,7 @@
             </div>
             <div v-if="status == 'finished'" class="flex justify-end">
                 <div class="absolute bottom-6 right-6">
+                    <Export :article="Number(getArticleID())" :btn-text="true" />
                     <Certificate :article="article" :btnText="true"/>                    
                 </div>
             </div>         
@@ -426,7 +423,6 @@ import {
     articleAddReference, 
     articleDelReference,
     articleSubmit, 
-    articleExport
 } from '../../hooks/useArticle';
 import { eventDetails } from '../../hooks/useEvent';
 import { userList } from '../../hooks/useUser';
@@ -438,6 +434,7 @@ import Loading from '../../components/Loading.vue';
 import { format } from 'date-fns';
 import { getUserRole } from '../../hooks/useAuth';
 import Certificate from '../../components/Certificate.vue';
+import Export from '../../components/Export.vue';
 
 export default defineComponent({
     setup(){
@@ -1081,15 +1078,7 @@ export default defineComponent({
                     }                        
                 }
             });            
-        },          
-        async exportArticle() {
-            const result = await articleExport(this.getArticleID())
-            if (result) {
-                Toast().fire({icon: 'success', title: 'Artigo exportado'})
-            } else {
-                Toast().fire({icon: 'error', title: 'Erro ao exportar artigo'})
-            }
-        },    
+        },                  
         activeBtnByRole(role) {
             return this.infoLoaded && getUserRole(true).toLowerCase() == role
         },
@@ -1144,6 +1133,6 @@ export default defineComponent({
         this.loadPage()             
         this.pageTitle = 'Submissão'                  
     },    
-    components: { Spinner, Loading, Modal, Certificate }
+    components: { Spinner, Loading, Modal, Certificate, Export }
 })
 </script>

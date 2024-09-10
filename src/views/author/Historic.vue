@@ -20,9 +20,7 @@
                                     <button title="Visualizar o artigo" href="#" v-on:click="viewArticle(item.id, item.event)" class="bg-gray-900 text-white rounded p-2 ps-3 pe-3 me-2 w-10"> 
                                         <font-awesome-icon :icon="['fas', 'eye']" />
                                     </button>                                    
-                                    <button title="Exportar o artigo" v-if="item.status == 'finished' ||  item.status == 'approved'" href="#" v-on:click="exportArticle(item.id)" class="bg-blue-700 text-white rounded p-2 ps-3 pe-3 me-2 w-10"> 
-                                        <font-awesome-icon :icon="['fas', 'file-word']" />
-                                    </button>    
+                                    <Export :article="item.id"/> 
                                     <Certificate v-if="item.status == 'finished'" :article="item"/>                          
                                 </div>                                                               
                             </div>     
@@ -44,12 +42,13 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue';
 import { IEventState } from '../../hooks/useEvent';
-import { submissionsList, articleExport } from '../../hooks/useArticle';
+import { submissionsList } from '../../hooks/useArticle';
 import Spinner from "../../components/Spinner.vue"
 import Certificate from "../../components/Certificate.vue"
 import { format } from 'date-fns';
 import router from '../../router';
 import { Toast } from '../../hooks/useToast';
+import Export from '../../components/Export.vue';
 
 export default defineComponent({
     setup(){
@@ -170,19 +169,11 @@ export default defineComponent({
                 _str += item + ' / '
             });
             return _str.slice(0, -3)         
-        },
-        async exportArticle(articleID) {
-            const result = await articleExport(articleID)
-            if (result) {
-                Toast().fire({icon: 'success', title: 'Artigo exportado'})
-            } else {
-                Toast().fire({icon: 'error', title: 'Erro ao exportar artigo'})
-            }
-        },     
+        },       
     },  
     beforeMount() {        
         this.loadUserHistoric()        
     },
-    components: { Spinner, Certificate }
+    components: { Spinner, Certificate, Export }
 })
 </script>
