@@ -39,7 +39,7 @@
                                 </td>                                
                                 <td class="px-5 py-4 text-sm bg-white border-b border-gray-200 text-center">
                                     <div class="sm:inline-block">                                        
-                                        <a title="Editar curso" :href="`/course/${item.id}`" class="bg-gray-900 text-white rounded p-2 ps-3 pe-3 me-2 w-10"><font-awesome-icon :icon="['fas', 'pen-to-square']" /></a>                                        
+                                        <a title="Editar curso" href="#" @click="$router.push('/course/' + item.id)" class="bg-gray-900 text-white rounded p-2 ps-3 pe-3 me-2 w-10"><font-awesome-icon :icon="['fas', 'pen-to-square']" /></a>                                        
                                     </div>                                    
                                 </td>
                             </tr>
@@ -55,8 +55,8 @@
 import { defineComponent, ref, reactive, toRefs } from "vue"
 import Spinner from "../../components/Spinner.vue"
 import { ICourseState, courseList } from "../../hooks/useCourse"
-import Swal from "sweetalert2"
 import { Toast } from "../../hooks/useToast"
+import router from "../../router"
 
 export default defineComponent({
     async setup() {
@@ -86,7 +86,7 @@ export default defineComponent({
                 Toast().fire({icon: 'warning', title: 'Nenhum curso encontrado'})      
             }            
             this.infoLoaded = true                                          
-        },                    
+        },                           
     },
     beforeMount() {
         this.loadCourses()

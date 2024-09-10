@@ -16,7 +16,10 @@
                         <a v-if="activeBtnByRole('admin') && status == 'approved'" href="#" v-on:click="editMode = !editMode" class="ml-2 mt-1 sm:mt-0 bg-gray-900 text-white rounded-md py-1 px-3 float-end">{{ editMode ? 'Desabilitar' : 'Habilitar' }} edição <font-awesome-icon size="lg" :icon="['fas', 'pen-to-square']" /> </a>
                     </div>                
                 </div>
-            </div>            
+            </div>       
+            <div class="mt-2">
+                <p class="text-sm text-gray-600"><i>Submetido em:</i> {{ formatDate(createdAt) }}</p>
+            </div>     
         </div>
         <form class="mt-4 mb-5" aria-disabled="true">
             <div class="grid grid-cols-1 gap-4 md:grid-cols-1 xl:grid-cols-1 mb-14">                
@@ -27,7 +30,7 @@
                             class="block w-full max-h-10 mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
                             v-model="title" />
                     </label>
-                </div>                               
+                </div>                                         
                 <div class="... bg-white border-2 rounded-xl border-gray px-5 pb-5 pt-3 mt-2">
                     <label class="block">
                         <span class="text-sm text-gray-700">Autores <span class="text-red-500 font-semibold">*</span></span>    
@@ -47,7 +50,7 @@
                                         <a title="Deletar Autor do artigo" v-if="userIsLogged(author.id) && editMode" href="#" v-on:click="delAuthor(author.id)" class="ms-2 bg-red-600 mt-1 text-white text-center ps-2 pe-2 pt-1 pb-1 w-10 rounded-md"> 
                                             <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'trash-can']" />
                                         </a> 
-                                        <a title="Visualizar perfil do Autor" v-if="isAdminOrAdvisor()" :href="'/user/' + author.id" class="ms-2 mt-1 bg-gray-700 text-white ps-2 pe-2 pt-1 pb-1 w-10 rounded-md"> 
+                                        <a title="Visualizar perfil do Autor" v-if="isAdminOrAdvisor()" href="#" @click="$router.push('/user/' + author.id)" class="ms-2 mt-1 bg-gray-700 text-white ps-2 pe-2 pt-1 pb-1 w-10 rounded-md"> 
                                             <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'eye']" />
                                         </a> 
                                     </div>                                
@@ -84,7 +87,7 @@
                                             <a title="Deletar Co-orientador do artigo" v-if="userIsLogged(advisor.id) && editMode" href="#" v-on:click="delAdvisor(advisor.id)" class="ms-2 mt-1 bg-red-600 w-10 text-center text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                                 <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'trash-can']" />
                                             </a> 
-                                            <a title="Visualizar perfil do Co-orientador" v-if="isAdminOrAdvisor()" :href="'/user/' + advisor.id" class="ms-2 mt-1 bg-gray-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                            <a title="Visualizar perfil do Co-orientador" v-if="isAdminOrAdvisor()" href="#" @click="$router.push('/user/' + advisor.id)" class="ms-2 mt-1 bg-gray-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                                 <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'eye']" />
                                             </a> 
                                         </div>                                
@@ -116,7 +119,7 @@
                                             <a title="Deletar Orientador do artigo" v-if="userIsLogged(advisor.id) && editMode" href="#" v-on:click="delAdvisor(advisor.id)" class="ms-2 mt-1 bg-red-600 w-10 text-center text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                                 <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'trash-can']" />
                                             </a> 
-                                            <a title="Visualizar perfil do Orientador" v-if="isAdminOrAdvisor()" :href="'/user/' + advisor.id" class="ms-2 mt-1 bg-gray-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                            <a title="Visualizar perfil do Orientador" v-if="isAdminOrAdvisor()" href="#" @click="$router.push('/user/' + advisor.id)" class="ms-2 mt-1 bg-gray-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                                 <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'eye']" />
                                             </a> 
                                         </div>                                
@@ -450,6 +453,7 @@ export default defineComponent({
         const article = ref()
         const id = ref("")
         const title = ref("")
+        const createdAt = ref("")
         const authors = ref("")
         const advisors = ref("")
         const keywords = ref()
@@ -489,6 +493,7 @@ export default defineComponent({
             pageTitle,
             id,
             title,
+            createdAt,
             authors,
             advisors,
             keywords,
@@ -570,6 +575,7 @@ export default defineComponent({
                         
             this.article = resultArticle.value
             this.title = resultArticle.value['title'] != ' ' ? resultArticle.value['title'] : ''
+            this.createdAt = resultArticle.value['created_at']
             this.authors = resultArticle.value['authors']
             this.status = resultArticle.value['status']
             this.advisors = resultArticle.value['advisors'] != ' ' ? resultArticle.value['advisors'] : ''
@@ -1085,6 +1091,9 @@ export default defineComponent({
         isAdminOrAdvisor() {
             return this.infoLoaded && (getUserRole(true).toLowerCase() == 'admin' || getUserRole(true).toLowerCase() == 'advisor')
         },
+        formatDate(date) {
+            return format(new Date(date), 'dd/MM/yyyy HH:mm:ss')
+        }, 
         formatDateComments(date) {
             return format(new Date(date), 'dd/MM HH:mm')
         }, 

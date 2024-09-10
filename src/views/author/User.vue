@@ -95,7 +95,7 @@
                                 </div>                                                                
                                 <div v-if="isAuthor" class="mt-5">
                                     <h3 class="mb-3 italic">Artigo(s) do usuário</h3>
-                                    <a class="p-2 bg-green-600 mt-2 text-white rounded" :href="'/historic/' + id"><font-awesome-icon :icon="['fas', 'newspaper']" /> &nbsp; Ver histórico de submissões</a>                                    
+                                    <a class="p-2 bg-green-600 mt-2 text-white rounded" href="#" @click="$router.push('/historic/' + id)"><font-awesome-icon :icon="['fas', 'newspaper']" /> &nbsp; Ver histórico de submissões</a>                                    
                                 </div>
                             </div>
                         </div>

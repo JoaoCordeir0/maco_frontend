@@ -29,6 +29,7 @@
                     <span class="text-sm text-gray-800">CPF <span class="text-red-500 font-semibold">*</span></span>
                     <input type="text"
                         maxlength="14"
+                        @input="formatCPF"
                         class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
                         v-model="cpf" />
                 </label>
@@ -37,6 +38,7 @@
                     <span class="text-sm text-gray-800">RA <span class="text-red-500 font-semibold">*</span></span>
                     <input type="text"
                         maxlength="7"
+                        @input="formatRA"
                         class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
                         v-model="ra" />
                 </label>
@@ -149,6 +151,22 @@ export default defineComponent({
     methods: {
         async getCourses() {
             this.courses = (await courseList('/public/')).value            
+        },
+        formatCPF() {            
+            let cpf = this.cpf.replace(/\D/g, '');                        
+            if (cpf.length <= 11) {
+                cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
+                cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
+                cpf = cpf.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            }            
+            this.cpf = cpf;
+        },
+        formatRA() {            
+            let ra = this.ra.replace(/\D/g, '');            
+            if (ra.length <= 6) {
+                ra = ra.replace(/(\d{5})(\d)/, '$1-$2');
+            }
+            this.ra = ra;
         }
     },
     beforeMount() {
