@@ -6,7 +6,7 @@
         <!-- End Backdrop -->
 
         <div :class="isOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'"
-            class="fixed inset-y-0 left-0 z-30 w-64 overflow-y-auto transition duration-300 transform bg-white lg:translate-x-0 lg:static lg:inset-0 border-r-2 border-gray">
+            class="fixed inset-y-0 left-0 z-30 w-72 overflow-y-auto transition duration-300 transform bg-white lg:translate-x-0 lg:static lg:inset-0 border-r-2 border-gray">
             <div class="flex items-center justify-center mt-8">
                 <div class="flex items-center">
                     <!-- Logo -->
@@ -66,7 +66,7 @@
                     <router-link class="flex items-center px-4 py-2 mt-2 duration-200"
                         :class="[$route.name === 'Corrections' ? activeClass : inactiveClass]" to="/corrections">
                         <font-awesome-icon :icon="['fas', 'file-pen']" />
-                        <span class="mx-4 font-semibold">Em correção</span>
+                        <span class="mx-4 font-semibold">Correções pendentes</span>
                     </router-link>
                     <router-link class="flex items-center px-4 py-2 mt-2 duration-200"
                         :class="[$route.name === 'Historic' ? activeClass : inactiveClass]" to="/historic">
@@ -81,8 +81,8 @@
                 </div>
             </nav>
 
-            <div class="bottom-5 left-12 fixed">                
-                <a href="https://forms.gle/oc1gqzS6GPUB4iAUA" class="bg-yellow-400 text-white rounded p-1 ps-2 pe-2 me-2" title="Enviar reporte de problemas. Funcionalidade ativa apenas na versão Beta" target="_blank">
+            <div class="bottom-5 left-16 fixed">                
+                <a href="https://forms.gle/oc1gqzS6GPUB4iAUA" class="bg-yellow-400 text-white rounded p-1 px-3 me-2" title="Enviar reporte de problemas. Funcionalidade ativa apenas na versão Beta" target="_blank">
                     <font-awesome-icon :icon="['fas', 'bug']" /> Enviar reporte
                 </a>
             </div>            

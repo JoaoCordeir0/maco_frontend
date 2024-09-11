@@ -114,6 +114,10 @@ export default defineComponent({
                 Toast().fire({icon: 'warning', title: 'Preencha todas as informações!'})
                 return
             } 
+            if (pass1.value.length < 8) {
+                Toast().fire({icon: 'error', title: 'Senha deve conter pelo menos 8 caracteres!'})
+                return
+            }
             if (pass1.value != pass2.value) {
                 Toast().fire({icon: 'error', title: 'Senhas não são iguais!'})
                 return

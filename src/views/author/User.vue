@@ -16,6 +16,7 @@
                                         <label class="block">
                                             <span class="text-sm text-gray-700">Nome <span class="text-red-500 font-semibold">*</span></span>
                                             <input :disabled="!isEdit" type="text"
+                                                maxlength="100"
                                                 class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
                                                 v-model="name" />
                                         </label>
@@ -26,6 +27,7 @@
                                         <label class="block">
                                             <span class="text-sm text-gray-700">E-mail <span class="text-red-500 font-semibold">*</span></span>
                                             <input :disabled="!isEdit" type="text"
+                                                maxlength="100"
                                                 class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
                                                 v-model="email" />
                                         </label>
@@ -36,6 +38,8 @@
                                         <label class="block">
                                             <span class="text-sm text-gray-700">CPF <span class="text-red-500 font-semibold">*</span></span>
                                             <input :disabled="!isEdit" type="text"
+                                                @input="formatCPF"
+                                                maxlength="14"
                                                 class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
                                                 v-model="cpf" />
                                         </label>
@@ -44,6 +48,8 @@
                                         <label class="block">
                                             <span class="text-sm text-gray-700">RA <span class="text-red-500 font-semibold">*</span></span>
                                             <input :disabled="!isEdit" type="text"
+                                                @input="formatRA"
+                                                maxlength="7"
                                                 class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
                                                 v-model="ra" />
                                         </label>
@@ -54,6 +60,7 @@
                                         <label class="block">
                                             <span class="text-sm text-gray-700">Senha <span class="text-red-500 font-semibold">*</span></span>
                                             <input :disabled="!isEdit" type="text"
+                                                maxlength="30"
                                                 class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
                                                 placeholder="********"
                                                 v-model="pass" />
@@ -85,18 +92,31 @@
                                     </div>                                                             
                                 </div>
                             </div>
-                            <div class="mt-4 md:mt-0">
+                            <div class="mt-4 md:mt-0" v-if="$router.currentRoute.value.params.action != 'add'">
                                 <h3 class="mb-3 italic">Curso(s) do usuário</h3>
                                 <div v-if="isset_courses" v-for="(item, index) in courses" class="border border-sky-600 p-3 rounded mt-2">
                                     <p><span class="semibold">{{ parseInt(index) + 1 }}</span> - {{ item.name }} - <span>{{ formatDate(item.created_at) }}</span></p>
                                 </div>
                                 <div v-else class="border border-red-600 p-3 rounded mt-2">
                                     <p>Nenhum vinculado</p>
-                                </div>                                                                
+                                </div>             
+                                <div v-if="userRole == '2:ADVISOR' || userRole == '1:ADMIN'" class="mt-4 mb-10">
+                                    <a class="p-2 bg-gray-800 mt-2 text-white rounded" href="#"><font-awesome-icon :icon="['fas', 'file-circle-plus']" /> &nbsp; Vincular curso</a>                                    
+                                </div>                                                   
                                 <div v-if="isAuthor" class="mt-5">
                                     <h3 class="mb-3 italic">Artigo(s) do usuário</h3>
                                     <a class="p-2 bg-green-600 mt-2 text-white rounded" href="#" @click="$router.push('/historic/' + id)"><font-awesome-icon :icon="['fas', 'newspaper']" /> &nbsp; Ver histórico de submissões</a>                                    
                                 </div>
+                            </div>
+                            <div class="mt-4 md:mt-0" v-else>
+                                <h3 class="mb-3 italic">Curso do usuário</h3>
+                                <label class="block mt-2">
+                                    <span class="text-sm text-gray-700">Curso <span class="text-red-500 font-semibold">*</span></span>
+                                    <select v-model="course" class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800">                
+                                        <option value="" selected disabled>Selecione o curso</option>
+                                        <option v-for="course in courses" :value="course.id">{{ course.name }}</option>                                                
+                                    </select>  
+                                </label>     
                             </div>
                         </div>
 
@@ -132,11 +152,12 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from "vue"
 import router from "../../router"
-import { IUserState, userDetails, userEdit, userFormatCPF } from "../../hooks/useUser"
+import { IUserState, userAdd, userDetails, userEdit, userFormatCPF } from "../../hooks/useUser"
+import { getUserRole } from "../../hooks/useAuth"
 import Spinner from "../../components/Spinner.vue"
 import { Toast } from "../../hooks/useToast"
 import { format } from 'date-fns';
-import { getUserRole } from "../../hooks/useAuth"
+import { courseList } from "../../hooks/useCourse"
 
 export default defineComponent({
     setup() {
@@ -156,22 +177,37 @@ export default defineComponent({
         const role = ref()
         const status = ref()
         const courses = ref()
+        const course = ref()
         const isset_courses = false
         const created_at = ref("")
         const isAuthor = ref(false)
         const isEdit = ref(false)
+        const userRole = ref("")
        
         async function saveUser() {
             state.isLoading = true
 
-            if (name.value == "") {
+            if (name.value == "" || email.value == "" || cpf.value == "" || ra.value == "") {
                 Toast().fire({icon: 'warning', title: 'Informe todas as informações obrigatórias!'})
                 state.isLoading = false
                 return
             }            
 
             if (router.currentRoute.value.params.action == 'add') {        
-               
+                const result = await userAdd({                
+                    name: name.value,
+                    cpf: cpf.value,
+                    ra: ra.value,
+                    email: email.value,
+                    password: pass.value,              
+                    course: course.value,  
+                })
+                if (result.status == 'success') {
+                    Toast().fire({icon: 'success', title: 'Usuário criado!'})
+                    router.push('/users')
+                } else {
+                    Toast().fire({icon: 'error', title: result.message})
+                }   
             } else {
                 const result = await userEdit({
                     id: id.value,
@@ -207,10 +243,12 @@ export default defineComponent({
             status,
             created_at,            
             courses,
+            course,
             isset_courses,
             isAuthor,
             saveUser,
             isEdit,
+            userRole,
         }
     },
     methods: {
@@ -225,7 +263,6 @@ export default defineComponent({
 
             const result = await userDetails(this.$route.params.action, mode)            
 
-            console.log(result)
             if (result == undefined) {
                 Toast().fire({icon: 'error', title: 'Usuário não encontrado!'})
                 router.push('/dashboard')
@@ -249,7 +286,10 @@ export default defineComponent({
             if (localStorage.getItem('user-id') == this.id || getUserRole() == '1:ADMIN') {
                 this.isEdit = true
             }
-        },         
+        },   
+        async getCoursesToAddUser() {
+            this.courses = (await courseList('/public/')).value            
+        },      
         formatDate(date) {
             return format(new Date(date), 'dd/MM/yyyy')
         }, 
@@ -261,6 +301,22 @@ export default defineComponent({
                 this.isset_courses = true
             }            
             return data['courses']  
+        },
+        formatCPF() {            
+            let cpf = this.cpf.replace(/\D/g, '');                        
+            if (cpf.length <= 11) {
+                cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
+                cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
+                cpf = cpf.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            }            
+            this.cpf = cpf;
+        },
+        formatRA() {            
+            let ra = this.ra.replace(/\D/g, '');            
+            if (ra.length <= 6) {
+                ra = ra.replace(/(\d{5})(\d)/, '$1-$2');
+            }
+            this.ra = ra;
         }
     },
     beforeMount() {
@@ -268,10 +324,14 @@ export default defineComponent({
             case 'add':
                 this.pageTitle = 'Inserir usuário'
                 this.infoLoaded = true
+                this.isEdit = true
+                this.status = true
+                this.getCoursesToAddUser()
                 break;            
             default:
                 this.pageTitle = 'Editar usuário'
                 this.loadUser()
+                this.userRole = getUserRole()
         }
     },
     components: { Spinner }

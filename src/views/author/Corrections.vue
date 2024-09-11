@@ -2,7 +2,7 @@
     <div class="mt-2 mb-2">
         <div class="bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2">
             <div class="flex flex-wrap">
-                <p class="text-gray-500 font-semibold text-xl border-b-2">Artigos em correção</p>    
+                <p class="text-gray-500 font-semibold text-xl border-b-2">Correções pendentes</p>    
                 <span v-if="!infoLoaded">
                     <Spinner />
                 </span>                      
@@ -29,7 +29,7 @@
                 <div v-else class="w-full mt-5"> 
                     <div class="border-2 rounded p-2 mb-3">                        
                         <div class="w-full">                    
-                            Nenhum artigo em correção                                         
+                            Nenhum artigo pendente de correção                                         
                         </div>
                     </div>   
                 </div>            

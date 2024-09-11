@@ -11,6 +11,9 @@
                         </p>
                     </div>
                     <div class="col-end-10 col-span-2 ...">
+                        <button @click="$router.push('/user/add')" class="bg-green-700 text-white rounded-md ps-4 pe-4 me-2 h-9 float-start">
+                            <font-awesome-icon :icon="['fas', 'user-plus']" /> <span class="hidden md:inline">Adicionar</span>
+                        </button>  
                         <UserAdminFilter @some-event="loadUsers" />                        
                     </div>                
                 </div>               
@@ -43,9 +46,11 @@
                                 <td class="px-5 py-4 text-sm bg-white border-b border-gray-200">
                                     <p :class="item.status ? 'text-gray-900' : 'text-red-600'" class="whitespace-nowrap">{{ getRole(item.role) }}</p>
                                 </td>                             
-                                <td class="px-5 py-4 text-sm bg-white border-b border-gray-200 text-center">
-                                    <a title="Ver submissões do aluno" v-if="item.role == 3" href="#" @click="$router.push('/historic/' + item.id)" class="bg-green-900 text-white rounded p-2 ps-3 pe-3 me-2 w-10"><font-awesome-icon :icon="['fas', 'newspaper']" /></a>
-                                    <a title="Editar aluno" href="#" @click="$router.push('/user/' + item.id)" class="bg-gray-900 text-white rounded p-2 ps-3 pe-3 me-2 w-10"><font-awesome-icon :icon="['fas', 'pen-to-square']" /></a>                                    
+                                <td class="px-5 py-4 text-sm bg-white border-b border-gray-200 text-center min-w-32">
+                                    <div class="sm:inline-block">
+                                        <a title="Ver submissões do aluno" v-if="item.role == 3" href="#" @click="$router.push('/historic/' + item.id)" class="bg-green-900 text-white rounded p-2 ps-3 pe-3 me-2 w-10"><font-awesome-icon :icon="['fas', 'newspaper']" /></a>
+                                        <a title="Editar aluno" href="#" @click="$router.push('/user/' + item.id)" class="bg-gray-900 text-white rounded p-2 ps-3 pe-3 me-2 w-10"><font-awesome-icon :icon="['fas', 'pen-to-square']" /></a>                                    
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>

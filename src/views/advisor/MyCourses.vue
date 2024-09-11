@@ -8,8 +8,7 @@
                 </span>         
                 <div v-if="infonotnull" class="w-full mt-5">     
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">                        
-                        <div class="col max-w-sm rounded overflow-hidden shadow-lg" v-for="item in courses">
-                            <img class="w-full" :src="'/public/' + item.image" alt="Sunset in the mountains">
+                        <div class="col max-w-sm rounded overflow-hidden shadow-xl border-t-2" v-for="item in courses">                            
                             <div class="px-6 py-4">
                                 <div class="font-bold text-xl mb-2">{{ item.name }}</div>
                                 <p class="text-gray-700 text-base">{{ item.description }}</p>

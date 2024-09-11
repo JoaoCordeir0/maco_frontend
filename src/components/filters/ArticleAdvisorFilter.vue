@@ -2,7 +2,7 @@
     <button
         @click="filter = !filter"
         class="relative z-10 block h-9 text-bold bg-blue-700 text-white ps-4 pe-4 rounded">
-        <font-awesome-icon :icon="['fas', 'filter']" /> Filtros
+        <font-awesome-icon :icon="['fas', 'filter']" />  <span class="hidden md:inline">Filtros</span>
     </button>
     <div
         v-show="filter"
