@@ -29,7 +29,7 @@
           leave-active-class="transition duration-150 ease-in transform" leave-from-class="scale-100 opacity-100"
           leave-to-class="scale-95 opacity-0">
           <div v-show="dropdownOpen" class="absolute right-0 z-20 w-48 py-2 mt-2 bg-white rounded-md shadow-xl">
-            <a href="#" @click="pageUser"
+            <a :href="'/user/' + getIdUserLogged()"
               class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-400 hover:bg-opacity-30 hover:text-gray-900">Profile</a>
             <hr>
             <a href="#" @click="logout"
@@ -46,7 +46,7 @@
 import { defineComponent, ref } from "vue";
 import { useSidebar } from "../hooks/useSidebar";
 import { getUserRole } from "../hooks/useAuth";
-import router from "../router"
+import router from "../router";
 
 export default defineComponent({
   data() {
@@ -83,14 +83,11 @@ export default defineComponent({
     },
     getIdUserLogged() {
       return window.localStorage.getItem('user-id')
-    },
-    pageUser() {
-      router.push('/user/' + this.getIdUserLogged())
-    },
+    },    
   },
   beforeMount() {
     this.roleUser = getUserRole(true)
     this.nameUser = this.loadUser()
-  }
+  },  
 });
 </script>

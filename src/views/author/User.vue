@@ -15,7 +15,7 @@
                                     <div class="...">
                                         <label class="block">
                                             <span class="text-sm text-gray-700">Nome <span class="text-red-500 font-semibold">*</span></span>
-                                            <input type="text"
+                                            <input :disabled="!isEdit" type="text"
                                                 class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
                                                 v-model="name" />
                                         </label>
@@ -25,7 +25,7 @@
                                     <div class="...">
                                         <label class="block">
                                             <span class="text-sm text-gray-700">E-mail <span class="text-red-500 font-semibold">*</span></span>
-                                            <input type="text"
+                                            <input :disabled="!isEdit" type="text"
                                                 class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
                                                 v-model="email" />
                                         </label>
@@ -35,7 +35,7 @@
                                     <div class="...">
                                         <label class="block">
                                             <span class="text-sm text-gray-700">CPF <span class="text-red-500 font-semibold">*</span></span>
-                                            <input type="text"
+                                            <input :disabled="!isEdit" type="text"
                                                 class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
                                                 v-model="cpf" />
                                         </label>
@@ -43,7 +43,7 @@
                                     <div class="...">
                                         <label class="block">
                                             <span class="text-sm text-gray-700">RA <span class="text-red-500 font-semibold">*</span></span>
-                                            <input type="text"
+                                            <input :disabled="!isEdit" type="text"
                                                 class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
                                                 v-model="ra" />
                                         </label>
@@ -53,7 +53,7 @@
                                     <div class="...">
                                         <label class="block">
                                             <span class="text-sm text-gray-700">Senha <span class="text-red-500 font-semibold">*</span></span>
-                                            <input type="text"
+                                            <input :disabled="!isEdit" type="text"
                                                 class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
                                                 placeholder="********"
                                                 v-model="pass" />
@@ -64,7 +64,7 @@
                                     <div class="...">
                                         <label class="block">
                                             <span class="text-sm text-gray-700">Permissão <span class="text-red-500 font-semibold">*</span></span>
-                                            <select v-model="role" class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800">                
+                                            <select :disabled="!isEdit" v-model="role" class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800">                
                                                 <option value="1">Administrador</option>
                                                 <option value="2">Revisor</option>
                                                 <option value="3">Aluno</option>                
@@ -77,7 +77,7 @@
                                                 <span class="text-sm text-gray-700">Status <span class="text-red-500 font-semibold">*</span></span>
                                             </label>
                                             <label class="relative inline-flex cursor-pointer items-center mt-4">                        
-                                                <input id="switch-2" type="checkbox" class="peer sr-only" :checked="status" v-on:click="status = !status">
+                                                <input :disabled="!isEdit" id="switch-2" type="checkbox" class="peer sr-only" :checked="status" v-on:click="status = !status">
                                                 <div class="peer h-4 w-11 rounded-full border bg-slate-200 after:absolute after:-top-1 after:left-0 after:h-6 after:w-6 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-green-300 peer-checked:after:translate-x-full peer-focus:ring-green-300"></div>
                                             </label>                        
                                             <span class="ml-3 mt-3">{{ getStatus() }}</span>
@@ -100,7 +100,7 @@
                             </div>
                         </div>
 
-                        <div v-if="infoLoaded" class="mt-5">
+                        <div v-if="infoLoaded && isEdit" class="mt-5">
                             <div class="flex justify-end">
                                 <button type="submit" :disabled="isLoading"
                                     class="px-12 py-2 text-sm text-center text-white bg-gray-900 rounded-md focus:outline-none font-bold">
@@ -136,6 +136,7 @@ import { IUserState, userDetails, userEdit, userFormatCPF } from "../../hooks/us
 import Spinner from "../../components/Spinner.vue"
 import { Toast } from "../../hooks/useToast"
 import { format } from 'date-fns';
+import { getUserRole } from "../../hooks/useAuth"
 
 export default defineComponent({
     setup() {
@@ -158,6 +159,7 @@ export default defineComponent({
         const isset_courses = false
         const created_at = ref("")
         const isAuthor = ref(false)
+        const isEdit = ref(false)
        
         async function saveUser() {
             state.isLoading = true
@@ -208,29 +210,45 @@ export default defineComponent({
             isset_courses,
             isAuthor,
             saveUser,
+            isEdit,
         }
     },
     methods: {
         async loadUser() {
-            const result = await userDetails(this.$route.params.action)                                
+            let mode = ''            
+            if (getUserRole() == '3:AUTHOR') {
+                mode = '&mode=author'
+            }
+            if (getUserRole() == '2:ADVISOR') {
+                mode = '&mode=advisor'
+            }
 
-            if (result.value['name'] == undefined) {
+            const result = await userDetails(this.$route.params.action, mode)            
+
+            console.log(result)
+            if (result == undefined) {
                 Toast().fire({icon: 'error', title: 'Usuário não encontrado!'})
+                router.push('/dashboard')
+                return
             }                
             
-            this.id = result.value['id']
-            this.name = result.value['name']          
-            this.cpf = userFormatCPF(result.value['cpf'])
-            this.ra = result.value['ra']
-            this.email = result.value['email']            
-            this.role = result.value['role']  
+            this.id = result['id']
+            this.name = result['name']          
+            this.cpf = userFormatCPF(result['cpf'])
+            this.ra = result['ra']
+            this.email = result['email']            
+            this.role = result['role']  
             if (this.role == 3) {
                 this.isAuthor = true
             }
-            this.status = result.value['status']  
-            this.created_at = result.value['created_at']  
+            this.status = result['status']  
+            this.created_at = result['created_at']  
             this.courses = this.getCourses(result)
             this.infoLoaded = true          
+
+            if (localStorage.getItem('user-id') == this.id || getUserRole() == '1:ADMIN') {
+                this.isEdit = true
+            }
         },         
         formatDate(date) {
             return format(new Date(date), 'dd/MM/yyyy')
@@ -239,10 +257,10 @@ export default defineComponent({
             return this.status ? 'Ativo' : 'Inativo'
         },    
         getCourses(data) {
-            if (data.value['courses'][0] != undefined) {
+            if (data['courses'][0] != undefined) {
                 this.isset_courses = true
             }            
-            return data.value['courses']  
+            return data['courses']  
         }
     },
     beforeMount() {

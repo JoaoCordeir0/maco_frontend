@@ -25,12 +25,12 @@ export async function userList(mode, filter) {
     return ref<IUserState[]>(data)
 }
 
-export async function userDetails(id) {
-    const { data } = await axios.get(`${api.url}/user/list?user_id=${id}`, {
+export async function userDetails(id, mode) {
+    const { data } = await axios.get(`${api.url}/user/list?user_id=${id}${mode}`, {
         headers: api.authBearer
     })
 
-    return ref<IUserState[]>(data[0])
+    return data[0]
 }
 
 export async function userAdd(params) {        

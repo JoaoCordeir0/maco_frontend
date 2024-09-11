@@ -81,6 +81,11 @@
                 </div>
             </nav>
 
+            <div class="bottom-5 left-12 fixed">                
+                <a href="https://forms.gle/oc1gqzS6GPUB4iAUA" class="bg-yellow-400 text-white rounded p-1 ps-2 pe-2 me-2" title="Enviar reporte de problemas. Funcionalidade ativa apenas na versão Beta" target="_blank">
+                    <font-awesome-icon :icon="['fas', 'bug']" /> Enviar reporte
+                </a>
+            </div>            
         </div>
     </div>
 </template>
@@ -110,6 +115,6 @@ export default defineComponent({
     },
     beforeMount() {
         this.roleUser = getUserRole()
-    }
+    },    
 });
 </script>
