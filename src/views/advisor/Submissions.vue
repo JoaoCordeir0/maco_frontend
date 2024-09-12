@@ -48,7 +48,7 @@
                                     <div class="sm:inline-block">
                                         <Export :article="item.id"/>
                                         <Certificate v-if="item.status == 'finished'" :article="item"/>                                        
-                                        <button title="Visualizar o artigo" v-on:click="viewSubmission(item.id, item.event)" class="bg-gray-900 text-white rounded p-2 ps-3 pe-3 w-10"><font-awesome-icon :icon="['fas', 'eye']" /></button>
+                                        <button title="Visualizar o artigo" v-on:click="viewSubmission(item.id, item.event)" class="bg-gray-900 text-white rounded-md p-2 ps-3 pe-3 w-10"><font-awesome-icon :icon="['fas', 'eye']" /></button>
                                     </div>                                    
                                 </td>
                             </tr>

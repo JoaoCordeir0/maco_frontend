@@ -1,14 +1,14 @@
 <template>
-    <img src="/logo_maco.png" title="Maco: Magnoli & Cordeiro" alt="Logo Maco" width="200" class="fixed top-0 pl-2 pt-2 rounded-full">
+    <img src="/logo_maco.png" title="Maco: Magnoli & Cordeiro" alt="Logo Maco" width="150" class="fixed top-0 pl-2 pt-2 rounded-full">
     <div class="flex items-center justify-center h-screen px-6 bg-zinc-100">
-        <div class="w-full max-w-sm bg-white border-2 rounded-xl border-gray px-5 py-5">
-            <div class="space-y-2">
-                <p class="font-semibold text-2xl text-gray-800">Login</p>
-                <p class="text-xs text-gray-400">Insira seu e-mail e senha para entrar.</p>
-            </div>
-            <form class="mt-4" @submit.prevent="login">
-                <label class="block">
-                    <span class="text-sm text-gray-800">Email</span>
+        <div class="w-full max-w-md bg-white border-t-2 rounded-xl border-gray px-5 py-5 shadow-xl">            
+            <form class="mt-4 mb-4 md:mt-10 md:mb-10 max-w-96 m-auto" @submit.prevent="login">
+                <div class="space-y-2">                    
+                    <p class="font-semibold text-2xl text-gray-800">Login</p>
+                    <p class="text-xs text-gray-400">Insira seu e-mail e senha para entrar.</p>
+                </div>
+                <label class="block mt-4">
+                    <span class="text-sm text-gray-800">E-mail</span>
                     <input type="text"
                         class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
                         v-model="username" />
@@ -16,9 +16,15 @@
 
                 <label class="block mt-3">
                     <span class="text-sm text-gray-800">Senha</span>
-                    <input type="password"
-                        class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
-                        v-model="password" />
+                    <div class="relative w-full">
+                        <input :type="type_input ? 'text' : 'password'"
+                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                            v-model="password" />
+                        <button class="absolute inset-y-0 right-0 pr-3 flex items-center" type="button" @click="type_input = !type_input">
+                            <font-awesome-icon :icon="['fas', 'eye']" class="icon-color" />
+                        </button>  
+                    </div>                    
+
                     <div class="flex justify-end mt-2">
                         <button type="button" @click="forgotPasswordPage" class="text-xs underline">Esqueceu a senha?</button>
                     </div>
@@ -60,8 +66,9 @@ export default defineComponent({
             token: '',
         });
 
-        const username = ref("");
-        const password = ref("");
+        const username = ref("")
+        const password = ref("")
+        const type_input = ref(false)
 
         function forgotPasswordPage() {
             router.push('forgotpassword')
@@ -117,6 +124,7 @@ export default defineComponent({
             login,
             forgotPasswordPage,
             registerPage,
+            type_input,
         }
     },
     async beforeMount() {

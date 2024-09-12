@@ -81,9 +81,9 @@
                 </div>
             </nav>
 
-            <div class="bottom-5 left-16 fixed">                
-                <a href="https://forms.gle/oc1gqzS6GPUB4iAUA" class="bg-yellow-400 text-white rounded p-1 px-3 me-2" title="Enviar reporte de problemas. Funcionalidade ativa apenas na versão Beta" target="_blank">
-                    <font-awesome-icon :icon="['fas', 'bug']" /> Enviar reporte
+            <div class="bottom-5 left-11 fixed">                
+                <a href="https://forms.gle/oc1gqzS6GPUB4iAUA" class="bg-amber-400 text-white rounded p-1 px-3 me-2" title="Enviar reporte de problemas. Funcionalidade ativa apenas na versão Beta" target="_blank">
+                    <font-awesome-icon :icon="['fas', 'bug']" /> Reportar problema
                 </a>
             </div>            
         </div>

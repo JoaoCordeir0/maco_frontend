@@ -17,7 +17,7 @@
                                     <p><b>Evento:</b> <i>{{ item.event_name }}</i></p>
                                 </div>     
                                 <div class="mt-2 text-center">
-                                    <button title="Visualizar o artigo" href="#" v-on:click="viewArticle(item.id, item.event)" class="bg-gray-900 text-white rounded p-2 ps-3 pe-3 me-2 w-10"> 
+                                    <button title="Visualizar o artigo" href="#" v-on:click="viewArticle(item.id, item.event)" class="px-2 mt-1 mb-1 sm:mt-0 py-2 text-sm text-center text-white bg-gray-900 me-2 rounded-md focus:outline-none font-bold w-10"> 
                                         <font-awesome-icon :icon="['fas', 'eye']" />
                                     </button>                                    
                                     <Export :article="item.id"/> 

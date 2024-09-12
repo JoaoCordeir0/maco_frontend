@@ -17,8 +17,9 @@
                     </div>                
                 </div>
             </div>       
-            <div class="mt-2">
-                <p class="text-sm text-gray-600"><i>Submetido em:</i> {{ formatDate(createdAt) }}</p>
+            <div class="mt-2">                
+                <p v-if="status != 'in_submission'" class="text-sm text-gray-600"><i>Submetido em:</i> {{ formatDate(createdAt) }}</p>
+                <p v-else class="text-sm text-gray-600"><i>Criado em:</i> {{ formatDate(createdAt) }}</p>
             </div>     
         </div>
         <form class="mt-4 mb-5" aria-disabled="true">
@@ -213,7 +214,7 @@
                 </button>                
             </div>   
             <div v-if="activeBtnByRole('advisor') && editMode" class="flex justify-end">
-                <div class="absolute bottom-4 right-5 bg-opacity-20 bg-gray-600 p-1 rounded">
+                <div class="absolute bottom-4 right-5 bg-opacity-20 bg-gray-600 pt-1 px-1 rounded">
                     <Export :article="Number(getArticleID())" :btn-text="true" />
 
                     <button v-on:click="approveArticle()" type="button" class="px-2 sm:px-8 md:px-12 py-2 mr-2 text-sm text-center text-white bg-green-800 rounded-md focus:outline-none font-bold">                                    
@@ -236,7 +237,7 @@
                 </div>
             </div>      
             <div v-if="activeBtnByRole('admin') && status == 'approved'" class="flex justify-end">
-                <div class="absolute bottom-4 right-5 bg-opacity-20 bg-gray-600 p-1 rounded">                    
+                <div class="absolute bottom-4 right-5 bg-opacity-20 bg-gray-600 pt-1 px-1 rounded">                    
                     <Export :article="Number(getArticleID())" :btn-text="true" />
 
                     <button v-on:click="finalizeArticle()" type="button" class="px-2 sm:px-8 md:px-12 mt-1 mb-1 sm:mt-0 py-2 text-sm text-center text-white bg-green-800 rounded-md focus:outline-none font-bold">                                    
@@ -255,7 +256,7 @@
                 </div>
             </div>
             <div v-if="status == 'finished'" class="flex justify-end">
-                <div class="absolute bottom-6 right-6">
+                <div class="absolute bottom-4 right-5 bg-opacity-20 bg-gray-600 pt-1 px-1 rounded">
                     <Export :article="Number(getArticleID())" :btn-text="true" />
                     <Certificate :article="article" :btnText="true"/>                    
                 </div>
@@ -1092,10 +1093,19 @@ export default defineComponent({
             return this.infoLoaded && (getUserRole(true).toLowerCase() == 'admin' || getUserRole(true).toLowerCase() == 'advisor')
         },
         formatDate(date) {
-            return format(new Date(date), 'dd/MM/yyyy HH:mm:ss')
+            try {
+                return format(new Date(date), 'dd/MM/yyyy HH:mm:ss')
+            } catch {
+                return date
+            }
+            
         }, 
         formatDateComments(date) {
-            return format(new Date(date), 'dd/MM HH:mm')
+            try {    
+                return format(new Date(date), 'dd/MM HH:mm')
+            } catch {
+                return date
+            }
         }, 
         userIsLogged(author) {            
             return author != localStorage.getItem('user-id')

@@ -7,7 +7,7 @@
                     <Spinner />
                 </span>         
                 <div v-if="infonotnull" class="w-full mt-5">                         
-                    <div class="border-2 rounded p-2 mb-3" v-for="item in events">                        
+                    <div class="border-t-2 shadow-lg rounded p-2 mb-3" v-for="item in events">                        
                         <div class="w-full grid grid-cols-2 gap-4">                    
                             <div class="col-start-1 col-end-12 md:col-start-1 md:col-end-8">
                                 <div class="items-center">
@@ -34,7 +34,7 @@
             <div class="flex flex-wrap">
                 <p class="text-gray-500 font-semibold text-xl border-b-2">Artigos incompletos</p>                     
                 <div class="w-full mt-5">                         
-                    <div class="border-2 rounded p-2 mb-3" v-for="item in articles">                        
+                    <div class="border-t-2 shadow-lg rounded p-2 mb-3" v-for="item in articles">                        
                         <div class="w-full grid grid-cols-2 gap-4">                    
                             <div class="col-start-1 col-end-12 md:col-start-1 md:col-end-8">
                                 <div class="items-center">

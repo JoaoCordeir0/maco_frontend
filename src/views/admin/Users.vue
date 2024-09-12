@@ -67,7 +67,6 @@ import Spinner from "../../components/Spinner.vue"
 import { IUserState, userList, userFormatCPF } from "../../hooks/useUser"
 import { Toast } from "../../hooks/useToast"
 import UserAdminFilter from '../../components/filters/UserAdminFilter.vue'
-import router from "../../router"
 
 export default defineComponent({
     async setup() {

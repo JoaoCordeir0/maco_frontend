@@ -69,9 +69,9 @@
                                 </div>
                                 <div class="grid grid-cols-2 gap-4 mt-5">                                                                                                          
                                     <div class="...">
-                                        <label class="block">
-                                            <span class="text-sm text-gray-700">Permissão <span class="text-red-500 font-semibold">*</span></span>
-                                            <select :disabled="!isEdit" v-model="role" class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800">                
+                                        <label class="block">                                            
+                                            <span class="text-sm text-gray-700">Permissão <span class="text-red-500 font-semibold">*</span></span>                                            
+                                            <select :disabled="!isEdit || userRole != '1:ADMIN'" v-model="role" class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800">                
                                                 <option value="1">Administrador</option>
                                                 <option value="2">Revisor</option>
                                                 <option value="3">Aluno</option>                
@@ -94,18 +94,21 @@
                             </div>
                             <div class="mt-4 md:mt-0" v-if="$router.currentRoute.value.params.action != 'add'">
                                 <h3 class="mb-3 italic">Curso(s) do usuário</h3>
-                                <div v-if="isset_courses" v-for="(item, index) in courses" class="border border-sky-600 p-3 rounded mt-2">
-                                    <p><span class="semibold">{{ parseInt(index) + 1 }}</span> - {{ item.name }} - <span>{{ formatDate(item.created_at) }}</span></p>
+                                <div v-if="isset_courses" v-for="(item, index) in courses">
+                                    <p class="border-t-2 shadow-lg p-3 rounded mt-2">
+                                        <span class="semibold">{{ parseInt(index) + 1 }}</span> - {{ item.name }} - <span>{{ formatDate(item.created_at) }}</span>
+                                        <a v-if="userRole == '1:ADMIN'" href="#" class="float-end" @click="removeCourse(item.id)"><font-awesome-icon class="text-red-600" size="lg" :icon="['fas', 'trash-can']" /></a>
+                                    </p>
                                 </div>
                                 <div v-else class="border border-red-600 p-3 rounded mt-2">
                                     <p>Nenhum vinculado</p>
                                 </div>             
-                                <div v-if="userRole == '2:ADVISOR' || userRole == '1:ADMIN'" class="mt-4 mb-10">
-                                    <a class="p-2 bg-gray-800 mt-2 text-white rounded" href="#"><font-awesome-icon :icon="['fas', 'file-circle-plus']" /> &nbsp; Vincular curso</a>                                    
+                                <div v-if="userRole == '1:ADMIN'" class="mt-5 mb-10">
+                                    <a class="p-2 bg-gray-800 mt-2 text-white rounded" href="#" @click="showCoursesModal"><font-awesome-icon :icon="['fas', 'file-circle-plus']" /> &nbsp; Vincular curso</a>                                    
                                 </div>                                                   
-                                <div v-if="isAuthor" class="mt-5">
+                                <div v-if="isAuthor && (userRole == '1:ADMIN' || userRole == '2:ADVISOR')" class="mt-5">
                                     <h3 class="mb-3 italic">Artigo(s) do usuário</h3>
-                                    <a class="p-2 bg-green-600 mt-2 text-white rounded" href="#" @click="$router.push('/historic/' + id)"><font-awesome-icon :icon="['fas', 'newspaper']" /> &nbsp; Ver histórico de submissões</a>                                    
+                                    <a class="p-2 bg-green-600 mt-2 text-white rounded" href="#" @click="userRole == '3:AUTHOR' ? $router.push('/historic') : $router.push('/historic/' + id)"><font-awesome-icon :icon="['fas', 'newspaper']" /> &nbsp; Ver histórico de submissões</a>                                    
                                 </div>
                             </div>
                             <div class="mt-4 md:mt-0" v-else>
@@ -114,7 +117,7 @@
                                     <span class="text-sm text-gray-700">Curso <span class="text-red-500 font-semibold">*</span></span>
                                     <select v-model="course" class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800">                
                                         <option value="" selected disabled>Selecione o curso</option>
-                                        <option v-for="course in courses" :value="course.id">{{ course.name }}</option>                                                
+                                        <option v-for="course in courses_add" :value="course.id">{{ course.name }}</option>                                                
                                     </select>  
                                 </label>     
                             </div>
@@ -147,17 +150,36 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal de adição e remoção de cursos -->
+    <Modal v-show="isModalCoursesVisible" @some-event="showCoursesModal">
+        <template #header>
+            <p class="text-xl">Adição de cursos para o usuário</p>
+        </template>
+        <template #body>
+            <div class="px-5 pb-5 pt-1">                
+                <div v-for="item in courses_add">
+                    <p v-if="courseNotInUser(item.id)" class="border-t-2 shadow-lg p-3 rounded mt-2">
+                        {{ item.name }}
+                        <a href="#" class="float-end" @click="addCourse(item.id)"><font-awesome-icon size="lg" :icon="['fas', 'circle-plus']" /></a>
+                    </p>
+                </div>
+            </div>
+        </template>
+    </Modal>
 </template>
   
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from "vue"
 import router from "../../router"
-import { IUserState, userAdd, userDetails, userEdit, userFormatCPF } from "../../hooks/useUser"
+import { IUserState, userAdd, userAddCourse, userDetails, userEdit, userFormatCPF, userRemoveCourse } from "../../hooks/useUser"
 import { getUserRole } from "../../hooks/useAuth"
 import Spinner from "../../components/Spinner.vue"
 import { Toast } from "../../hooks/useToast"
 import { format } from 'date-fns';
 import { courseList } from "../../hooks/useCourse"
+import Modal from "../../components/Modal.vue"
+import Swal from "sweetalert2"
 
 export default defineComponent({
     setup() {
@@ -177,12 +199,14 @@ export default defineComponent({
         const role = ref()
         const status = ref()
         const courses = ref()
+        const courses_add = ref()
         const course = ref()
         const isset_courses = false
         const created_at = ref("")
         const isAuthor = ref(false)
         const isEdit = ref(false)
         const userRole = ref("")
+        const isModalCoursesVisible = ref(false)
        
         async function saveUser() {
             state.isLoading = true
@@ -249,6 +273,8 @@ export default defineComponent({
             saveUser,
             isEdit,
             userRole,
+            isModalCoursesVisible,
+            courses_add
         }
     },
     methods: {
@@ -288,7 +314,7 @@ export default defineComponent({
             }
         },   
         async getCoursesToAddUser() {
-            this.courses = (await courseList('/public/')).value            
+            this.courses_add = (await courseList('/public/')).value            
         },      
         formatDate(date) {
             return format(new Date(date), 'dd/MM/yyyy')
@@ -317,6 +343,60 @@ export default defineComponent({
                 ra = ra.replace(/(\d{5})(\d)/, '$1-$2');
             }
             this.ra = ra;
+        },
+        showCoursesModal() {
+            this.isModalCoursesVisible = !this.isModalCoursesVisible
+
+            if (this.isModalCoursesVisible) {
+                this.getCoursesToAddUser()
+            }
+        },
+        courseNotInUser(course) {
+            if (router.currentRoute.value.params.action != 'add') {
+                for(let c = 0; c < Object.keys(this.courses).length; c++) { 
+                    if (this.courses[c].id == course) {
+                        return false
+                    }
+                }
+                return true
+            }            
+        },
+        async removeCourse(course) {
+            let user = router.currentRoute.value.params.action
+            Swal.fire({
+                title: "Tem certeza?",
+                html: `Você está prestes a excluir. Está certo disso?`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sim, excluir!",
+                cancelButtonText: "Cancelar",
+            }).then(async (modal) => {
+                if (modal.isConfirmed) { 
+                    const result = await userRemoveCourse(user, course)
+
+                    if (result.status == 'success') {
+                        Toast().fire({icon: 'success', title: 'Curso removido do usuário!'})
+                        this.loadUser()
+                    } else {
+                        Toast().fire({icon: 'error', title: result.message})
+                    }                     
+                }
+            })   
+        },
+        async addCourse(course) {            
+            const result = await userAddCourse({
+                'user': router.currentRoute.value.params.action,
+                'course': course,
+            })
+
+            if (result.status == 'success') {
+                Toast().fire({icon: 'success', title: 'Curso vinculado ao usuário!'})
+                this.loadUser()
+            } else {
+                Toast().fire({icon: 'error', title: result.message})
+            }               
         }
     },
     beforeMount() {
@@ -330,10 +410,10 @@ export default defineComponent({
                 break;            
             default:
                 this.pageTitle = 'Editar usuário'
-                this.loadUser()
-                this.userRole = getUserRole()
+                this.loadUser()                
         }
+        this.userRole = getUserRole()
     },
-    components: { Spinner }
+    components: { Spinner, Modal }
 })
 </script>

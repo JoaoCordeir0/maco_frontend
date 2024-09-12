@@ -71,6 +71,23 @@ export async function generateCertificate(params) {
     return data
 }
 
+
+export async function userRemoveCourse(user, course) {        
+    const { data } = await axios.delete(`${api.url}/user/remove/course/${user}/${course}`, {
+        headers: api.authBearer
+    })
+
+    return data
+}
+
+export async function userAddCourse(params) {        
+    const { data } = await axios.post(`${api.url}/user/add/course`, params, {
+        headers: api.authBearer
+    })
+
+    return data
+}
+
 export function userFormatCPF(cpf) {            
     cpf = cpf.replace(/[^\d]/g, "");                    
     return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
