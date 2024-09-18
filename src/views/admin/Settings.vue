@@ -17,7 +17,7 @@
                     </div>                
                 </div>     
                 <div v-if="infonotnull" class="w-full mt-5">                         
-                    <div class="border-2 rounded p-2 mb-2" v-for="item in events">                        
+                    <div class="border-t-2 shadow-lg rounded p-2 mb-3" v-for="item in events">                        
                         <div class="w-full grid grid-cols-2 gap-4">                    
                             <div class="col-start-1 col-end-12 md:col-start-1 md:col-end-8">
                                 <div class="mt-1">

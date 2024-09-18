@@ -10,7 +10,7 @@
                     <div class="border-t-2 shadow-lg rounded p-2 mb-3" v-for="item in events">                        
                         <div class="w-full grid grid-cols-2 gap-4">                    
                             <div class="col-start-1 col-end-12 md:col-start-1 md:col-end-8">
-                                <div class="items-center">
+                                <div class="items-center pt-1">
                                     {{ item.name }} - <b>{{ formatDate(item.start) }}</b> até <b>{{ formatDate(item.end) }}</b>
                                 </div>
                             </div>
@@ -37,7 +37,7 @@
                     <div class="border-t-2 shadow-lg rounded p-2 mb-3" v-for="item in articles">                        
                         <div class="w-full grid grid-cols-2 gap-4">                    
                             <div class="col-start-1 col-end-12 md:col-start-1 md:col-end-8">
-                                <div class="items-center">
+                                <div class="items-center pt-1">
                                     <span>{{ item.id }}</span> - {{ item.title == ' ' ? 'Título não informado' : item.title }}
                                 </div>
                             </div>

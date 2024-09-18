@@ -23,7 +23,7 @@
                     </div>                                                                                                                                                                                                         
                 </div>   
                 <div v-else class="w-full mt-5"> 
-                    <div class="border-2 rounded p-2 mb-3">                        
+                    <div class="border-t-2 shadow-lg rounded p-2 mb-3">                        
                         <div class="w-full grid grid-cols-6 gap-4">                    
                             Nenhum certificado                                        
                         </div>

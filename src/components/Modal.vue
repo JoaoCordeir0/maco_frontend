@@ -5,9 +5,9 @@
           enter-to-class="scale-100 opacity-100"
           leave-active-class="transition duration-300 ease-in transform"
           leave-from-class="scale-100 opacity-100"
-          leave-to-class="scale-95 opacity-0"
+          leave-to-class="scale-100 opacity-0"
     >
-        <div id="modal-backdrop" class="overflow-scroll fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+        <div id="modal-backdrop" class="overflow-scroll fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50" style="margin-bottom: -20px;">
             <div id="modal" class="bg-white rounded-3xl overflow-x-auto flex flex-col sm:w-full md:w-4/6 xl:w-2/6 h-auto" >
                 <!-- Modal Header -->
                 <header id="modal-header" class="ps-5 pe-3 py-3 flex justify-between items-center border-b-2 border-gray">

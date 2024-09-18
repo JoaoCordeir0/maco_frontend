@@ -7,7 +7,7 @@
                     <Spinner />
                 </span>                      
                 <div v-if="!infoNull" class="w-full mt-5">                         
-                    <div class="border-2 rounded p-2 mb-3" v-for="item in articles">                        
+                    <div class="border-t-2 shadow-lg rounded p-2 mb-3" v-for="item in articles">                        
                         <div class="w-full grid grid-cols-6 gap-4">                    
                             <div class="col-start-1 col-end-8 ...">
                                 <div class="items-center">
@@ -27,7 +27,7 @@
                     </div>                     
                 </div>   
                 <div v-else class="w-full mt-5"> 
-                    <div class="border-2 rounded p-2 mb-3">                        
+                    <div class="border-t-2 shadow-lg rounded p-2 mb-3">                        
                         <div class="w-full">                    
                             Nenhum artigo pendente de correção                                         
                         </div>
