@@ -1,11 +1,11 @@
 <template>
-    <div class="mt-2" v-if="roleUser == '1:ADMIN'">
+    <div class="mt-2 mb-5" v-if="roleUser == '1:ADMIN'">
         <DashboardAdmin />
     </div>
-    <div class="mt-2" v-else-if="roleUser == '2:ADVISOR'">        
+    <div class="mt-2 mb-5" v-else-if="roleUser == '2:ADVISOR'">        
         <DashboardAdvisor />
     </div>   
-    <div class="mt-2" v-else-if="roleUser == '3:AUTHOR'">
+    <div class="mt-2 mb-5" v-else-if="roleUser == '3:AUTHOR'">
         <DashboardAuthor />
     </div>  
 </template>

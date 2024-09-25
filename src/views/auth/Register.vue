@@ -1,71 +1,87 @@
 <template>
     <img src="/logo_maco.png" title="Maco: Magnoli & Cordeiro" alt="Logo Maco" width="150" class="hidden md:fixed top-0 pl-2 pt-2 rounded-full">
     <div class="flex items-center justify-center h-screen px-6 bg-zinc-100">
-        <div class="w-full max-w-md bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2">            
-            <form class="mt-4 mb-4 max-w-96 m-auto" @submit.prevent="sendRegister">
-                <div class="space-y-2 flex">
+        <div class="w-full max-w-xl md:h-5/6 2xl:h-auto h-screen overflow-y-hidden md:overflow-y-auto  bg-white border-2 rounded-xl border-gray py-2 px-2 md:py-4 md:px-4 mt-2">            
+            <form class="p-5 m-auto" @submit.prevent="sendRegister">
+                <div class="space-y-2 flex mb-2">
                     <a href="#" onclick="history.go(-1)" class="mt-3 mr-3"><font-awesome-icon :icon="['fas', 'arrow-left']" /></a>
                     <p class="font-semibold text-2xl text-gray-800">
                         Cadastro de alunos
                     </p>            
                 </div>
-                <label class="block mt-4">
-                    <span class="text-sm text-gray-800">Nome <span class="text-red-500 font-semibold">*</span></span>
-                    <input type="text"
-                        maxlength="100"
-                        class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
-                        v-model="name" />
-                </label>
 
-                <label class="block mt-2">
-                    <span class="text-sm text-gray-800">E-mail <span class="text-red-500 font-semibold">*</span></span>
-                    <input type="email"
-                        maxlength="100"
-                        class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
-                        v-model="email" />
-                </label>
+                <div class="grid grid-cols-12 gap-3">
+                    <div class="col-span-12 md:col-span-6">
+                        <span class="text-sm text-gray-800">Nome <span class="text-red-500 font-semibold">*</span></span>
+                        <input type="text"
+                            maxlength="100"
+                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                            v-model="name" />
+                    </div>
+                    <div class="col-span-12 md:col-span-6">
+                        <span class="text-sm text-gray-800">Sobrenome <span class="text-red-500 font-semibold">*</span></span>
+                        <input type="text"
+                            maxlength="100"
+                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                            v-model="lastname" />
+                    </div>
+                </div>
 
-                <label class="block mt-2">
-                    <span class="text-sm text-gray-800">CPF <span class="text-red-500 font-semibold">*</span></span>
+                <div class="grid grid-cols-12">
+                    <div class="col-span-12">
+                        <span class="text-sm text-gray-800">E-mail <span class="text-red-500 font-semibold">*</span></span>
+                        <input type="email"
+                            maxlength="100"
+                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                            v-model="email" />
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-3">
+                    <div class="col-span-12 md:col-span-6">
+                        <span class="text-sm text-gray-800">CPF <span class="text-red-500 font-semibold">*</span></span>
                     <input type="text"
                         maxlength="14"
                         @input="formatCPF"
                         class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
                         v-model="cpf" />
-                </label>
-
-                <label class="block mt-2">
-                    <span class="text-sm text-gray-800">RA <span class="text-red-500 font-semibold">*</span></span>
+                    </div>
+                    <div class="col-span-12 md:col-span-6">
+                        <span class="text-sm text-gray-800">RA <span class="text-red-500 font-semibold">*</span></span>
                     <input type="text"
                         maxlength="7"
                         @input="formatRA"
                         class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
                         v-model="ra" />
-                </label>
+                    </div>
+                </div>
 
-                <label class="block mt-2">
-                    <span class="text-sm text-gray-800">Senha <span class="text-red-500 font-semibold">*</span></span>
-                    <input type="password"
-                        maxlength="20"
-                        class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
-                        v-model="pass1" />
-                </label>
+                <div class="grid grid-cols-12 gap-3">
+                    <div class="col-span-12 md:col-span-6">
+                        <span class="text-sm text-gray-800">Senha <span class="text-red-500 font-semibold">*</span></span>
+                        <input type="password"
+                            maxlength="20"
+                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                            v-model="pass1" />
+                    </div>
+                    <div class="col-span-12 md:col-span-6">
+                        <span class="text-sm text-gray-800">Confirme a senha <span class="text-red-500 font-semibold">*</span></span>
+                        <input type="password"
+                            maxlength="20"
+                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                            v-model="pass2" />
+                    </div>
+                </div>
 
-                <label class="block mt-2">
-                    <span class="text-sm text-gray-800">Confirme a senha <span class="text-red-500 font-semibold">*</span></span>
-                    <input type="password"
-                        maxlength="20"
-                        class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
-                        v-model="pass2" />
-                </label>
-
-                <label class="block mt-2">
-                    <span class="text-sm text-gray-700">Curso <span class="text-red-500 font-semibold">*</span></span>
-                    <select v-model="course" class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800">                
-                        <option value="" selected disabled>Selecione o curso</option>
-                        <option v-for="course in courses" :value="course.id">{{ course.name }}</option>                                                
-                    </select>  
-                </label>     
+                <div class="grid grid-cols-12 gap-3">
+                    <div class="col-span-12">
+                        <span class="text-sm text-gray-700">Curso <span class="text-red-500 font-semibold">*</span></span>
+                        <select v-model="course" class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800">                
+                            <option value="" selected disabled>Selecione o curso</option>
+                            <option v-for="course in courses" :value="course.id">{{ course.name }}</option>                                                
+                        </select>  
+                    </div>
+                </div>
 
                 <div class="mt-6">
                     <button type="submit" :disabled="isLoading"
@@ -101,6 +117,7 @@ export default defineComponent({
 
         const isLoading = false;
         const name = ref("")
+        const lastname = ref("")
         const cpf = ref("")        
         const email = ref("")
         const ra = ref("")
@@ -110,7 +127,7 @@ export default defineComponent({
         const courses = ref()
 
         async function sendRegister(){                      
-            if (name.value == '' || cpf.value == '' || email.value == '' || ra.value == '' || pass1.value == '' || pass2.value == '' || course.value == '') {
+            if (name.value == '' || lastname.value == '' || cpf.value == '' || email.value == '' || ra.value == '' || pass1.value == '' || pass2.value == '' || course.value == '') {
                 Toast().fire({icon: 'warning', title: 'Preencha todas as informações!'})
                 return
             } 
@@ -124,7 +141,7 @@ export default defineComponent({
             }   
 
             const result = await userAdd({                
-                name: name.value,
+                name: name.value + " " + lastname.value,
                 cpf: cpf.value,
                 ra: ra.value,
                 email: email.value,
@@ -141,6 +158,7 @@ export default defineComponent({
 
         return {
             name,
+            lastname,
             cpf,
             email,
             ra,
