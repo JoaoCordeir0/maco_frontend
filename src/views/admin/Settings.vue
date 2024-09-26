@@ -46,30 +46,42 @@
                             class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
                             v-model="event_name" />
                     </label>    
-                    <label class="block mt-2">
-                        <span class="text-sm text-gray-700">Data inicial do evento <span class="text-red-500 font-semibold">*</span></span>
-                        <input type="date"
-                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
-                            v-model="event_start" />
-                    </label>    
-                    <label class="block mt-2">
-                        <span class="text-sm text-gray-700">Data final do evento <span class="text-red-500 font-semibold">*</span></span>
-                        <input type="date"
-                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
-                            v-model="event_end" />
-                    </label>    
-                    <label class="block mt-2">
-                        <span class="text-sm text-gray-700">Quantidade de palavras permitidas no resumo <span class="text-red-500 font-semibold">*</span></span>
-                        <input type="number"
-                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
-                            v-model="event_words" />
-                    </label>   
-                    <label class="block mt-2">
-                        <span class="text-sm text-gray-700">Quantidade máxima de palavras chaves <span class="text-red-500 font-semibold">*</span></span>
-                        <input type="number"
-                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
-                            v-model="event_keywords" />
-                    </label>  
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block mt-2">
+                                <span class="text-sm text-gray-700">Data inicial do evento <span class="text-red-500 font-semibold">*</span></span>
+                                <input type="date"
+                                    class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                                    v-model="event_start" />
+                            </label>   
+                        </div>
+                        <div>
+                            <label class="block mt-2">
+                                <span class="text-sm text-gray-700">Data final do evento <span class="text-red-500 font-semibold">*</span></span>
+                                <input type="date"
+                                    class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                                    v-model="event_end" />
+                            </label>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block mt-2" title="Quantidade máxima de palavras permitidas no resumo">
+                                <span class="text-sm text-gray-700">Máximo de P. no resumo <span class="text-red-500 font-semibold">*</span></span>
+                                <input type="number"
+                                    class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                                    v-model="event_words" />
+                            </label> 
+                        </div>
+                        <div>
+                            <label class="block mt-2" title="Quantidade máxima de palavras chaves permitidas">
+                                <span class="text-sm text-gray-700">Máximo de P. chaves <span class="text-red-500 font-semibold">*</span></span>
+                                <input type="number"
+                                    class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                                    v-model="event_keywords" />
+                            </label>  
+                        </div>
+                    </div>
                     <label class="block mt-2">
                         <span class="text-sm text-gray-700">Instruções para o evento <span class="text-red-500 font-semibold">*</span></span>                        
                         <textarea name="" id="" cols="30" rows="5" v-model="event_instructions"

@@ -1,7 +1,7 @@
 <template>
     <img src="/logo_maco.png" title="Maco: Magnoli & Cordeiro" alt="Logo Maco" width="150" class="hidden md:fixed top-0 pl-2 pt-2 rounded-full">
     <div class="flex items-center justify-center h-screen px-6 bg-zinc-100">
-        <div class="w-full max-w-xl md:h-5/6 2xl:h-auto h-screen overflow-y-hidden md:overflow-y-auto  bg-white border-2 rounded-xl border-gray py-2 px-2 md:py-4 md:px-4 mt-2">            
+        <div class="w-full max-w-xl h-screen md:h-auto overflow-y-auto bg-white border-2 rounded-xl border-gray py-2 px-2 md:py-4 md:px-4 mt-2">            
             <form class="p-5 m-auto" @submit.prevent="sendRegister">
                 <div class="space-y-2 flex mb-2">
                     <a href="#" onclick="history.go(-1)" class="mt-3 mr-3"><font-awesome-icon :icon="['fas', 'arrow-left']" /></a>
