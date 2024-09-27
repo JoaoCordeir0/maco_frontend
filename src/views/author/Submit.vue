@@ -1120,6 +1120,7 @@ export default defineComponent({
         },
         showReferenceModal() {
             this.isModalReferenceVisible = !this.isModalReferenceVisible
+            this.reference = ""
         },
         showCommentsModal() {
             this.isModalCommentsVisible = !this.isModalCommentsVisible
