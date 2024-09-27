@@ -68,7 +68,7 @@
                                     </div>                                                                                                                        
                                 </div>
                                 <div class="grid grid-cols-2 gap-4 mt-5">                                                                                                          
-                                    <div class="...">
+                                    <div class="..." v-if="!addMode">
                                         <label class="block">                                            
                                             <span class="text-sm text-gray-700">Permissão <span class="text-red-500 font-semibold">*</span></span>                                            
                                             <select :disabled="!isEdit || userRole != '1:ADMIN'" v-model="role" class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800">                
@@ -200,13 +200,14 @@ export default defineComponent({
         const status = ref()
         const courses = ref()
         const courses_add = ref()
-        const course = ref()
+        const course = ref("")
         const isset_courses = false
         const created_at = ref("")
         const isAuthor = ref(false)
         const isEdit = ref(false)
         const userRole = ref("")
         const isModalCoursesVisible = ref(false)
+        const addMode = ref(false)
        
         async function saveUser() {
             state.isLoading = true
@@ -217,14 +218,19 @@ export default defineComponent({
                 return
             }            
 
-            if (router.currentRoute.value.params.action == 'add') {        
+            if (router.currentRoute.value.params.action == 'add') {      
+                if (course.value == "") {
+                    Toast().fire({icon: 'warning', title: 'Informe o curso!'})
+                    state.isLoading = false
+                    return
+                }  
                 const result = await userAdd({                
                     name: name.value,
                     cpf: cpf.value,
                     ra: ra.value,
                     email: email.value,
                     password: pass.value,              
-                    course: course.value,  
+                    course: course.value,                    
                 })
                 if (result.status == 'success') {
                     Toast().fire({icon: 'success', title: 'Usuário criado!'})
@@ -274,7 +280,8 @@ export default defineComponent({
             isEdit,
             userRole,
             isModalCoursesVisible,
-            courses_add
+            courses_add,
+            addMode,
         }
     },
     methods: {
@@ -406,6 +413,7 @@ export default defineComponent({
                 this.infoLoaded = true
                 this.isEdit = true
                 this.status = true
+                this.addMode = true
                 this.getCoursesToAddUser()
                 break;            
             default:
