@@ -1,11 +1,11 @@
 <template>
-    <img src="/logo_maco.png" title="Maco: Magnoli & Cordeiro" alt="Logo Maco" width="150" class="hidden md:fixed top-0 pl-2 pt-2 rounded-full">
-    <div class="flex items-center justify-center h-screen px-6 bg-zinc-100">
-        <div class="w-full max-w-xl h-screen md:h-auto overflow-y-auto bg-white border-2 rounded-xl border-gray py-2 px-2 md:py-4 md:px-4 mt-2">            
-            <form class="p-5 m-auto" @submit.prevent="sendRegister">
+    <img src="/logo_maco.png" title="Maco: Magnoli & Cordeiro" alt="Logo Maco" width="150" class="hidden top-0 pl-2 pt-2 rounded-full">
+    <div class="flex items-center justify-center h-screen px-3 bg-zinc-100">
+        <div class="w-full max-w-xl md:h-auto overflow-y-auto bg-white border-2 rounded-xl border-gray py-2 px-2 md:py-4 md:px-4 mt-2">            
+            <form class="p-5 m-auto overflow-y-auto" @submit.prevent="sendRegister">
                 <div class="space-y-2 flex mb-2">
                     <a href="#" onclick="history.go(-1)" class="mt-3 mr-3"><font-awesome-icon :icon="['fas', 'arrow-left']" /></a>
-                    <p class="font-semibold text-2xl text-gray-800">
+                    <p class="font-semibold text-lg md:text-2xl text-gray-800">
                         Cadastro de alunos
                     </p>            
                 </div>
@@ -27,7 +27,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-12">
+                <div class="grid grid-cols-12 mt-3">
                     <div class="col-span-12">
                         <span class="text-sm text-gray-800">E-mail <span class="text-red-500 font-semibold">*</span></span>
                         <input type="email"
@@ -37,26 +37,26 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-12 gap-3">
+                <div class="grid grid-cols-12 gap-3 mt-3">
                     <div class="col-span-12 md:col-span-6">
                         <span class="text-sm text-gray-800">CPF <span class="text-red-500 font-semibold">*</span></span>
-                    <input type="text"
-                        maxlength="14"
-                        @input="formatCPF"
-                        class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
-                        v-model="cpf" />
+                        <input type="text"
+                            maxlength="14"
+                            @input="formatCPF"
+                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                            v-model="cpf" />
                     </div>
                     <div class="col-span-12 md:col-span-6">
                         <span class="text-sm text-gray-800">RA <span class="text-red-500 font-semibold">*</span></span>
-                    <input type="text"
-                        maxlength="7"
-                        @input="formatRA"
-                        class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
-                        v-model="ra" />
+                        <input type="text"
+                            maxlength="7"
+                            @input="formatRA"
+                            class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"
+                            v-model="ra" />
                     </div>
                 </div>
 
-                <div class="grid grid-cols-12 gap-3">
+                <div class="grid grid-cols-12 gap-3 mt-3">
                     <div class="col-span-12 md:col-span-6">
                         <span class="text-sm text-gray-800">Senha <span class="text-red-500 font-semibold">*</span></span>
                         <input type="password"
@@ -73,7 +73,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-12 gap-3">
+                <div class="grid grid-cols-12 gap-3 mt-3">
                     <div class="col-span-12">
                         <span class="text-sm text-gray-700">Curso <span class="text-red-500 font-semibold">*</span></span>
                         <select v-model="course" class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800">                
