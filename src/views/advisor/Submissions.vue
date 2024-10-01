@@ -35,16 +35,16 @@
                                 <td class="px-5 py-2 text-sm bg-white border-b border-gray-200">
                                     <p class="text-gray-900 whitespace-nowrap">{{ item.title == ' ' ? 'Título não informado' : item.title }}</p>
                                 </td>                                
-                                <td class="px-5 py-2 text-sm bg-white border-b border-gray-200">
-                                    <p class="text-gray-900 whitespace-nowrap">{{ formatCourseAndAuthors(item.authors, 'course_name') }}</p>
+                                <td class="px-5 py-2 text-sm bg-white border-b border-gray-200 max-w-36" :title="formatCourseAndAuthors(item.authors, 'course_name')">
+                                    <p class="text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis w-full">{{ formatCourseAndAuthors(item.authors, 'course_name') }}</p>
                                 </td>  
-                                <td class="px-5 py-2 text-sm bg-white border-b border-gray-200">
-                                    <p class="text-gray-900 whitespace-nowrap">{{ formatCourseAndAuthors(item.authors, 'name') }}</p>
+                                <td class="px-5 py-2 text-sm bg-white border-b border-gray-200 max-w-36" :title="formatCourseAndAuthors(item.authors, 'name')">
+                                    <p class="text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis w-full">{{ formatCourseAndAuthors(item.authors, 'name') }}</p>
                                 </td>  
                                 <td class="px-5 py-2 text-sm border-b border-gray-200">
                                     <p class="text-gray-900 whitespace-nowrap"><span :class="getColorArticleStatus(item.status)" class="rounded pt-1 pb-1 pr-3 pl-3 text-white">{{ formatArticleStatus(item.status) }}</span></p>
                                 </td>                                
-                                <td class="px-5 py-2 text-sm bg-white border-b border-gray-200 min-w-60 text-center">
+                                <td class="px-5 py-2 text-sm bg-white border-b border-gray-200 min-w-32 sm:min-w-60 text-center">
                                     <div class="sm:inline-block">
                                         <Export :article="item.id"/>
                                         <Certificate v-if="item.status == 'finished'" :article="item"/>                                        

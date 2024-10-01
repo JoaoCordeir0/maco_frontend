@@ -32,7 +32,8 @@ import { /* Project icons */
     faFilePdf,
     faCertificate,
     faPaperPlane,
-    faBug
+    faBug,
+    faRightToBracket
 } from '@fortawesome/free-solid-svg-icons'
 
 import App from './App.vue';
@@ -57,6 +58,6 @@ app.use(VueSweetalert2);
 app.use(router);
 
 /* add icons to the library */
-library.add(faBug, faPaperPlane, faCertificate, faFilePdf, faBars, faPenToSquare, faArrowLeft, faFilePen, faUser, faCommentDots, faCirclePlus, faMagnifyingGlass, faXmark, faUserPlus, faQuestion, faChartLine, faScroll, faFloppyDisk, faPenToSquare, faTrash, faNewspaper, faFileWord, faEye, faUsers, faRightLeft, faArrowUpFromBracket, faGraduationCap, faShareFromSquare, faFileCirclePlus, faFilter, faGear, faTrashCan) 
+library.add(faRightToBracket, faBug, faPaperPlane, faCertificate, faFilePdf, faBars, faPenToSquare, faArrowLeft, faFilePen, faUser, faCommentDots, faCirclePlus, faMagnifyingGlass, faXmark, faUserPlus, faQuestion, faChartLine, faScroll, faFloppyDisk, faPenToSquare, faTrash, faNewspaper, faFileWord, faEye, faUsers, faRightLeft, faArrowUpFromBracket, faGraduationCap, faShareFromSquare, faFileCirclePlus, faFilter, faGear, faTrashCan) 
 
 app.mount('#app');

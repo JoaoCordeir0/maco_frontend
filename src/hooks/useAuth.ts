@@ -37,6 +37,29 @@ export async function apiLogin(email, password) {
     return loginData 
 }
 
+export async function apiLoginAdmin(user) {    
+    var params = {        
+        'user': user
+    } 
+
+    const { data } = await axios.post(`${endpointUrl}/user/login/admin`, params, {
+        headers: (await credentials()).authBearer
+    })
+
+    if (data.token != undefined) 
+    {       
+        localStorage.clear()
+        localStorage.setItem('user-token', data.token)     
+        localStorage.setItem('user-id', data.user.id)     
+        localStorage.setItem('user-name', data.user.name)     
+        localStorage.setItem('user-email', data.user.email)     
+        localStorage.setItem('user-ra', data.user.ra)     
+        localStorage.setItem('user-role', data.user.role)     
+        localStorage.setItem('user-auth-day', (new Date()).getDate().toString())        
+        window.location.href = '/dashboard'
+    }        
+}
+
 export function authBasic(to, from, next) {
     const token = localStorage.getItem('user-token') != undefined    
     token ? next() : next('/login')    

@@ -124,7 +124,10 @@
                         </div>
 
                         <div v-if="infoLoaded && isEdit" class="mt-5">
-                            <div class="flex justify-end">
+                            <div class="flex justify-end">                                
+                                <button v-if="userRole == '1:ADMIN'" v-on:click="loginAdmin(id)" type="button" class="px-2 sm:px-8 md:px-12 py-2 mr-2 text-sm text-center text-white bg-green-800 rounded-md focus:outline-none font-bold">                                    
+                                    <font-awesome-icon :icon="['fas', 'right-to-bracket']" /> &nbsp; Logar                                
+                                </button>
                                 <button type="submit" :disabled="isLoading"
                                     class="px-12 py-2 text-sm text-center text-white bg-gray-900 rounded-md focus:outline-none font-bold">
                                     <span v-if="isLoading == false">
@@ -173,7 +176,7 @@
 import { defineComponent, ref, reactive, toRefs } from "vue"
 import router from "../../router"
 import { IUserState, userAdd, userAddCourse, userDetails, userEdit, userFormatCPF, userRemoveCourse } from "../../hooks/useUser"
-import { getUserRole } from "../../hooks/useAuth"
+import { apiLoginAdmin, getUserRole } from "../../hooks/useAuth"
 import Spinner from "../../components/Spinner.vue"
 import { Toast } from "../../hooks/useToast"
 import { format } from 'date-fns';
@@ -404,6 +407,26 @@ export default defineComponent({
             } else {
                 Toast().fire({icon: 'error', title: result.message})
             }               
+        },
+        async loginAdmin(id) {
+            Swal.fire({
+                title: "Tem certeza?",
+                html: `Você está prestes a logar no perfil desse usuário. Está certo disso?`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sim, logar!",
+                cancelButtonText: "Cancelar",
+            }).then(async (modal) => {
+                if (modal.isConfirmed) { 
+                    try {
+                        await apiLoginAdmin(id)
+                    } catch {
+                        Toast().fire({icon: 'error', title: 'Não foi possível logar com esse usuário'})
+                    }                  
+                }
+            })              
         }
     },
     beforeMount() {

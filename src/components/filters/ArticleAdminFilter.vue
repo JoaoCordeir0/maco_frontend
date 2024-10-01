@@ -55,7 +55,7 @@ export default defineComponent({
         const filter = ref(false);        
         const status = ref(4)
         const course = ref(1)
-        const event = ref(events.value[0]['id'])        
+        const event = ref(events.value[0]['id'])
         const courses = ref()        
 
         return {            

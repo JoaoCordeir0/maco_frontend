@@ -41,11 +41,11 @@ import { eventList } from '../../hooks/useEvent';
 
 export default defineComponent({
     async setup(){       
+        const events = await eventList()        
         const filter = ref(false);        
         const status = ref(4)
         const course = ref(0)
-        const event = ref(0)
-        const events = ref()
+        const event = ref(events.value[0]['id'])
         const courses = ref()        
 
         return {            
@@ -61,16 +61,10 @@ export default defineComponent({
         async loadCourses() {
             const result = await courseListByUser()                                            
             this.courses = result
-        }, 
-        async loadEvents() {
-            const result = await eventList()                                            
-            this.events = result            
-            this.event = this.events[0]['id']
-        },       
+        },         
     },
     beforeMount() {
-        this.loadCourses()   
-        this.loadEvents()        
+        this.loadCourses()              
         this.$emit('someEvent', { course: this.course, event: this.event })
     }  
 })
