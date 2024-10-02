@@ -20,28 +20,34 @@
             v-show="filter"
             class="absolute right-10 z-20 p-3 mt-2 bg-white rounded-md shadow-xl border-2">       
             <p class="mt-2">Filtro por nível de usuário</p>
-            <select v-model="role" @change="$emit('someEvent', { user_role: role })" class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full">                
+            <select v-model="role" @change="$emit('someEvent', { user_role: role, user_info_with_role: info })" class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full">                
                 <option value="1">Administrador</option>
                 <option value="2">Revisor</option>
                 <option value="3">Aluno</option>                
-            </select>           
+            </select>  
+            
+            <p class="mt-2">Filtro pelo nome, e-mail ou RA</p>
+            <input v-model="info" @change="$emit('someEvent', { user_role: role, user_info_with_role: info })" 
+                type="text" class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full"
+                placeholder="Ex: João Victor Cordeiro"
+                />            
         </div>
     </transition>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { courseList } from '../../hooks/useCourse';
-import { eventList } from '../../hooks/useEvent';
 
 export default defineComponent({
     async setup(){       
-        const filter = ref(false);        
+        const filter = ref(false)
         const role = ref(1)        
+        const info = ref("")
 
         return {            
             filter,            
-            role,        
+            role,  
+            info,      
         }
     },    
     methods: {

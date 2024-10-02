@@ -4,7 +4,9 @@
             <div class="flex flex-wrap">                                                
                 <div class="w-full grid grid-cols-2 gap-4">                    
                     <div class="col-start-1 col-end-12 md:col-start-1 md:col-end-8">
-                        <p class="text-gray-500 font-semibold text-xl"> <span class="border-b-2">{{ pageTitle }} <span>{{ eventName }}</span></span>
+                        <p class="text-gray-500 font-semibold text-xl"> 
+                            <span class="pr-3 hover:text-gray-900 hover:cursor-pointer" onclick="history.go(-1)"> <font-awesome-icon :icon="['fas', 'arrow-left']" /> </span>
+                            <span class="border-b-2">{{ pageTitle }} <span>{{ eventName }}</span></span>
                             <span v-if="!infoLoaded">
                                 <Spinner />
                             </span>

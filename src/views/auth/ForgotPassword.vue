@@ -64,8 +64,11 @@ export default defineComponent({
                 });                
                 return
             }
-            const result = await userRecoverPassword({'email': email.value})
-            console.log(result)
+            //const result = await userRecoverPassword({'email': email.value})
+            Toast().fire({
+                icon: 'error',
+                title: 'SMTP não configurado!'
+            });     
         }
         return {
             email,

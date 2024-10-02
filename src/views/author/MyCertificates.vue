@@ -2,7 +2,10 @@
     <div class="mt-2 mb-2">
         <div class="bg-white border-2 rounded-xl border-gray px-5 py-5 mt-2">
             <div class="flex flex-wrap">
-                <p class="text-gray-500 font-semibold text-xl border-b-2">{{ pageTitle }}</p>    
+                <p class="text-gray-500 font-semibold text-xl">
+                    <span class="pr-3 hover:text-gray-900 hover:cursor-pointer" onclick="history.go(-1)"> <font-awesome-icon :icon="['fas', 'arrow-left']" /> </span>
+                    <span class="border-b-2">{{ pageTitle }}</span>
+                </p>    
                 <span v-if="!infoLoaded">
                     <Spinner />
                 </span>                      

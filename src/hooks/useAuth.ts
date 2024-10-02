@@ -99,7 +99,7 @@ export function getUserRole(modestring = false) {
         let role = atob(localStorage.getItem('user-role') || '')        
         if (modestring) {
             role = role.split(':')[1]
-        }
+        }        
         return role
     }
     catch (e) {

@@ -14,7 +14,9 @@ export async function userList(mode, filter) {
     if (filter.user_info != undefined) {
         path = `&user_info=${filter.user_info}&article_id=${filter.article_id}`
     }
-    if (filter.user_role != undefined) {
+    if (filter.user_info_with_role != undefined) {
+        path = `&user_role=${filter.user_role}&user_info=${filter.user_info_with_role}`
+    } else if (filter.user_role != undefined) {
         path = `&user_role=${filter.user_role}`
     }
     

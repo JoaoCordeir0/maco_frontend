@@ -4,7 +4,9 @@
             <div class="flex flex-wrap">
                 <div class="w-full grid grid-cols-6 gap-4">                    
                     <div class="col-start-1 col-end-8 ...">
-                        <p class="text-gray-500 font-semibold text-xl"><span class="border-b-2"> {{ pageTitle }} | {{ total }}</span>
+                        <p class="text-gray-500 font-semibold text-xl">
+                            <span class="pr-3 hover:text-gray-900 hover:cursor-pointer" onclick="history.go(-1)"> <font-awesome-icon :icon="['fas', 'arrow-left']" /> </span>
+                            <span class="border-b-2"> {{ pageTitle }} | {{ total }}</span>
                             <span v-if="!infoLoaded">
                                 <Spinner />
                             </span>
@@ -32,7 +34,7 @@
                                 <td class="px-5 py-2 text-sm bg-white border-b border-gray-200">
                                     <p class="text-gray-900 whitespace-nowrap">{{ item.id }}</p>
                                 </td>
-                                <td class="px-5 py-2 text-sm bg-white border-b border-gray-200">
+                                <td class="px-5 py-2 text-sm bg-white border-b border-gray-200 hover:cursor-pointer" v-on:click="viewSubmission(item.id, item.event)">
                                     <p class="text-gray-900 whitespace-nowrap">{{ item.title == ' ' ? 'Título não informado' : item.title }}</p>
                                 </td>                                
                                 <td class="px-5 py-2 text-sm bg-white border-b border-gray-200 max-w-36" :title="formatCourseAndAuthors(item.authors, 'course_name')">

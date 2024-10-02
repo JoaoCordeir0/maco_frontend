@@ -4,7 +4,9 @@
             <div class="flex flex-wrap">
                 <div class="w-full grid grid-cols-6 gap-4">                    
                     <div class="col-start-1 col-end-8 ...">
-                        <p class="text-gray-500 font-semibold text-xl"><span class="border-b-2"> Listagem de usuários | {{ total }}</span>
+                        <p class="text-gray-500 font-semibold text-xl">
+                            <span class="pr-3 hover:text-gray-900 hover:cursor-pointer" onclick="history.go(-1)"> <font-awesome-icon :icon="['fas', 'arrow-left']" /> </span>
+                            <span class="border-b-2"> Listagem de usuários | {{ total }}</span>
                             <span v-if="!infoLoaded">
                                 <Spinner />
                             </span>
@@ -56,6 +58,13 @@
                         </tbody>
                     </table>
                 </div>
+                <div v-else class="w-full mt-5"> 
+                    <div class="border-t-2 shadow-lg rounded p-2 mb-3">                        
+                        <div class="w-full">                    
+                            Nenhum usuário encontrado com o filtro aplicado                                     
+                        </div>
+                    </div>   
+                </div>  
             </div>
         </div>
     </div>
@@ -90,6 +99,8 @@ export default defineComponent({
     methods: {
         async loadUsers(filter) {                        
             this.infoLoaded = false
+            this.users = []
+
             const result = (await userList('admin', filter)).value // Consome a API
             
             if (result[0] != undefined) {
@@ -98,7 +109,8 @@ export default defineComponent({
                 this.infonotnull = true
             } else {
                 Toast().fire({icon: 'warning', title: 'Nenhum usuário encontrado'})   
-                this.total = 0   
+                this.total = 0  
+                this.infonotnull = false 
             }            
             this.infoLoaded = true
         },    

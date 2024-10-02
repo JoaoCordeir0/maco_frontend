@@ -9,7 +9,7 @@
       </button>
 
       <div class="flex items-center justify-center ml-3">
-        <p class="text-gray-500 font-semibold text-xl">Maco - {{ roleUser }}</p>
+        <p class="text-gray-500 font-semibold text-xl">Maco - <i>{{ roleUser }}</i></p>
       </div>
 
     </div>
@@ -18,7 +18,7 @@
 
       <div class="relative">
         <button @click="dropdownOpen = !dropdownOpen"
-          class="relative z-10 block w-9 h-9 overflow-hidden rounded-full shadow focus:outline-none text-bold bg-purple-700 text-white">
+          class="relative z-10 block w-9 h-9 overflow-hidden rounded-full shadow focus:outline-none text-bold bg-blue-700 text-white">
           {{ nameUser }}
         </button>
 
@@ -85,7 +85,15 @@ export default defineComponent({
     },    
   },
   beforeMount() {
-    this.roleUser = getUserRole(true)
+    let role = getUserRole(true)
+    if (role == 'ADMIN') {
+        role = 'ADMINISTRADOR'
+    } else if (role == 'AUTHOR') {
+        role = 'AUTOR'
+    } else if (role == 'ADVISOR') {
+        role = 'REVISOR'
+    }
+    this.roleUser = role
     this.nameUser = this.loadUser()
   },  
 });

@@ -68,7 +68,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/settings',
-    name: 'EventSettings',
+    name: 'Configurações de evento',
     component: Settings,
     beforeEnter: authAdmin
   },
