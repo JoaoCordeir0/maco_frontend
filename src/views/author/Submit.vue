@@ -25,7 +25,7 @@
             </div>     
         </div>
         <form class="mt-4 mb-5" aria-disabled="true">
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-1 xl:grid-cols-1 mb-14">                
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-1 xl:grid-cols-1 mb-5 md:mb-14">                
                 <div class="... bg-white border-2 rounded-xl border-gray px-5 pb-5 pt-3 mt-2">
                     <label class="block">
                         <span class="text-sm text-gray-700">Título do Artigo <span class="text-red-500 font-semibold">*</span></span>
@@ -206,7 +206,7 @@
                     
             <div v-if="activeBtnByRole('author') && editMode" class="flex justify-end">
                 <button type="button" :disabled="isLoading" v-on:click="submitArticle()"
-                    class="absolute bottom-4 right-5 px-12 py-2 text-sm text-center text-white bg-gray-900 rounded-md focus:outline-none font-bold">
+                    class="md:absolute bottom-4 right-5 px-12 py-2 text-sm text-center text-white bg-gray-900 rounded-md focus:outline-none font-bold">
                     <span v-if="!isLoading">
                         <font-awesome-icon :icon="['fas', 'floppy-disk']" /> &nbsp; Enviar
                     </span>
@@ -216,7 +216,7 @@
                 </button>                
             </div>   
             <div v-if="activeBtnByRole('advisor') && editMode" class="flex justify-end">
-                <div class="absolute bottom-4 right-5 bg-opacity-20 bg-gray-600 pt-1 px-1 rounded">
+                <div class="md:absolute bottom-4 right-5 bg-opacity-20 bg-gray-600 pt-1 px-1 rounded">
                     <Export :article="Number(getArticleID())" :btn-text="true" />
 
                     <button v-on:click="approveArticle()" type="button" class="px-2 sm:px-8 md:px-12 py-2 mr-2 text-sm text-center text-white bg-green-800 rounded-md focus:outline-none font-bold">                                    
@@ -239,11 +239,11 @@
                 </div>
             </div>      
             <div v-if="activeBtnByRole('admin') && status == 'approved'" class="flex justify-end">
-                <div class="absolute bottom-4 right-5 bg-opacity-20 bg-gray-600 pt-1 px-1 rounded">                    
+                <div class="md:absolute bottom-4 right-5 bg-opacity-20 bg-gray-600 pt-1 px-1 rounded">                    
                     <Export :article="Number(getArticleID())" :btn-text="true" />
 
                     <button v-on:click="finalizeArticle()" type="button" class="px-2 sm:px-8 md:px-12 mt-1 mb-1 sm:mt-0 py-2 text-sm text-center text-white bg-green-800 rounded-md focus:outline-none font-bold">                                    
-                        <font-awesome-icon :icon="['fas', 'arrow-up-from-bracket']" /> &nbsp; Finalizar                                     
+                        <font-awesome-icon :icon="['fas', 'arrow-up-from-bracket']" /> &nbsp; Finalizar                               
                     </button>                   
 
                     <button v-if="editMode" type="button" :disabled="isLoading" v-on:click="saveArticle()"
@@ -258,7 +258,7 @@
                 </div>
             </div>
             <div v-if="status == 'finished'" class="flex justify-end">
-                <div class="absolute bottom-4 right-5 bg-opacity-20 bg-gray-600 pt-1 px-1 rounded">
+                <div class="md:absolute bottom-4 right-5 bg-opacity-20 bg-gray-600 pt-1 px-1 rounded">
                     <Export :article="Number(getArticleID())" :btn-text="true" />
                     <Certificate :article="article" :btnText="true"/>                    
                 </div>
