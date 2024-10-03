@@ -56,10 +56,14 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
-                <div v-else class="overflow-x-auto inline-block min-w-full rounded-lg mt-5">                    
-                   <p>Nenhum artigo disponível</p>
-                </div>
+                </div>                
+                <div v-else class="w-full mt-5"> 
+                    <div class="border-t-2 shadow-lg rounded p-2 mb-3">                        
+                        <div class="w-full">                    
+                            Nenhum artigo disponível
+                        </div>
+                    </div>   
+                </div>  
             </div>
         </div>
     </div>
