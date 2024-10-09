@@ -994,6 +994,7 @@ export default defineComponent({
                 input: "textarea",
                 icon: "question",
                 title: "Tem certeza?",
+                inputValue: sessionStorage.getItem('return_to_author_message'),
                 text: "Você está prestes a devolver o artigo para o aluno, informe o que deve ser corrigido no artigo.",
                 showCancelButton: true,
                 cancelButtonColor: "#d33",
@@ -1008,7 +1009,13 @@ export default defineComponent({
                             resolve("Preencha essa informação!)");
                         }
                     });
-                }
+                },
+                didOpen: () => {
+                    const inputField = Swal.getInput();                
+                    inputField?.addEventListener('input', function() {
+                        sessionStorage.setItem('return_to_author_message', inputField?.value)                        
+                    });
+                },
             })
 
             if (comment) {
@@ -1030,6 +1037,7 @@ export default defineComponent({
 
                         if (resultStatus.status == 'success' && resultComment.status == 'success') {                
                             Toast().fire({icon: 'success', title: 'Artigo devolvido para o aluno!'})     
+                            sessionStorage.setItem('return_to_author_message', '')
                             router.push('/submissions')
                         } else {
                             Toast().fire({icon: 'error', title: resultStatus.message + ' ' + resultComment.message})  
