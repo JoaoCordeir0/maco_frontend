@@ -1,5 +1,5 @@
 <template>
-    <button type="button" :disabled="isLoading" title="Emitir certificado" v-on:click="exportArticle" class="px-2 mt-1 mb-1 sm:mt-0 py-2 text-sm text-center text-white bg-blue-800 me-2 rounded-md focus:outline-none font-bold" :class="!$props.btnText ? 'w-10' : 'sm:px-8 md:px-12'">
+    <button type="button" :disabled="isLoading" title="Exportar artigo para Docx" v-on:click="exportArticle" class="px-2 mt-1 mb-1 sm:mt-0 py-2 text-sm text-center text-white bg-blue-800 me-2 rounded-md focus:outline-none font-bold" :class="!$props.btnText ? 'w-10' : 'sm:px-8 md:px-12'">
         <span v-if="!isLoading">
             <font-awesome-icon :icon="['fas', 'file-word']" /> <span v-if="$props.btnText"> Exportar artigo</span>
         </span>        

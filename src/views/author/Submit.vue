@@ -55,7 +55,7 @@
                                         </a> 
                                         <a title="Visualizar perfil do Autor" v-if="isAdminOrAdvisor()" href="#" @click="$router.push('/user/' + author.id)" class="ms-2 mt-1 bg-gray-700 text-white ps-2 pe-2 pt-1 pb-1 w-10 rounded-md"> 
                                             <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'eye']" />
-                                        </a> 
+                                        </a>
                                     </div>                                
                                 </div>                               
                             </div>                          

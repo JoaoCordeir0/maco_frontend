@@ -18,7 +18,7 @@
                 <router-link class="flex items-center px-4 py-2 mt-2 duration-200"
                     :class="[$route.name === 'Dashboard' ? activeClass : inactiveClass]" to="/dashboard">
                     <font-awesome-icon :icon="['fas', 'chart-line']" />
-                    <span class="mx-4 font-semibold">Dashoard</span>
+                    <span class="mx-4 font-semibold">Dashboard</span>
                 </router-link>
 
                 <div v-if="roleUser == '1:ADMIN'">
