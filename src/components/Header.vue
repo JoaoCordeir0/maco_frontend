@@ -16,7 +16,7 @@
 
     <div class="flex items-center">
 
-      <div class="relative">
+      <div class="relative">        
         <button @click="dropdownOpen = !dropdownOpen"
           class="relative z-10 block w-9 h-9 overflow-hidden rounded-full shadow focus:outline-none text-bold bg-blue-700 text-white">
           {{ nameUser }}
@@ -28,7 +28,10 @@
           enter-from-class="scale-95 opacity-0" enter-to-class="scale-100 opacity-100"
           leave-active-class="transition duration-150 ease-in transform" leave-from-class="scale-100 opacity-100"
           leave-to-class="scale-95 opacity-0">
-          <div v-show="dropdownOpen" class="absolute right-0 z-20 w-48 py-2 mt-2 bg-white rounded-md shadow-xl">
+          <div v-show="dropdownOpen" class="absolute right-0 z-20 w-48 py-2 mt-2 bg-white rounded-md shadow-xl">            
+            <a v-if="userInBackup()" href="#" @click="backUser()"
+              class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-400 hover:bg-opacity-30 hover:text-gray-900">Voltar para "{{ getNameUserBackup() }}"</a>
+            <hr>
             <a :href="'/user/' + getIdUserLogged()"
               class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-400 hover:bg-opacity-30 hover:text-gray-900">Meu perfil</a>
             <hr>
@@ -44,7 +47,7 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { useSidebar } from "../hooks/useSidebar";
-import { getUserRole } from "../hooks/useAuth";
+import { backToUser, getUserRole } from "../hooks/useAuth";
 import router from "../router";
 
 export default defineComponent({
@@ -82,7 +85,38 @@ export default defineComponent({
     },
     getIdUserLogged() {
       return window.localStorage.getItem('user-id')
-    },    
+    },   
+    userInBackup() {
+      let user = localStorage.getItem('user-backup') 
+      if (user != '' && user != undefined && user != null) {
+        return true
+      }
+      return false
+    },
+    getUserBackup() {
+      try {
+        let user = localStorage.getItem('user-backup')
+        user = JSON.parse(user || '')      
+        return user
+      } catch {
+        return 'error'
+      }      
+    },
+    getNameUserBackup() {
+      let user = this.getUserBackup()
+      let name = user?.name
+      let chars_name = ''
+      if (name != null) {
+        let name_split = name.split(' ')
+        name_split.forEach(element => {
+          chars_name += element.substr(0, 1)
+        });
+      }
+      return chars_name
+    },
+    async backUser() {
+      await backToUser(this.getUserBackup())
+    }
   },
   beforeMount() {
     let role = getUserRole(true)

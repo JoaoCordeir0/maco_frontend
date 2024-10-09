@@ -48,7 +48,7 @@
                                 <td class="px-5 py-4 text-sm bg-white border-b border-gray-200">
                                     <p :class="item.status ? 'text-gray-900' : 'text-red-600'" class="whitespace-nowrap">{{ getRole(item.role) }}</p>
                                 </td>                             
-                                <td class="px-5 py-4 text-sm bg-white border-b border-gray-200 text-center min-w-32">
+                                <td class="px-5 py-2 text-sm bg-white border-b border-gray-200 min-w-32 sm:min-w-60 text-center">
                                     <div class="sm:inline-block">
                                         <a title="Ver submissões do aluno" v-if="item.role == 3" href="#" @click="$router.push('/historic/' + item.id)" class="bg-green-900 text-white rounded p-2 ps-3 pe-3 me-2 w-10"><font-awesome-icon :icon="['fas', 'newspaper']" /></a>
                                         <a title="Editar aluno" href="#" @click="$router.push('/user/' + item.id)" class="bg-gray-900 text-white rounded p-2 ps-3 pe-3 me-2 w-10"><font-awesome-icon :icon="['fas', 'pen-to-square']" /></a>                                    

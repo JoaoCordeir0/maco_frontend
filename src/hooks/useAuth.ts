@@ -48,7 +48,16 @@ export async function apiLoginAdmin(user) {
 
     if (data.token != undefined) 
     {       
+        let actual_user = {
+            token: localStorage.getItem('user-token'),     
+            id: localStorage.getItem('user-id'),     
+            name: localStorage.getItem('user-name'),     
+            email: localStorage.getItem('user-email'),     
+            ra: localStorage.getItem('user-ra'),     
+            role: localStorage.getItem('user-role'),  
+        }
         localStorage.clear()
+        localStorage.setItem('user-backup', JSON.stringify(actual_user))
         localStorage.setItem('user-token', data.token)     
         localStorage.setItem('user-id', data.user.id)     
         localStorage.setItem('user-name', data.user.name)     
@@ -58,6 +67,20 @@ export async function apiLoginAdmin(user) {
         localStorage.setItem('user-auth-day', (new Date()).getDate().toString())        
         window.location.href = '/dashboard'
     }        
+}
+
+export async function backToUser(user) {
+    if (user == 'error') {
+        return
+    }
+    localStorage.clear()
+    localStorage.setItem('user-token', user.token)     
+    localStorage.setItem('user-id', user.id)     
+    localStorage.setItem('user-name', user.name)     
+    localStorage.setItem('user-email', user.email)     
+    localStorage.setItem('user-ra', user.ra)     
+    localStorage.setItem('user-role', user.role)   
+    window.location.href = '/dashboard'
 }
 
 export function authBasic(to, from, next) {

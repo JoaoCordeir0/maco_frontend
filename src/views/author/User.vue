@@ -128,7 +128,7 @@
 
                         <div v-if="infoLoaded && isEdit" class="mt-5">
                             <div class="flex justify-end">                                
-                                <button v-if="userRole == '1:ADMIN'" v-on:click="loginAdmin(id)" type="button" class="px-2 sm:px-8 md:px-12 py-2 mr-2 text-sm text-center text-white bg-green-800 rounded-md focus:outline-none font-bold">                                    
+                                <button v-if="userRole == '1:ADMIN' && !addMode" v-on:click="loginAdmin(id)" type="button" class="px-2 sm:px-8 md:px-12 py-2 mr-2 text-sm text-center text-white bg-green-800 rounded-md focus:outline-none font-bold">                                    
                                     <font-awesome-icon :icon="['fas', 'right-to-bracket']" /> &nbsp; Logar                                
                                 </button>
                                 <button type="submit" :disabled="isLoading"

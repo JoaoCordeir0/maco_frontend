@@ -900,6 +900,7 @@ export default defineComponent({
                 if (this.comments[0] != undefined) {
                     const { value: comment } = await Swal.fire({
                         input: "textarea",
+                        inputValue: sessionStorage.getItem('return_to_advisor_message'),
                         icon: "question",
                         inputLabel: "Informe o que foi corrigido no artigo",               
                         showCancelButton: true,
@@ -915,8 +916,14 @@ export default defineComponent({
                                     resolve("Preencha essa informação!)");
                                 }
                             });
-                        }
-                    })
+                        },
+                        didOpen: () => {
+                            const inputField = Swal.getInput();                
+                            inputField?.addEventListener('input', function() {
+                                sessionStorage.setItem('return_to_advisor_message', inputField?.value)                        
+                            });
+                        },
+                    })                                      
                     if (comment) {
                         Swal.fire({
                             title: "Tem certeza?",
@@ -933,6 +940,7 @@ export default defineComponent({
                                 const result2 = await articleEditStatus(this.getArticleID(), 2)
                                 if (result1.status == 'success' && result2.status == 'success') {                                                    
                                     Toast().fire({icon: 'success', title: 'Artigo submetido com sucesso'})
+                                    sessionStorage.setItem('return_to_advisor_message', '')
                                     this.editMode = false
                                 } else {
                                     Toast().fire({icon: 'error', title: result1.message + ' ' + result2.message})
@@ -992,9 +1000,9 @@ export default defineComponent({
         async returnToAuthor() {
             const { value: comment } = await Swal.fire({
                 input: "textarea",
-                icon: "question",
-                title: "Tem certeza?",
                 inputValue: sessionStorage.getItem('return_to_author_message'),
+                icon: "question",
+                title: "Tem certeza?",                
                 text: "Você está prestes a devolver o artigo para o aluno, informe o que deve ser corrigido no artigo.",
                 showCancelButton: true,
                 cancelButtonColor: "#d33",
