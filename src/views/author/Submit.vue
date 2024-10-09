@@ -275,24 +275,24 @@
             <div class="px-5 pb-5 pt-1">                
                 <div v-for="comment in comments">
                     <div class="flex w-full items-start gap-2.5 mt-3" v-if="userIsLogged(comment.user_id)">
-                        <span class="text-gray-700"><font-awesome-icon size="xl" :icon="['fas', 'user']" /></span>                    
-                        <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-700">
+                        <span class="text-gray-600"><font-awesome-icon size="xl" :icon="['fas', 'user']" /></span>                    
+                        <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-600 rounded-e-xl rounded-es-xl bg-gray-600">
                             <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ comment.user_name }}</span>
-                                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">{{ formatDateComments(comment.created_at) }}</span>
+                                <span class="text-sm font-semibold text-white">{{ comment.user_name }}</span>
+                                <span class="text-sm font-normal text-white">{{ formatDateComments(comment.created_at) }}</span>
                             </div>
-                            <p class="text-sm font-normal py-2.5 text-gray-900 dark:text-white">{{ comment.comment }}</p>                        
+                            <p class="text-sm font-normal py-2.5 text-white">{{ comment.comment }}</p>                        
                         </div>                               
                     </div>
                     <div class="flex items-start gap-2.5 mt-3 mb-3 float-end" v-else>                        
-                        <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-b-xl rounded-tl-xl dark:bg-green-800">
+                        <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-900 rounded-b-xl rounded-tl-xl bg-gray-900">
                             <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ comment.user_name }}</span>
-                                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">{{ formatDateComments(comment.created_at) }}</span>
+                                <span class="text-sm font-semibold text-white">{{ comment.user_name }}</span>
+                                <span class="text-sm font-normal text-white">{{ formatDateComments(comment.created_at) }}</span>
                             </div>
-                            <p class="text-sm font-normal py-2.5 text-gray-900 dark:text-white">{{ comment.comment }}</p>                        
+                            <p class="text-sm font-normal py-2.5 text-white">{{ comment.comment }}</p>                        
                         </div>                               
-                        <span class="text-green-800"><font-awesome-icon size="xl" :icon="['fas', 'user']" /></span>                    
+                        <span class="text-gray-900"><font-awesome-icon size="xl" :icon="['fas', 'user']" /></span>                    
                     </div>
                 </div>            
             </div>
