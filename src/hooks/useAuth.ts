@@ -74,6 +74,9 @@ export async function backToUser(user) {
         return
     }
     localStorage.clear()
+    if (! await isValidToken(user.token)) {
+        window.location.href = '/login'
+    }
     localStorage.setItem('user-token', user.token)     
     localStorage.setItem('user-id', user.id)     
     localStorage.setItem('user-name', user.name)     
@@ -106,9 +109,12 @@ export function authAuthor(to, from, next) {
     token && role ? next() : next('/login')    
 }
 
-export async function isValidToken() {
+export async function isValidToken(token: string = '') {
+    if (token == '') {
+        token = localStorage.getItem('user-token')
+    }
     const { data } = await axios.post(`${endpointUrl}/public/token`, {
-        'token': localStorage.getItem('user-token')
+        'token': token
     })
 
     if (data.status == 'success') {
