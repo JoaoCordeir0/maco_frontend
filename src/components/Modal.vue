@@ -7,8 +7,8 @@
           leave-from-class="scale-100 opacity-100"
           leave-to-class="scale-100 opacity-0"
     >
-        <div id="modal-backdrop" class="overflow-scroll fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50" style="margin-bottom: -20px;">
-            <div id="modal" class="bg-white rounded-3xl overflow-x-auto flex flex-col sm:w-full md:w-4/6 xl:w-2/6 h-auto" >
+        <div id="modal-backdrop" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50" style="margin-bottom: -20px;">
+            <div id="modal" class="bg-white rounded-3xl flex flex-col sm:w-full md:w-4/6 xl:w-2/6" :class="$props.height">
                 <!-- Modal Header -->
                 <header id="modal-header" class="ps-5 pe-3 py-3 flex justify-between items-center border-b-2 border-gray">
                     <slot name="header"></slot>
@@ -18,7 +18,9 @@
                 </header>          
                 
                 <!-- Modal Body -->
-                <slot name="body"></slot>                
+                <div class="overflow-y-auto">
+                    <slot name="body"></slot>                
+                </div>                
             </div>
         </div>
     </transition>
@@ -26,5 +28,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-export default defineComponent({})
+export default defineComponent({
+    props: {
+        height: String,              
+    },
+})
 </script>

@@ -158,7 +158,7 @@
     </div>
 
     <!-- Modal de adição e remoção de cursos -->
-    <Modal v-show="isModalCoursesVisible" @some-event="showCoursesModal">
+    <Modal v-show="isModalCoursesVisible" @some-event="showCoursesModal" :height="'h-1/2'">
         <template #header>
             <p class="text-xl">Adição de cursos para o usuário</p>
         </template>

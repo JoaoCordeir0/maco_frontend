@@ -35,7 +35,7 @@
             </div>
         </div>
     </div>
-    <Modal v-show="isModalVisible" @some-event="showModal">
+    <Modal v-show="isModalVisible" @some-event="showModal" :height="'h-2/3'">
         <template #header>
             <p class="text-xl">Criação e edição de eventos</p>
         </template>

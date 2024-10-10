@@ -267,7 +267,7 @@
     </div>
 
     <!-- Modal dos comentarios -->
-    <Modal v-show="isModalCommentsVisible" @some-event="showCommentsModal">
+    <Modal v-show="isModalCommentsVisible" @some-event="showCommentsModal" :height="'h-5/6'">
         <template #header>
             <p class="text-xl">Comentários</p>
         </template>
@@ -300,7 +300,7 @@
     </Modal>
 
     <!-- Modal de adição dos autores -->
-    <Modal v-show="isModalAuthorVisible" @some-event="showAuthorModal">
+    <Modal v-show="isModalAuthorVisible" @some-event="showAuthorModal" :height="'h-auto max-h-96'">
         <template #header>
             <p class="text-xl">Adição de autores</p>
         </template>
@@ -343,7 +343,7 @@
     </Modal>
 
     <!-- Modal de adição dos orientadores -->
-    <Modal v-show="isModalAdvisorVisible" @some-event="showAdvisorModal">
+    <Modal v-show="isModalAdvisorVisible" @some-event="showAdvisorModal" :height="'h-auto max-h-96'">
         <template #header>
             <p class="text-xl">Adição de orientadores</p>
         </template>
@@ -386,7 +386,7 @@
     </Modal>
 
     <!-- Modal de adição de referências -->
-    <Modal v-show="isModalReferenceVisible" @some-event="showReferenceModal">
+    <Modal v-show="isModalReferenceVisible" @some-event="showReferenceModal" :height="'h-auto'">
         <template #header>
             <p class="text-xl">Referências bibliográficas</p>
         </template>
