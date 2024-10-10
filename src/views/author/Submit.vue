@@ -144,7 +144,7 @@
                     <label class="block">
                         <span class="text-sm text-gray-700">Resumo <span class="text-red-500 font-semibold">*</span> 
                         <br> Quantidade de palavras permitidas: {{ allowedWords }} - {{ summary.split('').length == 0 ? 0 : summary.split(' ').length }} preenchidos</span>
-                        <textarea name="" id="" cols="30" rows="5" v-model="summary" :disabled="!infoLoaded || !editMode"
+                        <textarea name="" id="" cols="30" rows="18" v-model="summary" :disabled="!infoLoaded || !editMode"
                             class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800"></textarea>
                     </label>
                 </div>    
