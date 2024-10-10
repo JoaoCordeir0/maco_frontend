@@ -23,7 +23,7 @@
                 
                 <div class="w-full max-h-80 overflow-x-hidden">  
                     <div v-for="item in logs">
-                        <p class="bg-gray-400 bg-opacity-20 mt-3 py-1 px-2 rounded me-2">
+                        <p v-if="parseInfo(item.log)['user'] != ''" class="bg-gray-400 bg-opacity-20 mt-3 py-1 px-2 rounded me-2">
                             <i>{{ formatDate(item.created_at) }}</i> - {{ parseInfo(item.log)['action'] }} | <a class="text-blue-700" href="#" @click="$router.push('/user/' + parseInfo(item.log)['user'])">Ver usuário</a>                            
                         </p>
                     </div>
