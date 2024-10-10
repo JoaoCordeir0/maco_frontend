@@ -604,7 +604,10 @@ export default defineComponent({
         async checkEventAvailabe(event) {            
             const dateStart = new Date(event.value['start'])
             const dateEnd = new Date(event.value['end'])
-            const today = new Date();
+            dateEnd.setHours(23)
+            dateEnd.setMinutes(59)
+            dateEnd.setSeconds(0)
+            const today = new Date()            
 
             if (!(today >= dateStart && today <= dateEnd)) {
                 this.editMode = false
