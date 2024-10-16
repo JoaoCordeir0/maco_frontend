@@ -70,11 +70,11 @@
                                         </label>
                                     </div>                                                                                                                        
                                 </div>
-                                <div class="grid grid-cols-2 gap-4 mt-5">                                                                                                          
+                                <div class="grid grid-cols-2 gap-4 mt-5" v-if="userRole == '1:ADMIN'">                                                                                                          
                                     <div class="..." v-if="!addMode">
                                         <label class="block">                                            
                                             <span class="text-sm text-gray-700">Permissão <span class="text-red-500 font-semibold">*</span></span>                                            
-                                            <select :disabled="!isEdit || userRole != '1:ADMIN'" v-model="role" class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800">                
+                                            <select :disabled="!isEdit" v-model="role" class="block w-full mt-1 border-gray-300 rounded-md focus:border-gray-800 focus:ring focus:ring-opacity-40 focus:ring-gray-800">                
                                                 <option value="1">Administrador</option>
                                                 <option value="2">Revisor</option>
                                                 <option value="3">Aluno</option>                
