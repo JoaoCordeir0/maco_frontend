@@ -62,6 +62,7 @@ export async function apiLoginAdmin(user) {
         localStorage.clear()
         localStorage.setItem('user-backup', JSON.stringify(actual_user))
         localStorage.setItem('user-token', data.token)     
+        localStorage.setItem('user-token-expires', data.token_expires)   
         localStorage.setItem('user-id', data.user.id)     
         localStorage.setItem('user-name', data.user.name)     
         localStorage.setItem('user-email', data.user.email)     
