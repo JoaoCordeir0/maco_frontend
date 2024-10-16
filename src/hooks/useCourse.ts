@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { ref } from 'vue';
-import { credentials } from './useAuth';
+import { credentials, validSession } from './useAuth';
 
 const api = await credentials()
 
@@ -10,6 +10,8 @@ export interface ICourseState {
 }
 
 export async function courseList(path = '/') {
+    await validSession() 
+
     const { data } = await axios.get(`${api.url}${path}course/list`, {
         headers: api.authBearer
     })
@@ -18,6 +20,8 @@ export async function courseList(path = '/') {
 }
 
 export async function courseListByUser() {
+    await validSession() 
+
     let id = localStorage.getItem('user-id')
     const { data } = await axios.get(`${api.url}/course/list?user_id=${id}`, {
         headers: api.authBearer
@@ -27,6 +31,8 @@ export async function courseListByUser() {
 }
 
 export async function courseDetails(id) {
+    await validSession() 
+
     const { data } = await axios.get(`${api.url}/course/list?course_id=${id}`, {
         headers: api.authBearer
     })
@@ -34,7 +40,9 @@ export async function courseDetails(id) {
     return ref<ICourseState[]>(data[0])
 }
 
-export async function courseAdd(infos) {    
+export async function courseAdd(infos) { 
+    await validSession() 
+
     let params = {        
         'name': infos.name,
         'description': infos.description,
@@ -49,6 +57,8 @@ export async function courseAdd(infos) {
 }
 
 export async function courseEdit(infos) {
+    await validSession() 
+    
     let params = {
         'id': infos.id,
         'name': infos.name,

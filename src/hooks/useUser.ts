@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { ref } from 'vue';
-import { credentials } from './useAuth';
+import { credentials, validSession } from './useAuth';
 
 const api = await credentials()
 
@@ -10,6 +10,8 @@ export interface IUserState {
 }
 
 export async function userList(mode, filter) {
+    await validSession()
+
     let path = ''    
     if (filter.user_info != undefined) {
         path = `&user_info=${filter.user_info}&article_id=${filter.article_id}`
@@ -28,6 +30,8 @@ export async function userList(mode, filter) {
 }
 
 export async function userDetails(id, mode) {
+    await validSession()
+
     const { data } = await axios.get(`${api.url}/user/list?user_id=${id}${mode}`, {
         headers: api.authBearer
     })
@@ -35,13 +39,17 @@ export async function userDetails(id, mode) {
     return data[0]
 }
 
-export async function userAdd(params) {        
+export async function userAdd(params) {  
+    await validSession()      
+
     const { data } = await axios.post(`${api.url}/user/register`, params)
 
     return data
 }
 
-export async function userEdit(params) {    
+export async function userEdit(params) {   
+    await validSession() 
+
     const { data } = await axios.post(`${api.url}/user/edit`, params, {
         headers: api.authBearer,        
     })
@@ -49,7 +57,9 @@ export async function userEdit(params) {
     return data
 }
 
-export async function userDel(id) {        
+export async function userDel(id) { 
+    await validSession()       
+
     const { data } = await axios.delete(`${api.url}/user/del/${id}`, {
         headers: api.authBearer
     })
@@ -57,7 +67,9 @@ export async function userDel(id) {
     return data
 }
 
-export async function userRecoverPassword(params) {    
+export async function userRecoverPassword(params) {  
+    await validSession()  
+
     const { data } = await axios.post(`${api.url}/user/recoverpassword`, params, {
         headers: api.authBearer
     })
@@ -66,6 +78,8 @@ export async function userRecoverPassword(params) {
 }
 
 export async function generateCertificate(params) {
+    await validSession()
+
     const { data } = await axios.post(`${api.url}/user/certificate/export`, params, {
         headers: api.authBearer
     })
@@ -74,7 +88,9 @@ export async function generateCertificate(params) {
 }
 
 
-export async function userRemoveCourse(user, course) {        
+export async function userRemoveCourse(user, course) {   
+    await validSession()     
+
     const { data } = await axios.delete(`${api.url}/user/remove/course/${user}/${course}`, {
         headers: api.authBearer
     })
@@ -82,7 +98,9 @@ export async function userRemoveCourse(user, course) {
     return data
 }
 
-export async function userAddCourse(params) {        
+export async function userAddCourse(params) {     
+    await validSession()   
+    
     const { data } = await axios.post(`${api.url}/user/add/course`, params, {
         headers: api.authBearer
     })

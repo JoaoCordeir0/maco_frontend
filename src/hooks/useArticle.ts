@@ -1,6 +1,6 @@
 import axios from "axios";
 import { ref } from "vue";
-import { credentials } from "./useAuth";
+import { credentials, validSession } from "./useAuth";
 
 const api = await credentials();
 
@@ -10,6 +10,8 @@ export interface IArticleState {
 }
 
 export async function articleList(level, filter) {
+    await validSession() 
+
     let path = `/article/list/${level}`
     let char = '?'
     if (filter.status != undefined && filter.status != 0) {
@@ -32,7 +34,9 @@ export async function articleList(level, filter) {
     return ref<IArticleState[]>(data)
 }
 
-export async function submissionsList(level, filter) {     
+export async function submissionsList(level, filter) {
+    await validSession()      
+
     const { data } = await axios.get(`${api.url}/article/list/${level}?${filter}`, {
         headers: api.authBearer
     })
@@ -41,6 +45,8 @@ export async function submissionsList(level, filter) {
 }
 
 export async function submissionDetails(level, article) {
+    await validSession() 
+    
     const { data } = await axios.get(`${api.url}/article/list/${level}?article_id=${article}`, {
         headers: api.authBearer
     })
@@ -49,6 +55,8 @@ export async function submissionDetails(level, article) {
 }
 
 export async function submissionDelete(articleID) {
+    await validSession() 
+
     const { data } = await axios.delete(`${api.url}/article/del/${articleID}`, {
         headers: api.authBearer
     })
@@ -57,6 +65,8 @@ export async function submissionDelete(articleID) {
 }
 
 export async function articleDelAuthor(article, user) {    
+    await validSession() 
+
     const { data } = await axios.delete(`${api.url}/article/author/del/${article}/${user}`, {
         headers: api.authBearer,        
     })
@@ -65,6 +75,8 @@ export async function articleDelAuthor(article, user) {
 }
 
 export async function articleDelAdvisor(article, user) {    
+    await validSession() 
+
     const { data } = await axios.delete(`${api.url}/article/advisor/del/${article}/${user}`, {
         headers: api.authBearer,        
     })
@@ -73,7 +85,8 @@ export async function articleDelAdvisor(article, user) {
 }
 
 export async function articleAdd(params) {
-       
+    await validSession() 
+
     const { data } = await axios.post(`${api.url}/article/add`, params, {
         headers: api.authBearer
     })
@@ -82,6 +95,8 @@ export async function articleAdd(params) {
 }
 
 export async function articleEditStatus(article, status) {
+    await validSession() 
+    
     let params = {
         'article': article,
         'status': status,
@@ -94,7 +109,9 @@ export async function articleEditStatus(article, status) {
     return data
 }
 
-export async function articleAddComment(article, comment) {    
+export async function articleAddComment(article, comment) {  
+    await validSession() 
+
     let params = {
         'article': article,
         'comment': comment,
@@ -107,7 +124,9 @@ export async function articleAddComment(article, comment) {
     return data
 }
 
-export async function articleAddAuthor(article, author) {    
+export async function articleAddAuthor(article, author) {  
+    await validSession() 
+
     let params = {
         'article': article,
         'author': author,
@@ -121,6 +140,8 @@ export async function articleAddAuthor(article, author) {
 }
 
 export async function articleAddAdvisor(article, adivisor, coadvisor) {    
+    await validSession() 
+
     let params = {
         'article': article,
         'advisor': adivisor,
@@ -135,6 +156,8 @@ export async function articleAddAdvisor(article, adivisor, coadvisor) {
 }
 
 export async function articleEditKeywords(article, keywords) {    
+    await validSession() 
+
     let params = {
         'article': article,
         'keywords': keywords,
@@ -147,7 +170,9 @@ export async function articleEditKeywords(article, keywords) {
     return data
 }
 
-export async function articleAddReference(article, reference) {    
+export async function articleAddReference(article, reference) { 
+    await validSession() 
+
     let params = {
         'article': article,
         'reference': reference,
@@ -160,7 +185,9 @@ export async function articleAddReference(article, reference) {
     return data
 }
 
-export async function articleDelReference(article, referenceID) {    
+export async function articleDelReference(article, referenceID) { 
+    await validSession() 
+
     const { data } = await axios.delete(`${api.url}/article/reference/del/${article}/${referenceID}`, {
         headers: api.authBearer
     })
@@ -168,7 +195,9 @@ export async function articleDelReference(article, referenceID) {
     return data
 }
 
-export async function articleSubmit(article, title, summary) {    
+export async function articleSubmit(article, title, summary) {  
+    await validSession()   
+
     let params = {
         'article': article,
         'title': title,
@@ -182,7 +211,9 @@ export async function articleSubmit(article, title, summary) {
     return data
 }
 
-export async function articleEditReference(article, ref, value) {    
+export async function articleEditReference(article, ref, value) {  
+    await validSession()   
+
     let params = {
         'article': article,
         'ref_id': ref,
@@ -197,6 +228,8 @@ export async function articleEditReference(article, ref, value) {
 }
 
 export async function articleExport(article) {
+    await validSession() 
+    
     let params = {
         'article': article,
         'type': 'docx',        

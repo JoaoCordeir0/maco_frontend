@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { ref } from 'vue';
+import Swal from "sweetalert2"
 
 const endpointUrl = import.meta.env.VITE_URL_API
 
@@ -23,12 +24,13 @@ export async function apiLogin(email, password) {
     if (data.token != undefined) 
     {       
         localStorage.clear()
-        localStorage.setItem('user-token', data.token)     
+        localStorage.setItem('user-token', data.token)   
+        localStorage.setItem('user-token-expires', data.token_expires)   
         localStorage.setItem('user-id', data.user.id)     
         localStorage.setItem('user-name', data.user.name)     
         localStorage.setItem('user-email', data.user.email)     
         localStorage.setItem('user-ra', data.user.ra)     
-        localStorage.setItem('user-role', data.user.role)     
+        localStorage.setItem('user-role', data.user.role)    
         localStorage.setItem('user-auth-day', (new Date()).getDate().toString())        
     }
 
@@ -49,7 +51,8 @@ export async function apiLoginAdmin(user) {
     if (data.token != undefined) 
     {       
         let actual_user = {
-            token: localStorage.getItem('user-token'),     
+            token: localStorage.getItem('user-token'), 
+            token_expires: localStorage.getItem('user-token-expires'),    
             id: localStorage.getItem('user-id'),     
             name: localStorage.getItem('user-name'),     
             email: localStorage.getItem('user-email'),     
@@ -77,7 +80,8 @@ export async function backToUser(user) {
     if (! await isValidToken(user.token)) {
         window.location.href = '/login'
     }
-    localStorage.setItem('user-token', user.token)     
+    localStorage.setItem('user-token', user.token)   
+    localStorage.setItem('user-token-expires', user.token_expires)     
     localStorage.setItem('user-id', user.id)     
     localStorage.setItem('user-name', user.name)     
     localStorage.setItem('user-email', user.email)     
@@ -113,6 +117,10 @@ export async function isValidToken(token: string = '') {
     if (token == '') {
         token = localStorage.getItem('user-token')
     }
+    if (token == null) {
+        return false
+    }
+
     const { data } = await axios.post(`${endpointUrl}/public/token`, {
         'token': token
     })
@@ -148,5 +156,31 @@ export async function credentials() {
         url,
         token,
         authBearer,
+    }
+}
+
+export async function validSession() {
+    const today = new Date()  
+    const dateEnd = new Date(localStorage.getItem('user-token-expires') ?? today)
+
+    if (today >= dateEnd) {                
+        let timerInterval;
+        Swal.fire({
+        title: "Alerta!",
+        html: "Sessão expirada",
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        willClose: () => {
+            clearInterval(timerInterval);
+        }
+        }).then((result) => {
+            if (result.dismiss === Swal.DismissReason.timer) {
+                localStorage.clear()
+                window.location.href = '/login'
+            }
+        });
     }
 }
