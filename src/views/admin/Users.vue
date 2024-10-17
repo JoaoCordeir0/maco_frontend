@@ -25,7 +25,7 @@
                             <tr>
                                 <th class="px-5 text-start border-b-2">Id</th>
                                 <th class="px-5 text-start border-b-2">Nome</th>        
-                                <th class="px-5 text-start border-b-2">CPF</th>                                
+                                <th class="px-5 text-start border-b-2">RA</th>                                
                                 <th class="px-5 text-start border-b-2">Curso</th>
                                 <th class="px-5 text-start border-b-2">Papel</th>
                                 <th class="px-5 text-center border-b-2">Ações</th>
@@ -36,11 +36,11 @@
                                 <td class="px-5 py-4 text-sm bg-white border-b border-gray-200">
                                     <p :class="item.status ? 'text-gray-900' : 'text-red-600'" class="whitespace-nowrap">{{ item.id }}</p>
                                 </td>
-                                <td class="px-5 py-4 text-sm bg-white border-b border-gray-200">
+                                <td class="px-5 py-4 text-sm bg-white border-b border-gray-200 hover:cursor-pointer" @click="$router.push('/user/' + item.id)">
                                     <p :class="item.status ? 'text-gray-900' : 'text-red-600'" class="whitespace-nowrap">{{ item.name }}</p>
                                 </td>                                
                                 <td class="px-5 py-4 text-sm bg-white border-b border-gray-200">
-                                    <p :class="item.status ? 'text-gray-900' : 'text-red-600'" class="whitespace-nowrap">{{ formatCPF(item.cpf) }}</p>
+                                    <p :class="item.status ? 'text-gray-900' : 'text-red-600'" class="whitespace-nowrap">{{ formatRA(item.ra) }}</p>
                                 </td>                                  
                                 <td class="px-5 py-4 text-sm bg-white border-b border-gray-200">
                                     <p :class="item.status ? 'text-gray-900' : 'text-red-600'" class="whitespace-nowrap">{{ formatCourse(item.courses) }}</p>
@@ -73,7 +73,7 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from "vue"
 import Spinner from "../../components/Spinner.vue"
-import { IUserState, userList, userFormatCPF } from "../../hooks/useUser"
+import { IUserState, userList, userFormatRA } from "../../hooks/useUser"
 import { Toast } from "../../hooks/useToast"
 import UserAdminFilter from '../../components/filters/UserAdminFilter.vue'
 
@@ -114,8 +114,8 @@ export default defineComponent({
             }            
             this.infoLoaded = true
         },    
-        formatCPF(cpf) {
-            return userFormatCPF(cpf)
+        formatRA(ra) {
+            return userFormatRA(ra)
         },
         getRole(id) {
             let paper

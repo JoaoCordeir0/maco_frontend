@@ -33,7 +33,7 @@
                                 <td class="px-5 py-4 text-sm bg-white border-b border-gray-200">
                                     <p :class="!item.status ? 'text-red-500' : ''" class="text-gray-900 whitespace-nowrap">{{ item.id }}</p>
                                 </td>
-                                <td class="px-5 py-4 text-sm bg-white border-b border-gray-200">
+                                <td class="px-5 py-4 text-sm bg-white border-b border-gray-200 hover:cursor-pointer" @click="$router.push('/course/' + item.id)">
                                     <p :class="!item.status ? 'text-red-500' : ''" class="text-gray-900 whitespace-nowrap">{{ item.name }}</p>
                                 </td>                                
                                 <td class="px-5 py-4 text-sm bg-white border-b border-gray-200">

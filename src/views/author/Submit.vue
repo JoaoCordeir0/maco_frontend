@@ -53,7 +53,7 @@
                                         <a title="Deletar Autor do artigo" v-if="userIsLogged(author.id) && editMode" href="#" v-on:click="delAuthor(author.id)" class="ms-2 bg-red-600 mt-1 text-white text-center ps-2 pe-2 pt-1 pb-1 w-10 rounded-md"> 
                                             <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'trash-can']" />
                                         </a> 
-                                        <a title="Visualizar perfil do Autor" v-if="isAdminOrAdvisor()" href="#" @click="$router.push('/user/' + author.id)" class="ms-2 mt-1 bg-gray-700 text-white ps-2 pe-2 pt-1 pb-1 w-10 rounded-md"> 
+                                        <a title="Visualizar perfil do Autor" v-if="isAdmin()" href="#" @click="$router.push('/user/' + author.id)" class="ms-2 mt-1 bg-gray-900 text-white ps-2 pe-2 pt-1 pb-1 w-10 rounded-md"> 
                                             <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'eye']" />
                                         </a>
                                     </div>                                
@@ -90,7 +90,7 @@
                                             <a title="Deletar Co-orientador do artigo" v-if="userIsLogged(advisor.id) && editMode" href="#" v-on:click="delAdvisor(advisor.id)" class="ms-2 mt-1 bg-red-600 w-10 text-center text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                                 <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'trash-can']" />
                                             </a> 
-                                            <a title="Visualizar perfil do Co-orientador" v-if="isAdminOrAdvisor()" href="#" @click="$router.push('/user/' + advisor.id)" class="ms-2 mt-1 bg-gray-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                            <a title="Visualizar perfil do Co-orientador" v-if="isAdmin()" href="#" @click="$router.push('/user/' + advisor.id)" class="ms-2 mt-1 bg-gray-900 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                                 <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'eye']" />
                                             </a> 
                                         </div>                                
@@ -122,7 +122,7 @@
                                             <a title="Deletar Orientador do artigo" v-if="userIsLogged(advisor.id) && editMode" href="#" v-on:click="delAdvisor(advisor.id)" class="ms-2 mt-1 bg-red-600 w-10 text-center text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                                 <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'trash-can']" />
                                             </a> 
-                                            <a title="Visualizar perfil do Orientador" v-if="isAdminOrAdvisor()" href="#" @click="$router.push('/user/' + advisor.id)" class="ms-2 mt-1 bg-gray-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                                            <a title="Visualizar perfil do Orientador" v-if="isAdmin()" href="#" @click="$router.push('/user/' + advisor.id)" class="ms-2 mt-1 bg-gray-900 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                                                 <font-awesome-icon class="mt-1" size="lg" :icon="['fas', 'eye']" />
                                             </a> 
                                         </div>                                
@@ -1112,8 +1112,8 @@ export default defineComponent({
         activeBtnByRole(role) {
             return this.infoLoaded && getUserRole(true).toLowerCase() == role
         },
-        isAdminOrAdvisor() {
-            return this.infoLoaded && (getUserRole(true).toLowerCase() == 'admin' || getUserRole(true).toLowerCase() == 'advisor')
+        isAdmin() {
+            return this.infoLoaded && (getUserRole(true).toLowerCase() == 'admin')
         },
         formatDate(date) {
             try {

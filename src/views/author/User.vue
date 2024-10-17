@@ -178,7 +178,7 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from "vue"
 import router from "../../router"
-import { IUserState, userAdd, userAddCourse, userDetails, userEdit, userFormatCPF, userRemoveCourse } from "../../hooks/useUser"
+import { IUserState, userAdd, userAddCourse, userDetails, userEdit, userFormatCPF, userFormatRA, userRemoveCourse } from "../../hooks/useUser"
 import { apiLoginAdmin, getUserRole } from "../../hooks/useAuth"
 import Spinner from "../../components/Spinner.vue"
 import { Toast } from "../../hooks/useToast"
@@ -311,7 +311,7 @@ export default defineComponent({
             this.id = result['id']
             this.name = result['name']          
             this.cpf = userFormatCPF(result['cpf'])
-            this.ra = result['ra']
+            this.ra = userFormatRA(result['ra'])
             this.email = result['email']            
             this.role = result['role']  
             if (this.role == 3) {
@@ -341,21 +341,11 @@ export default defineComponent({
             }            
             return data['courses']  
         },
-        formatCPF() {            
-            let cpf = this.cpf.replace(/\D/g, '');                        
-            if (cpf.length <= 11) {
-                cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
-                cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
-                cpf = cpf.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-            }            
-            this.cpf = cpf;
+        formatCPF() {                        
+            this.cpf = userFormatCPF(this.cpf)
         },
-        formatRA() {            
-            let ra = this.ra.replace(/\D/g, '');            
-            if (ra.length <= 6) {
-                ra = ra.replace(/(\d{5})(\d)/, '$1-$2');
-            }
-            this.ra = ra;
+        formatRA() {                        
+            this.ra = userFormatRA(this.ra)
         },
         showCoursesModal() {
             this.isModalCoursesVisible = !this.isModalCoursesVisible

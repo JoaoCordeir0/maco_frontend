@@ -10,14 +10,24 @@
                     <Spinner />
                 </span>         
                 <div v-if="infonotnull" class="w-full mt-5">     
-                    <div class="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-4">                        
+                    <!-- <div class="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-4">                        
                         <div class="col rounded overflow-hidden shadow-xl border-t-2" v-for="item in courses">                            
                             <div class="px-6 py-4">
                                 <div class="font-bold text-xl mb-2">{{ item.name }}</div>
                                 <p class="text-gray-700 text-base">{{ item.description }}</p>
                             </div>                            
                         </div>                                            
-                    </div>                                   
+                    </div> -->
+                    <div class="flex flex-wrap justify-start">            
+                        <div class="col rounded overflow-hidden shadow-xl border-t-2 md:me-4 mb-4" v-for="item in courses">                            
+                            <div class="flex flex-col justify-start flex-grow w-screen md:w-72 hover:bg-gray-100">
+                                <div class="px-6 py-4">
+                                    <div class="font-bold text-md mb-2">{{ item.name }}</div>
+                                    <p class="text-gray-700 text-sm">{{ item.description }}</p>
+                                </div>                      
+                            </div>                            
+                        </div>          
+                    </div>
                 </div>
             </div>
         </div>
