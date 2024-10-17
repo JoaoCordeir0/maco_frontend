@@ -10,7 +10,9 @@ export interface ICourseState {
 }
 
 export async function courseList(path = '/') {
-    await validSession() 
+    if (path != '/public/') {
+        await validSession()
+    }
 
     const { data } = await axios.get(`${api.url}${path}course/list`, {
         headers: api.authBearer
