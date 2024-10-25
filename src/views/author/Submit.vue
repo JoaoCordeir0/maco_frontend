@@ -13,7 +13,7 @@
                         </p>
                     </div>
                     <div class="col-start-1 col-end-12 md:col-end-10 md:col-span-2">
-                        <a href="#" class="bg-green-700 text-white rounded-md py-1 px-3 ml-2 mt-1 sm:mt-0 float-end">Ajuda <font-awesome-icon :icon="['fas', 'question']" /></a>                        
+                        <!-- <a href="#" class="bg-green-700 text-white rounded-md py-1 px-3 ml-2 mt-1 sm:mt-0 float-end">Ajuda <font-awesome-icon :icon="['fas', 'question']" /></a>-->
                         <a v-if="comments != ''" href="#" v-on:click="showCommentsModal()" class="ml-2 mt-1 sm:mt-0 bg-cyan-600 text-white rounded-md py-1 px-3 float-end">Comentários <font-awesome-icon size="xl" :icon="['fas', 'comment-dots']" /></a>
                         <a v-if="activeBtnByRole('admin') && status == 'approved'" href="#" v-on:click="editMode = !editMode" class="ml-2 mt-1 sm:mt-0 bg-gray-900 text-white rounded-md py-1 px-3 float-end">{{ editMode ? 'Desabilitar' : 'Habilitar' }} edição <font-awesome-icon size="lg" :icon="['fas', 'pen-to-square']" /> </a>
                     </div>                
