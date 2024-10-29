@@ -39,9 +39,7 @@ export async function userDetails(id, mode) {
     return data[0]
 }
 
-export async function userAdd(params) {  
-    await validSession()      
-
+export async function userAdd(params) {       
     const { data } = await axios.post(`${api.url}/user/register`, params)
 
     return data
@@ -68,8 +66,6 @@ export async function userDel(id) {
 }
 
 export async function userRecoverPassword(params) {  
-    await validSession()  
-
     const { data } = await axios.post(`${api.url}/user/recoverpassword`, params, {
         headers: api.authBearer
     })
