@@ -64,10 +64,10 @@ export default defineComponent({
                 });                
                 return
             }
-            //const result = await userRecoverPassword({'email': email.value})
+            await userRecoverPassword({'email': email.value})
             Toast().fire({
-                icon: 'error',
-                title: 'SMTP não configurado!'
+                icon: 'success',
+                title: 'E-mail enviado!'
             });     
         }
         return {
