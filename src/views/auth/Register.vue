@@ -1,5 +1,5 @@
 <template>
-    <img src="/logo_maco.png" title="Maco: Magnoli & Cordeiro" alt="Logo Maco" width="150" class="hidden lg:block top-0 pl-2 pt-2 rounded-full" style="margin-bottom: -145px;">
+    <img src="logo_maco.png" title="Maco: Magnoli & Cordeiro" alt="Logo Maco" width="150" class="hidden lg:block top-0 pl-2 pt-2 rounded-full" style="margin-bottom: -145px;">
     <div class="flex items-center justify-center h-screen px-3 bg-zinc-100">
         <div class="w-full max-w-xl md:h-auto overflow-y-auto bg-white border-t-2 shadow-xl rounded-xl border-gray py-2 px-2 md:py-4 md:px-4 mt-2">            
             <form class="p-5 m-auto overflow-y-auto" @submit.prevent="sendRegister">

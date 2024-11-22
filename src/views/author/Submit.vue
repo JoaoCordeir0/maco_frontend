@@ -941,6 +941,7 @@ export default defineComponent({
                             cancelButtonText: "Cancelar",
                         }).then(async (modal) => {
                             if (modal.isConfirmed) { 
+                                this.isLoading = true
                                 const result1 = await articleAddComment(this.getArticleID(), comment)
                                 const result2 = await articleEditStatus(this.getArticleID(), 2)
                                 if (result1.status == 'success' && result2.status == 'success') {                                                    
@@ -950,6 +951,7 @@ export default defineComponent({
                                 } else {
                                     Toast().fire({icon: 'error', title: result1.message + ' ' + result2.message})
                                 }   
+                                this.isLoading = false
                                 router.push('/events')                           
                             }
                         })      
@@ -966,6 +968,8 @@ export default defineComponent({
                         cancelButtonText: "Cancelar",
                     }).then(async (modal) => {
                         if (modal.isConfirmed) { 
+                            this.isLoading = true
+                            Toast().fire({icon: 'info', title: 'Submetendo... Aguarde!'})
                             const result = await articleEditStatus(this.getArticleID(), 2)            
                             if (result.status == 'success') {                                                
                                 Toast().fire({icon: 'success', title: 'Artigo submetido com sucesso'})
@@ -973,6 +977,7 @@ export default defineComponent({
                             } else {
                                 Toast().fire({icon: 'error', title: result.message})
                             }    
+                            this.isLoading = false
                             router.push('/events')
                         }
                     })      
