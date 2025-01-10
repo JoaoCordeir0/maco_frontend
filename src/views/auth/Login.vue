@@ -1,5 +1,5 @@
 <template>
-    <img src="logo_maco.png" title="Maco: Magnoli & Cordeiro" alt="Logo Maco" width="150" class="fixed top-0 pl-2 pt-2 rounded-full">
+    <img src="/logo_maco.png" title="Maco: Magnoli & Cordeiro" alt="Logo Maco" width="150" class="fixed top-0 pl-2 pt-2 rounded-full">
     <div class="flex items-center justify-center h-screen px-6 bg-zinc-100">
         <div class="w-full max-w-md bg-white border-t-2 rounded-xl border-gray px-5 py-5 shadow-xl">            
             <form class="mt-4 mb-4 md:mt-10 md:mb-10 max-w-96 m-auto" @submit.prevent="login">
