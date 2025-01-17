@@ -13,9 +13,9 @@
                         </p>
                     </div>
                     <div class="col-end-10 col-span-2 ...">
-                        <a href="/course/add" class="bg-green-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
+                        <button @click="$router.push('/course/add')" class="bg-green-700 text-white ps-2 pe-2 pt-1 pb-1 rounded-md"> 
                             <font-awesome-icon :icon="['fas', 'file-circle-plus']" />  <span class="hidden md:inline">Criar novo curso</span>
-                        </a>
+                        </button>
                     </div>                
                 </div>    
                 <div v-if="infonotnull" class="overflow-x-auto inline-block min-w-full rounded-lg">                    
