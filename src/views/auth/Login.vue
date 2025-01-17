@@ -108,7 +108,7 @@ export default defineComponent({
                     }
                 }).then((result) => {
                     if (result.dismiss === Swal.DismissReason.timer) {
-                        location.href = '/dashboard'
+                        location.href = '/maco/dashboard'
                     }
                 });
             } else {

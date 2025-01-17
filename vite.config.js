@@ -7,6 +7,7 @@ export default defineConfig({
     vue(),
     nodePolyfills(),
   ],
+  base: '/maco/',
   build: {
     target: 'esnext'
   },

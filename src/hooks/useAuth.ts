@@ -69,7 +69,7 @@ export async function apiLoginAdmin(user) {
         localStorage.setItem('user-ra', data.user.ra)     
         localStorage.setItem('user-role', data.user.role)     
         localStorage.setItem('user-auth-day', (new Date()).getDate().toString())        
-        window.location.href = '/dashboard'
+        window.location.href = '/maco/dashboard'
     }        
 }
 
@@ -79,7 +79,7 @@ export async function backToUser(user) {
     }
     localStorage.clear()
     if (! await isValidToken(user.token)) {
-        window.location.href = '/login'
+        window.location.href = '/maco/login'
     }
     localStorage.setItem('user-token', user.token)   
     localStorage.setItem('user-token-expires', user.token_expires)     
@@ -88,30 +88,30 @@ export async function backToUser(user) {
     localStorage.setItem('user-email', user.email)     
     localStorage.setItem('user-ra', user.ra)     
     localStorage.setItem('user-role', user.role)   
-    window.location.href = '/dashboard'
+    window.location.href = '/maco/dashboard'
 }
 
 export function authBasic(to, from, next) {
     const token = localStorage.getItem('user-token') != undefined    
-    token ? next() : next('/login')    
+    token ? next() : next('/maco/login')    
 }
 
 export function authAdmin(to, from, next) {
     const token = localStorage.getItem('user-token') != undefined
     const role = String(getUserRole()) == '1:ADMIN'
-    token && role ? next() : next('/login')    
+    token && role ? next() : next('/maco/login')    
 }
 
 export function authAdvisor(to, from, next) {
     const token = localStorage.getItem('user-token') != undefined
     const role = String(getUserRole()) == '2:ADVISOR' || String(getUserRole()) == '2:ADMIN'
-    token && role ? next() : next('/login')    
+    token && role ? next() : next('/maco/login')    
 }
 
 export function authAuthor(to, from, next) {
     const token = localStorage.getItem('user-token') != undefined
     const role = String(getUserRole()) == '3:AUTHOR' || String(getUserRole()) == '2:ADVISOR' || String(getUserRole()) == '2:ADMIN'
-    token && role ? next() : next('/login')    
+    token && role ? next() : next('/maco/login')    
 }
 
 export async function isValidToken(token: string = '') {
@@ -180,7 +180,7 @@ export async function validSession() {
         }).then((result) => {
             if (result.dismiss === Swal.DismissReason.timer) {
                 localStorage.clear()
-                window.location.href = '/login'
+                window.location.href = '/maco/login'
             }
         });
     }
