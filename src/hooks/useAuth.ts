@@ -93,25 +93,25 @@ export async function backToUser(user) {
 
 export function authBasic(to, from, next) {
     const token = localStorage.getItem('user-token') != undefined    
-    token ? next() : next('/maco/login')    
+    token ? next() : next('/login')    
 }
 
 export function authAdmin(to, from, next) {
     const token = localStorage.getItem('user-token') != undefined
     const role = String(getUserRole()) == '1:ADMIN'
-    token && role ? next() : next('/maco/login')    
+    token && role ? next() : next('/login')    
 }
 
 export function authAdvisor(to, from, next) {
     const token = localStorage.getItem('user-token') != undefined
     const role = String(getUserRole()) == '2:ADVISOR' || String(getUserRole()) == '2:ADMIN'
-    token && role ? next() : next('/maco/login')    
+    token && role ? next() : next('/login')    
 }
 
 export function authAuthor(to, from, next) {
     const token = localStorage.getItem('user-token') != undefined
     const role = String(getUserRole()) == '3:AUTHOR' || String(getUserRole()) == '2:ADVISOR' || String(getUserRole()) == '2:ADMIN'
-    token && role ? next() : next('/maco/login')    
+    token && role ? next() : next('/login')    
 }
 
 export async function isValidToken(token: string = '') {
