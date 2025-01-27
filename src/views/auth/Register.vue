@@ -122,8 +122,6 @@ export default defineComponent({
             isLoading: false,
             message: '',
         })
-
-        const isLoading = false;
         const name = ref("")
         const lastname = ref("")
         const cpf = ref("")        
@@ -149,7 +147,8 @@ export default defineComponent({
                 Toast().fire({icon: 'error', title: 'Senhas não são iguais!'})
                 return
             }   
-
+            
+            state.isLoading = true
             const result = await userAdd({                
                 name: name.value + " " + lastname.value,
                 cpf: cpf.value,
@@ -158,6 +157,7 @@ export default defineComponent({
                 password: pass1.value,              
                 course: course.value,  
             })
+            state.isLoading = false
             if (result.status == 'success') {
                 Toast().fire({icon: 'success', title: 'Usuário criado!'})
                 router.push('/login')
@@ -167,6 +167,7 @@ export default defineComponent({
         }
 
         return {
+            ...toRefs(state),
             name,
             lastname,
             cpf,
@@ -175,7 +176,6 @@ export default defineComponent({
             pass1,
             pass2,         
             course,   
-            isLoading,
             courses,
             type_input_1,
             type_input_2,

@@ -8,7 +8,7 @@
                     <p class="font-semibold text-2xl text-gray-800">Esqueceu Senha?</p>                
                 </div>
                 <div class="mt-2">
-                    <p class="text-xs text-gray-400">Nós entendemos, coisas acontecem. Basta inserir seu endereço de e-mail abaixo e enviaremos um link para redefinir sua senha.</p>
+                    <p class="text-xs text-gray-400">Nós entendemos, coisas acontecem. Basta inserir seu endereço de e-mail abaixo e enviaremos uma nova senha para você.</p>
                 </div>
                 <label class="block mt-4">
                     <span class="text-sm text-gray-800">Email</span>
@@ -20,10 +20,10 @@
                 <div class="mt-6">
                     <button type="submit" :disabled="isLoading"
                         class="w-full px-4 py-2 text-sm text-center text-white bg-gray-800 rounded-md focus:outline-none hover:bg-gray-700 transition">
-                        <span v-if="isLoading == false">
+                        <span v-if="!isLoading">
                             Enviar
                         </span>
-                        <span v-if="isLoading == true">
+                        <span v-else>
                             <Loading />
                         </span>
                     </button>
@@ -39,7 +39,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from "vue"
-import { ILoginState, apiLogin } from "../../hooks/useAuth"
+import { IUserState } from "../../hooks/useUser"
 import router from "../../router"
 import Loading from "../../components/Loading.vue"
 import { Toast } from "../../hooks/useToast"
@@ -47,16 +47,18 @@ import { userRecoverPassword } from "../../hooks/useUser"
 
 export default defineComponent({
     setup() {
+        const state: IUserState = reactive({
+            isLoading: false,
+            message: '',
+        })
 
         const email = ref("");
-        
-        const isLoading = false;
 
         function loginPage() {
             router.push('login');
         }
 
-        async function sendEmail() {
+        async function sendEmail() {     
             if (email.value == "") {
                 Toast().fire({
                     icon: 'warning',
@@ -64,15 +66,18 @@ export default defineComponent({
                 });                
                 return
             }
+            state.isLoading = true
             await userRecoverPassword({'email': email.value})
             Toast().fire({
                 icon: 'success',
-                title: 'E-mail enviado!'
-            });     
+                title: 'E-mail enviado! Faça login com a nova senha'
+            })
+            state.isLoading = false  
+            router.push('login')
         }
         return {
+            ...toRefs(state),
             email,
-            isLoading,
             sendEmail,
             loginPage
         }
