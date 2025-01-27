@@ -32,7 +32,7 @@
             <a v-if="userInBackup()" href="#" @click="backUser()"
               class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-400 hover:bg-opacity-30 hover:text-gray-900">Voltar para "{{ getNameUserBackup() }}"</a>
             <hr>
-            <a :href="'/user/' + getIdUserLogged()"
+            <a href="#" @click="profile"
               class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-400 hover:bg-opacity-30 hover:text-gray-900">Meu perfil</a>
             <hr>
             <a href="#" @click="logout"
@@ -68,6 +68,9 @@ export default defineComponent({
     };
   },
   methods: {
+    profile() {
+      router.push(`/user/${this.getIdUserLogged()}`)
+    },
     logout() {
       localStorage.clear();
       router.push('/')
